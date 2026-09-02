@@ -1,0 +1,22 @@
+// type: "text" — блок с буквами/аббревиатурой, "icon" — Material Symbol account_balance
+export const universities = [
+  { bg: "#53284F", type: "text", label: "UCL", name: "UCL", city: "London, UK" },
+  { bg: "#660099", type: "text", label: "M", name: "University of Manchester", city: "Manchester, UK" },
+  { bg: "#000000", type: "icon", iconColor: "white", name: "University of Birmingham", city: "Birmingham, UK" },
+  { bg: "#002147", type: "icon", iconColor: "white", name: "University of Edinburgh", city: "Edinburgh, UK" },
+  { bg: "#C62828", type: "text", label: "K", name: "King's College London", city: "London, UK" },
+  { bg: "#B71C1C", type: "icon", iconColor: "white", name: "University of Bristol", city: "Bristol, UK" },
+  { bg: "#4A148C", type: "icon", iconColor: "white", name: "University of Sheffield", city: "Sheffield, UK" },
+  { bg: "#00204E", type: "icon", iconColor: "white", name: "University of Toronto", city: "Toronto, Canada" },
+  { bg: "#FFD54F", type: "icon", iconColor: "black", name: "UNSW Sydney", city: "Sydney, Australia" },
+  { bg: "#006064", type: "icon", iconColor: "white", name: "University of Hong Kong", city: "Hong Kong" },
+  { bg: "#004D40", type: "icon", iconColor: "white", name: "University of Exeter", city: "Exeter, UK" },
+  { bg: "#01579B", type: "icon", iconColor: "white", name: "University of Surrey", city: "Surrey, UK" },
+  { bg: "#1A237E", type: "icon", iconColor: "white", name: "University of Liverpool", city: "Liverpool, UK" },
+  { bg: "#0D47A1", type: "text", label: "R", name: "HSE University", city: "Moscow, Russia" },
+  { bg: "#212121", type: "icon", iconColor: "white", name: "University of Warwick", city: "Coventry, UK" },
+  { bg: "#004D40", type: "text", label: "S", name: "University of Southampton", city: "Southampton, UK" },
+  { bg: "#1B5E20", type: "icon", iconColor: "white", name: "University of Leeds", city: "Leeds, UK" },
+  { bg: "#0D47A1", type: "icon", iconColor: "white", name: "University of Glasgow", city: "Glasgow, UK" },
+  { bg: "#B71C1C", type: "text", label: "A", name: "University of Arizona", city: "Arizona, USA" },
+];
