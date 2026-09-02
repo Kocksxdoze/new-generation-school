@@ -302,7 +302,7 @@ export default function Footer() {
           gap={4}
         >
           <Text fontSize="sm" color="rgba(219,234,254,0.5)">
-            © 2024 New Generation School. Все права защищены.
+            © 2026 New Generation School. Все права защищены. Created by Eciva.
           </Text>
         </Flex>
       </Box>
