@@ -8,7 +8,7 @@ export default function Testimonials() {
     <Box
       as="section"
       id="testimonials"
-      py={24}
+      py={20}
       bg="surfaceLight"
       position="relative"
     >

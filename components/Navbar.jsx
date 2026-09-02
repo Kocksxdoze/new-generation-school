@@ -19,155 +19,171 @@ const navLinks = [
 
 export default function Navbar() {
   return (
-    <Box
-      as="nav"
-      position="fixed"
-      top={0}
-      w="full"
-      zIndex={50}
-      py={4}
-      px={{ base: 6, md: 12 }}
-    >
-      <Flex
-        className="glass-panel"
-        rounded="full"
-        maxW="7xl"
-        mx="auto"
-        px={6}
-        py={3}
-        align="center"
-        justify="space-between"
-        boxShadow="glass"
+    <>
+      <Box
+        as="nav"
+        position="fixed"
+        top={0}
+        w="full"
+        zIndex={50}
+        py={4}
+        px={{ base: 4, md: 12 }}
       >
-        {/* Brand */}
-        <ChakraLink
-          href="#"
-          display="flex"
-          alignItems="center"
-          gap={3}
-          role="group"
-          _hover={{ textDecoration: "none" }}
-        >
-          <Box
-            as="img"
-            src="/ЛОГО.png"
-            alt="New Generation School Logo"
-            h="10"
-            w="auto"
-            objectFit="contain"
-            transition="transform 0.2s"
-            _groupHover={{ transform: "scale(1.05)" }}
-          />
-          <Box display="flex" lineHeight={"1.2"} flexDirection="column">
-            <Text
-              fontFamily="heading"
-              fontWeight="bold"
-              color="#002045"
-              lineHeight="tight"
-              letterSpacing="tight"
-            >
-              New Generation
-            </Text>
-            <Text
-              fontSize="10px"
-              textTransform="uppercase"
-              letterSpacing="widest"
-              color="#64748B"
-              fontWeight="medium"
-            >
-              School
-            </Text>
-          </Box>
-        </ChakraLink>
-
-        {/* Nav Links (Desktop) */}
-        <HStack
-          display={{ base: "none", md: "flex" }}
-          gap={1}
-          bg="rgba(255,255,255,0.5)"
+        <Flex
+          className="glass-panel"
           rounded="full"
-          p={1}
-          border="1px solid rgba(255,255,255,0.6)"
+          maxW="7xl"
+          mx="auto"
+          px={{ base: 4, md: 6 }}
+          py={3}
+          align="center"
+          justify="space-between"
+          boxShadow="glass"
         >
-          {navLinks.map((link, i) => (
-            <ChakraLink
-              key={link.href}
-              href={link.href}
-              fontWeight="medium"
-              fontSize="sm"
-              px={5}
-              py={2}
-              rounded="full"
-              color={i === 0 ? "primaryNavy" : "#64748B"}
-              bg={i === 0 ? "white" : "transparent"}
-              boxShadow={i === 0 ? "sm" : "none"}
-              transition="all 0.2s"
-              _hover={{
-                bg: i === 0 ? "white" : "rgba(255,255,255,0.8)",
-                color: "primaryNavy",
-                textDecoration: "none",
-              }}
-            >
-              {link.label}
-            </ChakraLink>
-          ))}
-        </HStack>
-
-        {/* Trailing Action */}
-        <HStack gap={4}>
-          <HStack display={{ base: "none", lg: "flex" }} gap={2} mr={2}>
-            <Box
-              as="span"
-              className="material-symbols-outlined"
-              color="primaryNavy"
-              fontSize="xl"
-            >
-              call
-            </Box>
-            <ChakraLink
-              href="tel:+998902302963"
-              fontWeight="medium"
-              fontSize="sm"
-              color="primaryNavy"
-              _hover={{ color: "accentGold", textDecoration: "none" }}
-            >
-              +998 (90) 230-29-63
-            </ChakraLink>
-          </HStack>
+          {/* Brand */}
           <ChakraLink
             href="#"
-            display={{ base: "none", md: "inline-flex" }}
+            display="flex"
             alignItems="center"
-            justifyContent="center"
-            px={6}
-            py={2.5}
-            bg="#FFB800"
-            color="primaryNavy"
-            fontWeight="bold"
-            fontSize="sm"
-            rounded="full"
-            transition="colors 0.2s"
-            boxShadow="premium"
-            _hover={{ bg: "accentGoldHover", textDecoration: "none" }}
+            gap={3}
+            role="group"
+            _hover={{ textDecoration: "none" }}
           >
-            Подать заявку
-          </ChakraLink>
-          <IconButton
-            aria-label="Открыть меню"
-            display={{ base: "flex", md: "none" }}
-            p={2}
-            color="primaryNavy"
-            bg="rgba(255,255,255,0.8)"
-            rounded="full"
-            minW="auto"
-            h="auto"
-          >
-            <Box as="span" className="material-symbols-outlined">
-              menu
+            <Box
+              as="img"
+              src="/ЛОГО.png"
+              alt="New Generation School Logo"
+              h="10"
+              w="auto"
+              objectFit="contain"
+              transition="transform 0.2s"
+              _groupHover={{ transform: "scale(1.05)" }}
+            />
+            <Box
+              display={{ base: "none", sm: "flex" }}
+              lineHeight={"1.2"}
+              flexDirection="column"
+            >
+              <Text
+                fontFamily="heading"
+                fontWeight="bold"
+                color="#002045"
+                lineHeight="tight"
+                letterSpacing="tight"
+              >
+                New Generation
+              </Text>
+              <Text
+                fontSize="10px"
+                textTransform="uppercase"
+                letterSpacing="widest"
+                color="#64748B"
+                fontWeight="medium"
+              >
+                School
+              </Text>
             </Box>
-          </IconButton>
-        </HStack>
-      </Flex>
-    </Box>
+          </ChakraLink>
+
+          {/* Nav Links (Desktop) */}
+          <HStack
+            display={{ base: "none", md: "flex" }}
+            gap={1}
+            bg="rgba(255,255,255,0.5)"
+            rounded="full"
+            p={1}
+            border="1px solid rgba(255,255,255,0.6)"
+          >
+            {navLinks.map((link, i) => (
+              <ChakraLink
+                key={link.href}
+                href={link.href}
+                fontWeight="medium"
+                fontSize="sm"
+                px={5}
+                py={2}
+                rounded="full"
+                color={i === 0 ? "#002045" : "#64748B"}
+                bg={i === 0 ? "white" : "transparent"}
+                boxShadow={i === 0 ? "sm" : "none"}
+                transition="all 0.2s"
+                _hover={{
+                  bg: i === 0 ? "white" : "rgba(255,255,255,0.8)",
+                  color: "#002045",
+                  textDecoration: "none",
+                }}
+              >
+                {link.label}
+              </ChakraLink>
+            ))}
+          </HStack>
+
+          {/* Trailing Action */}
+          <HStack gap={4}>
+            <HStack display={{ base: "none", lg: "flex" }} gap={2} mr={2}>
+              <Box
+                as="span"
+                className="material-symbols-outlined"
+                color="#002045"
+                fontSize="xl"
+              >
+                call
+              </Box>
+              <ChakraLink
+                href="tel:+998902302963"
+                fontWeight="medium"
+                fontSize="sm"
+                color="#002045"
+                _hover={{ color: "accentGold", textDecoration: "none" }}
+              >
+                +998 (90) 230-29-63
+              </ChakraLink>
+            </HStack>
+            <ChakraLink
+              href="#"
+              display={{ base: "none", md: "inline-flex" }}
+              alignItems="center"
+              justifyContent="center"
+              px={6}
+              py={2.5}
+              bg="#FFB800"
+              color="#002045"
+              fontWeight="bold"
+              fontSize="sm"
+              rounded="full"
+              transition="colors 0.2s"
+              boxShadow="premium"
+              _hover={{ bg: "accentGoldHover", textDecoration: "none" }}
+            >
+              Подать заявку
+            </ChakraLink>
+            <Flex
+              as="button"
+              aria-label="Открыть меню"
+              display={{ base: "flex", md: "none" }}
+              align="center"
+              justify="center"
+              w={10}
+              h={10}
+              color="#002045"
+              bg="rgba(255,255,255,0.8)"
+              rounded="full"
+              border="1px solid rgba(255,255,255,0.5)"
+              cursor="pointer"
+              transition="all 0.2s"
+              _hover={{ bg: "white" }}
+            >
+              <Box
+                as="span"
+                className="material-symbols-outlined"
+                fontSize="md"
+              >
+                menu
+              </Box>
+            </Flex>
+          </HStack>
+        </Flex>
+      </Box>
+    </>
   );
 }

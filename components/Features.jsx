@@ -7,7 +7,7 @@ export default function Features() {
     <Box
       as="section"
       id="features"
-      py={24}
+      py={10}
       px={{ base: 6, md: 12 }}
       maxW="7xl"
       mx="auto"

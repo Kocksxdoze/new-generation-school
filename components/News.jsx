@@ -16,7 +16,7 @@ export default function News() {
     <Box
       as="section"
       id="news"
-      py={24}
+      py={20}
       px={{ base: 6, md: 12 }}
       maxW="7xl"
       mx="auto"

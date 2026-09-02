@@ -17,23 +17,24 @@ export default function Hero() {
     <Box
       as="section"
       position="relative"
-      pt={32}
-      pb={24}
-      px={{ base: 6, md: 12 }}
-      maxW="7xl"
+      pt={{ base: 10, md: 24 }}
+      pb={10}
+      px={{ base: 4, md: 12 }}
+      maxW="6xl"
       mx="auto"
       minH="95vh"
       display="flex"
       flexDirection="column"
       justifyContent="center"
+      overflow="hidden" // Главное исправление: скрывает всё, что выходит за рамки экрана
     >
-      {/* Ambient Gradients */}
+      {/* Ambient Gradients с адаптивными размерами */}
       <Box
         position="absolute"
         top={0}
         right={0}
-        w="800px"
-        h="800px"
+        w={{ base: "400px", md: "800px" }}
+        h={{ base: "400px", md: "800px" }}
         bg="blue.50"
         rounded="full"
         filter="blur(120px)"
@@ -45,8 +46,8 @@ export default function Hero() {
         position="absolute"
         bottom={0}
         left={0}
-        w="600px"
-        h="600px"
+        w={{ base: "300px", md: "600px" }}
+        h={{ base: "300px", md: "600px" }}
         bg="rgba(255, 184, 0, 0.05)"
         rounded="full"
         filter="blur(100px)"
@@ -67,7 +68,7 @@ export default function Hero() {
               px={4}
               py={2}
               rounded="full"
-              bg="(255,255,255,0.8)"
+              bg="rgba(255,255,255,0.8)"
               border="1px solid rgba(255,255,255,0.5)"
               backdropFilter="blur(12px)"
               boxShadow="apple"
@@ -93,14 +94,14 @@ export default function Hero() {
             <Heading
               as="h1"
               fontFamily="heading"
-              fontSize={{ base: "5xl", md: "7xl" }}
+              fontSize={{ base: "4xl", sm: "5xl", md: "7xl" }}
               fontWeight="extrabold"
               color="#002045"
               lineHeight="1.05"
               letterSpacing="tight"
             >
               Перспективное <br />
-              <Box as="span" color={"#002045"} className="text-gradient">
+              <Box as="span" color="#002045" className="text-gradient">
                 будущее <br />
               </Box>
               <Box as="span" className="text-gradient">
@@ -109,7 +110,7 @@ export default function Hero() {
             </Heading>
 
             <Text
-              fontSize={{ base: "lg", md: "xl" }}
+              fontSize={{ base: "md", md: "xl" }}
               color="#64748B"
               lineHeight="relaxed"
               maxW="lg"
@@ -193,7 +194,7 @@ export default function Hero() {
         <GridItem
           colSpan={{ base: 1, lg: 7 }}
           position="relative"
-          h={{ base: "60vh", lg: "75vh" }}
+          h={{ base: "50vh", lg: "75vh" }}
           w="full"
           display="flex"
           alignItems="center"
@@ -229,14 +230,14 @@ export default function Hero() {
             />
           </Flex>
 
-          {/* Floating Stat Card */}
+          {/* Floating Stat Card с безопасным позиционированием для мобилок */}
           <Box
             className="glass-panel float-card"
             position="absolute"
-            top={12}
-            left="-6"
+            top={{ base: 4, md: 12 }}
+            left={{ base: 2, md: -6 }}
             zIndex={20}
-            p={5}
+            p={{ base: 3, md: 5 }}
             rounded="3xl"
             boxShadow="apple"
           >
@@ -261,7 +262,11 @@ export default function Hero() {
                 <Text fontSize="sm" color="#64748B" fontWeight="medium">
                   Подход
                 </Text>
-                <Text fontSize="xl" fontWeight="bold" color="#002045">
+                <Text
+                  fontSize={{ base: "md", md: "xl" }}
+                  fontWeight="bold"
+                  color="#002045"
+                >
                   Инновационный
                 </Text>
               </Box>

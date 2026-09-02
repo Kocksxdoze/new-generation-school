@@ -15,7 +15,7 @@ export default function AboutSection() {
     <Box
       as="section"
       id="about"
-      py={24}
+      py={10}
       position="relative"
       overflow="hidden"
       bg="white"

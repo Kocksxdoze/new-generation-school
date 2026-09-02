@@ -13,7 +13,7 @@ import { universities } from "../data/universities";
 
 export default function Universities() {
   return (
-    <Box as="section" py={24} bg="#111827" color="white" position="relative">
+    <Box as="section" py={10} bg="#111827" color="white" position="relative">
       <Box maxW="7xl" mx="auto" px={{ base: 6, md: 12 }}>
         <Box textAlign="center" mb={16}>
           <HStack
