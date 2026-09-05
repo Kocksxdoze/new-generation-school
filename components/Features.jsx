@@ -117,32 +117,21 @@ export default function Features({
               }}
             >
               <VStack align="flex-start" spacing={5} w="full">
-                {/* Header Row in Card */}
-                <Flex justify="space-between" align="center" w="full">
-                  <Flex
-                    w={14}
-                    h={14}
-                    rounded="2xl"
-                    bg="#002045"
-                    align="center"
-                    justify="center"
-                    boxShadow="0 8px 16px -4px rgba(0, 32, 69, 0.25)"
-                    transition="transform 0.3s"
-                    _groupHover={{ transform: "scale(1.05)" }}
-                  >
-                    <Box as="span" className="material-symbols-outlined" color="#FFB800" fontSize="2xl">
-                      {item.icon}
-                    </Box>
-                  </Flex>
-                  <Text 
-                    fontSize="sm" 
-                    fontWeight="800" 
-                    color="#D4AF37" 
-                    letterSpacing="wider"
-                    opacity={0.8}
-                  >
-                    0{idx + 1}
-                  </Text>
+                {/* Icon in Card */}
+                <Flex
+                  w={14}
+                  h={14}
+                  rounded="2xl"
+                  bg="#002045"
+                  align="center"
+                  justify="center"
+                  boxShadow="0 8px 16px -4px rgba(0, 32, 69, 0.25)"
+                  transition="transform 0.3s"
+                  _groupHover={{ transform: "scale(1.05)" }}
+                >
+                  <Box as="span" className="material-symbols-outlined" color="#FFB800" fontSize="2xl">
+                    {item.icon}
+                  </Box>
                 </Flex>
 
                 <Box>
