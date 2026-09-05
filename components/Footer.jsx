@@ -250,15 +250,15 @@ export default function Footer() {
                   </Box>
                 </Flex>
                 <Box>
-                  <ChakraLink
-                    href="tel:+998902302963"
+                  <Text
                     display="block"
-                    color="rgba(219,234,254,0.8)"
+                    color="rgba(219,234,254,0.9)"
                     fontSize="sm"
-                    _hover={{ color: "white", textDecoration: "none" }}
+                    fontWeight="medium"
+                    userSelect="all"
                   >
                     +998 (90) 230-29-63
-                  </ChakraLink>
+                  </Text>
                   <Text fontSize="xs" color="rgba(191,219,254,0.5)" mt={1}>
                     Пн-Пт: 08:00-17:00, Сб: 08:00-14:00
                   </Text>
@@ -278,19 +278,18 @@ export default function Footer() {
                     as="span"
                     className="material-symbols-outlined"
                     fontSize="sm"
-                    color="#fdbb31"
+                    color="#FFB800"
                   >
                     mail
                   </Box>
                 </Flex>
-                <ChakraLink
-                  href="mailto:new_generation_school@mail.ru"
-                  color="rgba(219,234,254,0.8)"
+                <Text
+                  color="rgba(219,234,254,0.9)"
                   fontSize="sm"
-                  _hover={{ color: "white", textDecoration: "none" }}
+                  userSelect="all"
                 >
                   new_generation_school@mail.ru
-                </ChakraLink>
+                </Text>
               </Flex>
             </VStack>
           </GridItem>

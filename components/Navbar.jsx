@@ -142,15 +142,14 @@ export default function Navbar() {
               >
                 call
               </Box>
-              <ChakraLink
-                href="tel:+998902302963"
-                fontWeight="medium"
+              <Text
+                fontWeight="semibold"
                 fontSize="sm"
                 color="#002045"
-                _hover={{ color: "accentGold", textDecoration: "none" }}
+                userSelect="all"
               >
                 +998 (90) 230-29-63
-              </ChakraLink>
+              </Text>
             </HStack>
             <ChakraLink
               as={Link}
@@ -229,20 +228,19 @@ export default function Navbar() {
                 </ChakraLink>
               ))}
               <Box pt={4} borderTop="1px solid" borderColor="gray.100">
-                <ChakraLink
-                  href="tel:+998902302963"
-                  display="flex"
+                <Flex
                   alignItems="center"
                   gap={2}
                   color="#002045"
                   fontWeight="bold"
                   mb={4}
+                  userSelect="all"
                 >
                   <Box as="span" className="material-symbols-outlined" fontSize="sm">
                     call
                   </Box>
-                  +998 (90) 230-29-63
-                </ChakraLink>
+                  <Text>+998 (90) 230-29-63</Text>
+                </Flex>
                 <ChakraLink
                   as={Link}
                   href="/apply"

@@ -247,11 +247,10 @@ export default function AdminApplicationsPage() {
                         {app.fullName}
                       </Text>
                       <Text
-                        as="a"
-                        href={`tel:${app.phone}`}
-                        color="blue.600"
+                        color="#002045"
                         fontSize="xs"
-                        _hover={{ textDecoration: "underline" }}
+                        fontWeight="medium"
+                        userSelect="all"
                       >
                         {app.phone}
                       </Text>
@@ -367,55 +366,63 @@ export default function AdminApplicationsPage() {
                 {getStatusBadge(selectedApp.status)}
               </Flex>
 
-              <Box p={4} bg="gray.50" rounded="xl">
-                <Text fontSize="xs" color="gray.400">Родитель</Text>
-                <Heading size="sm" color="#002045" mb={1}>{selectedApp.fullName}</Heading>
-                <Text as="a" href={`tel:${selectedApp.phone}`} color="blue.600" fontWeight="bold">
-                  📞 {selectedApp.phone}
-                </Text>
-                {selectedApp.email && (
-                  <Text fontSize="sm" color="gray.600">✉️ {selectedApp.email}</Text>
-                )}
-              </Box>
-
-              <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
-                  <Text fontSize="xs" color="gray.400">Цель обращения</Text>
-                  <Text fontWeight="bold" fontSize="sm">{getTypeLabel(selectedApp.type)}</Text>
+                <Box p={4} bg="gray.50" rounded="xl">
+                  <Text fontSize="xs" color="gray.400">Родитель</Text>
+                  <Heading size="sm" color="#002045" mb={1}>{selectedApp.fullName}</Heading>
+                  <Text color="#002045" fontWeight="bold" userSelect="all">
+                    📞 {selectedApp.phone}
+                  </Text>
+                  {selectedApp.email && (
+                    <Text fontSize="sm" color="gray.600" userSelect="all">✉️ {selectedApp.email}</Text>
+                  )}
                 </Box>
-                <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
-                  <Text fontSize="xs" color="gray.400">Класс ребенка</Text>
-                  <Text fontWeight="bold" fontSize="sm">{selectedApp.childGrade || "Не указан"}</Text>
+
+                <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                  <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
+                    <Text fontSize="xs" color="gray.400">Цель обращения</Text>
+                    <Text fontWeight="bold" fontSize="sm">{getTypeLabel(selectedApp.type)}</Text>
+                  </Box>
+                  <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
+                    <Text fontSize="xs" color="gray.400">Класс ребенка</Text>
+                    <Text fontWeight="bold" fontSize="sm">{selectedApp.childGrade || "Не указан"}</Text>
+                  </Box>
+                </Grid>
+
+                <Box>
+                  <Text fontSize="xs" color="gray.400" mb={1}>Сообщение / Комментарий</Text>
+                  <Box p={4} bg="gray.50" rounded="xl" fontSize="sm" color="gray.700" whiteSpace="pre-wrap">
+                    {selectedApp.message || "Клиент не оставил дополнительного комментария."}
+                  </Box>
                 </Box>
-              </Grid>
 
-              <Box>
-                <Text fontSize="xs" color="gray.400" mb={1}>Сообщение / Комментарий</Text>
-                <Box p={4} bg="gray.50" rounded="xl" fontSize="sm" color="gray.700" whiteSpace="pre-wrap">
-                  {selectedApp.message || "Клиент не оставил дополнительного комментария."}
-                </Box>
-              </Box>
+                <Flex justify="space-between" align="center" pt={4} borderTop="1px solid" borderColor="gray.100">
+                  <Select
+                    size="sm"
+                    w="160px"
+                    value={selectedApp.status}
+                    onChange={(e) => {
+                      handleStatusChange(selectedApp.id, e.target.value);
+                      setSelectedApp({ ...selectedApp, status: e.target.value });
+                    }}
+                  >
+                    <option value="NEW">Новая</option>
+                    <option value="CONTACTED">В обработке</option>
+                    <option value="RESOLVED">Завершена</option>
+                    <option value="ARCHIVED">В архиве</option>
+                  </Select>
 
-              <Flex justify="space-between" align="center" pt={4} borderTop="1px solid" borderColor="gray.100">
-                <Select
-                  size="sm"
-                  w="160px"
-                  value={selectedApp.status}
-                  onChange={(e) => {
-                    handleStatusChange(selectedApp.id, e.target.value);
-                    setSelectedApp({ ...selectedApp, status: e.target.value });
-                  }}
-                >
-                  <option value="NEW">Новая</option>
-                  <option value="CONTACTED">В обработке</option>
-                  <option value="RESOLVED">Завершена</option>
-                  <option value="ARCHIVED">В архиве</option>
-                </Select>
-
-                <Button as="a" href={`tel:${selectedApp.phone}`} colorScheme="green" size="sm">
-                  Позвонить
-                </Button>
-              </Flex>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(selectedApp.phone);
+                      setNotice(`Номер ${selectedApp.phone} скопирован в буфер обмена`);
+                      setTimeout(() => setNotice(""), 3000);
+                    }}
+                  >
+                    Скопировать номер
+                  </Button>
+                </Flex>
             </VStack>
           </Box>
         </Box>

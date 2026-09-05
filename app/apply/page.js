@@ -429,11 +429,9 @@ export default function ApplyPage() {
                     <Box>
                       <Text fontSize="xs" color="gray.500">Приемная комиссия</Text>
                       <Text
-                        as="a"
-                        href="tel:+998902302963"
                         fontWeight="bold"
                         color="#002045"
-                        _hover={{ color: "#D4AF37" }}
+                        userSelect="all"
                       >
                         +998 (90) 230-29-63
                       </Text>

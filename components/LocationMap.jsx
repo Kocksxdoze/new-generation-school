@@ -48,12 +48,12 @@ export default function LocationMap() {
       >
         <Box
           as="iframe"
-          src="https://yandex.uz/map-widget/v1/?ll=71.773084%2C40.370058&z=17&pt=71.773084,40.370058,pm2rdm"
+          src="https://yandex.uz/map-widget/v1/?ll=71.773084%2C40.370058&mode=poi&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D72235911510&z=18"
           w="100%"
           h="100%"
           border={0}
           frameBorder="0"
-          allowFullScreen={false}
+          allowFullScreen
           loading="lazy"
           title="Расположение New Generation School"
         />
