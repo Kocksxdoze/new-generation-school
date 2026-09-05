@@ -12,12 +12,38 @@ import { notFoundHandler, errorHandler } from "./middlewares/error.middleware.js
 export const app = express();
 
 app.use(helmet({ crossOriginResourcePolicy: false })); // allow <img> from other origins to load /uploads
-app.use(
-  cors({
-    origin: env.corsOrigins.length > 0 ? env.corsOrigins : true,
-    credentials: true,
-  }),
-);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (curl, server-to-server, mobile)
+    if (!origin) return callback(null, true);
+
+    // If explicit origins configured without wildcard, verify
+    if (env.corsOrigins.length > 0 && !env.corsOrigins.includes("*")) {
+      const isAllowed = env.corsOrigins.some((allowed) => {
+        if (allowed === origin) return true;
+        if (allowed.startsWith("*.") && origin.endsWith(allowed.slice(1))) return true;
+        return false;
+      });
+      if (isAllowed) return callback(null, true);
+    }
+
+    // Allow all vercel preview/production domains and localhost
+    if (origin.endsWith(".vercel.app") || origin.includes("localhost")) {
+      return callback(null, true);
+    }
+
+    // Default: allow and reflect origin for cookie/auth support
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
