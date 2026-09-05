@@ -43,12 +43,13 @@ export default function Hero({
     <Box
       as="section"
       position="relative"
-      h="100vh"
-      minH="600px"
+      minH="100vh"
       w="100%"
       overflow="hidden"
       display="flex"
       alignItems="center"
+      pt={{ base: "120px", md: "100px" }}
+      pb={{ base: 12, md: 16 }}
     >
       {/* Background Media */}
       <Box position="absolute" inset={0} zIndex={0} bg="gray.900">
@@ -85,27 +86,7 @@ export default function Hero({
       >
         <Grid templateColumns={{ base: "1fr", lg: "repeat(12, 1fr)" }} gap={8}>
           <GridItem colSpan={{ base: 1, lg: 8 }}>
-            <VStack align="start" spacing={6} maxW="2xl">
-              <Box
-                px={5}
-                py={2}
-                bg="rgba(255, 255, 255, 0.15)"
-                backdropFilter="blur(10px)"
-                rounded="full"
-                border="1px solid"
-                borderColor="rgba(255, 255, 255, 0.3)"
-              >
-                <Text
-                  fontSize="sm"
-                  fontWeight="bold"
-                  color="#ffb800"
-                  textTransform="uppercase"
-                  letterSpacing="wider"
-                >
-                  {badgeText}
-                </Text>
-              </Box>
-
+            <VStack align="start" spacing={5} maxW="2xl">
               <Heading
                 as="h1"
                 fontSize={{ base: "32px", sm: "44px", md: "5xl", lg: "68px" }}
@@ -115,6 +96,32 @@ export default function Hero({
                 letterSpacing="tight"
                 dangerouslySetInnerHTML={{ __html: titleHtml }}
               />
+
+              {/* School Brand Accent Tag */}
+              <Flex
+                align="center"
+                gap={2}
+                px={4}
+                py={1.5}
+                bg="rgba(255, 255, 255, 0.12)"
+                backdropFilter="blur(10px)"
+                rounded="full"
+                border="1px solid rgba(255, 255, 255, 0.25)"
+                w="fit-content"
+              >
+                <Box as="span" className="material-symbols-outlined" color="#ffb800" fontSize="16px">
+                  location_on
+                </Box>
+                <Text
+                  fontSize={{ base: "xs", sm: "sm" }}
+                  fontWeight="bold"
+                  color="#ffb800"
+                  textTransform="uppercase"
+                  letterSpacing="wider"
+                >
+                  {badgeText}
+                </Text>
+              </Flex>
 
               <Text
                 fontSize={{ base: "md", sm: "lg", md: "2xl" }}

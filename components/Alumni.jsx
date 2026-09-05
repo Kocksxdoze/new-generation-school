@@ -253,24 +253,11 @@ export default function Alumni({
               zIndex={0}
             />
 
-            {/* Top Bar: Header pill + Navigation */}
-            <Flex justify="space-between" align="center" w="full" position="relative" zIndex={1} mb={4}>
-              <Flex 
-                align="center" 
-                gap={2} 
-                bg="rgba(255, 184, 0, 0.12)" 
-                px={3.5} 
-                py={1.5} 
-                rounded="full" 
-                border="1px solid rgba(255, 184, 0, 0.3)"
-              >
-                <Box as="span" className="material-symbols-outlined" color="#FFB800" fontSize="sm">
-                  auto_awesome
-                </Box>
-                <Text fontSize="xs" fontWeight="bold" color="#FFB800" letterSpacing="wider">
-                  ИСТОРИЯ ВЫПУСКНИКА
-                </Text>
-              </Flex>
+            {/* Top Bar: Quote Icon + Navigation */}
+            <Flex justify="space-between" align="center" w="full" position="relative" zIndex={1} mb={2}>
+              <Box as="span" className="material-symbols-outlined" color="#FFB800" fontSize={{ base: "3xl", md: "4xl" }} lineHeight="1">
+                format_quote
+              </Box>
 
               {reviews.length > 1 && (
                 <Flex align="center" gap={2}>
@@ -339,10 +326,7 @@ export default function Alumni({
                   return (
                     <Box key={idx} flex="0 0 100%" maxW="100%" minW="0" px={1} h="full" display="flex" flexDirection="column" justifyContent="space-between">
                       {/* Quote Box */}
-                      <Box flex={1} display="flex" flexDirection="column" justifyContent="center" py={3}>
-                        <Box as="span" className="material-symbols-outlined" color="#FFB800" fontSize={{ base: "3xl", md: "4xl" }} mb={2}>
-                          format_quote
-                        </Box>
+                      <Box flex={1} display="flex" flexDirection="column" justifyContent="center" py={2}>
                         <Text 
                           fontSize={{ base: "sm", sm: "md", md: "1.05rem" }} 
                           lineHeight="tall" 
