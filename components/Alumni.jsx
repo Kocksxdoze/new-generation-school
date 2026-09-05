@@ -136,7 +136,7 @@ export default function Alumni({
             >
               {reviews.map((review, idx) => {
                 const finalImg = review.imageUrl 
-                  ? (review.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "http://localhost:4000") + review.imageUrl : review.imageUrl)
+                  ? (review.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + review.imageUrl : review.imageUrl)
                   : "/bg.png";
                   
                 return (

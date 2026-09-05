@@ -25,7 +25,7 @@ const ComponentMap = {
 };
 
 async function getHomePageData() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://new-generation-school.onrender.com/api';
   try {
     const res = await fetch(`${API_URL}/site/home`, { 
       cache: 'no-store'

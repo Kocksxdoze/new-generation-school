@@ -27,7 +27,7 @@ export default function SingleNewsPage() {
       if (!params?.id) return;
       setLoading(true);
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://new-generation-school.onrender.com/api";
         const res = await fetch(`${apiUrl}/news/${params.id}`);
         if (res.ok) {
           const json = await res.json();
@@ -59,7 +59,7 @@ export default function SingleNewsPage() {
     ? (article.coverImage.startsWith("/")
         ? (process.env.NEXT_PUBLIC_API_URL
             ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
-            : "http://localhost:4000") + article.coverImage
+            : "https://new-generation-school.onrender.com") + article.coverImage
         : article.coverImage)
     : "/bg.png";
 

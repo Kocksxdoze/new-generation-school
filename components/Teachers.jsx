@@ -67,7 +67,7 @@ export default function Teachers({
       >
         {items.map((item, idx) => {
           const finalImageUrl = item.imageUrl 
-            ? (item.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "http://localhost:4000") + item.imageUrl : item.imageUrl)
+            ? (item.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + item.imageUrl : item.imageUrl)
             : "/bg.png";
 
           return (

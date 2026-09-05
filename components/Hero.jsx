@@ -35,7 +35,7 @@ export default function Hero({
       : imageUrl.startsWith("/")
         ? (process.env.NEXT_PUBLIC_API_URL
             ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
-            : "http://localhost:4000") + imageUrl
+            : "https://new-generation-school.onrender.com") + imageUrl
         : imageUrl
     : "/bg.png";
 

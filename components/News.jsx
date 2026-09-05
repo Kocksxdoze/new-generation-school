@@ -16,7 +16,7 @@ export default function News({
   useEffect(() => {
     async function fetchNews() {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://new-generation-school.onrender.com/api';
         const res = await fetch(`${apiUrl}/news?pageSize=${limit}&page=1`);
         if (res.ok) {
           const json = await res.json();
@@ -69,7 +69,7 @@ export default function News({
         ) : (
           newsList.map((item, idx) => {
             const finalImageUrl = item.coverImage 
-              ? (item.coverImage.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "http://localhost:4000") + item.coverImage : item.coverImage)
+              ? (item.coverImage.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + item.coverImage : item.coverImage)
               : "/bg.png";
             
             const [day, month] = formatDateParts(item.date || item.createdAt);
