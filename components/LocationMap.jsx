@@ -58,11 +58,11 @@ export default function LocationMap() {
           _groupHover={{ filter: "grayscale(0)" }}
         />
         <Box
+          display={{ base: "none", md: "block" }}
           position="absolute"
           bottom={8}
           left={8}
-          right={{ base: 8, md: "auto" }}
-          w={{ md: 96 }}
+          w={96}
           className="glass-panel"
           p={6}
           rounded="3xl"
@@ -117,6 +117,47 @@ export default function LocationMap() {
             </Box>
           </Flex>
         </Box>
+      </Box>
+
+      {/* Mobile-only Address Info Card below map */}
+      <Box
+        display={{ base: "block", md: "none" }}
+        mt={4}
+        p={5}
+        bg="white"
+        rounded="2xl"
+        border="1px solid"
+        borderColor="gray.100"
+        boxShadow="sm"
+      >
+        <Flex align="center" gap={3}>
+          <Flex
+            w={10}
+            h={10}
+            rounded="xl"
+            bg="#002045"
+            align="center"
+            justify="center"
+            flexShrink={0}
+          >
+            <Box
+              as="span"
+              className="material-symbols-outlined"
+              color="#fdbb31"
+              fontSize="sm"
+            >
+              location_on
+            </Box>
+          </Flex>
+          <Box>
+            <Text fontWeight="bold" fontSize="sm" color="#002045">
+              New Generation School · Фергана
+            </Text>
+            <Text fontSize="xs" color="#64748B">
+              ул. Мустакиллик, 228
+            </Text>
+          </Box>
+        </Flex>
       </Box>
     </Box>
   );

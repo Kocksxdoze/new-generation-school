@@ -1,15 +1,45 @@
 "use client";
 
 import { Box, Grid, Heading, Text, Flex } from "@chakra-ui/react";
-import { testimonials } from "../data/testimonials";
 
-export default function Testimonials() {
+export default function Testimonials({
+  subtitle = "Отзывы",
+  titleHtml = "Слова родителей <br />\n<span style=\"font-size: 1.875rem; font-weight: 500; color: #64748B;\">ключ к счастливым детям.</span>",
+  items = [
+    {
+      name: "Марина К.",
+      role: "Мама ученика 5 класса",
+      text: "Мы искали школу, где ребенок будет не только получать знания, но и с радостью идти на уроки. NGS превзошла все ожидания!",
+      variant: "light",
+      avatarLetter: "М",
+      avatarBg: "blue.50",
+      avatarColor: "blue.600"
+    },
+    {
+      name: "Рустам А.",
+      role: "Папа выпускницы",
+      text: "Благодаря сильной подготовке дочь поступила в топовый вуз на грант. Огромное спасибо всему преподавательскому составу.",
+      variant: "dark",
+      avatarLetter: "Р",
+      avatarBg: "#fdbb31",
+      avatarColor: "black"
+    },
+    {
+      name: "Дильдора У.",
+      role: "Мама ученицы 2 класса",
+      text: "Очень нравится современный подход и то, как преподаватели общаются с детьми. Ребенок стал более открытым и самостоятельным.",
+      variant: "light",
+      avatarLetter: "Д",
+      avatarBg: "green.50",
+      avatarColor: "green.600"
+    }
+  ]
+}) {
   return (
     <Box
       as="section"
       id="testimonials"
       py={20}
-      bg="surfaceLight"
       position="relative"
     >
       <Box maxW="7xl" mx="auto" px={{ base: 6, md: 12 }}>
@@ -31,34 +61,30 @@ export default function Testimonials() {
               fontSize="sm"
               mb={2}
             >
-              Отзывы
+              {subtitle}
             </Text>
             <Heading
               as="h2"
               fontFamily="heading"
               fontSize={{ base: "4xl", md: "5xl" }}
               fontWeight="bold"
-              color="primaryNavy"
+              color="#002045"
               lineHeight={"1.1"}
-            >
-              Слова родителей <br />
-              <Box as="span" fontSize="3xl" fontWeight="medium" color="#64748B">
-                ключ к счастливым детям.
-              </Box>
-            </Heading>
+              dangerouslySetInnerHTML={{ __html: titleHtml }}
+            />
           </Box>
         </Flex>
 
         <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6}>
-          {testimonials.map((t) =>
+          {items.map((t, idx) =>
             t.variant === "dark" ? (
               <Box
-                key={t.name}
+                key={idx}
                 bg="#002045"
                 color="white"
-                rounded="2rem"
+                rounded="2xl"
                 p={8}
-                boxShadow="premium"
+                boxShadow="xl"
                 position="relative"
                 transform={{ md: "translateY(-1rem)" }}
               >
@@ -95,15 +121,14 @@ export default function Testimonials() {
                       rounded="full"
                       align="center"
                       justify="center"
-                      color={"black"}
-                      bg={"#fdbb31"}
+                      color={t.avatarColor || "black"}
+                      bg={t.avatarBg || "#fdbb31"}
                       fontWeight="bold"
-                      fontFamily="heading"
                     >
-                      {t.avatarLetter}
+                      {t.avatarLetter || t.name.charAt(0)}
                     </Flex>
                     <Box>
-                      <Text as="h6" fontWeight="bold" color="white">
+                      <Text as="h6" fontWeight="bold" color="white" fontSize="sm">
                         {t.name}
                       </Text>
                       <Text fontSize="xs" color="blue.200">
@@ -115,8 +140,11 @@ export default function Testimonials() {
               </Box>
             ) : (
               <Box
-                key={t.name}
-                className="apple-card"
+                key={idx}
+                bg="white"
+                rounded="2xl"
+                border="1px solid"
+                borderColor="gray.100"
                 p={8}
                 position="relative"
               >
@@ -145,17 +173,16 @@ export default function Testimonials() {
                       w={12}
                       h={12}
                       rounded="full"
-                      bg={t.avatarBg}
+                      bg={t.avatarBg || "blue.50"}
                       align="center"
                       justify="center"
-                      color={t.avatarColor}
+                      color={t.avatarColor || "blue.600"}
                       fontWeight="bold"
-                      fontFamily="heading"
                     >
-                      {t.avatarLetter}
+                      {t.avatarLetter || t.name.charAt(0)}
                     </Flex>
                     <Box>
-                      <Text as="h6" fontWeight="bold" color="primaryNavy">
+                      <Text as="h6" fontWeight="bold" color="#002045" fontSize="sm">
                         {t.name}
                       </Text>
                       <Text fontSize="xs" color="#64748B">
@@ -165,7 +192,7 @@ export default function Testimonials() {
                   </Flex>
                 </Box>
               </Box>
-            ),
+            )
           )}
         </Grid>
       </Box>

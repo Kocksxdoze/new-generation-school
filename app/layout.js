@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-[#FDFBF7]">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

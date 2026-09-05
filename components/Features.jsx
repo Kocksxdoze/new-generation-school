@@ -1,288 +1,181 @@
 "use client";
 
-import { Box, Grid, GridItem, Heading, Text, Flex } from "@chakra-ui/react";
+import { Box, Grid, GridItem, Heading, Text, Flex, VStack } from "@chakra-ui/react";
 
-export default function Features() {
+export default function Features({
+  subtitle = "Почему выбирают нас",
+  title = "Сильная академическая база и забота",
+  description = "Мы помогаем ученикам развивать академические знания, критическое мышление, творчество и самостоятельность.",
+  items = [
+    {
+      title: "Сильная академическая база",
+      text: "Глубокое изучение предметов, подготовка к олимпиадам и международным экзаменам.",
+      icon: "workspace_premium",
+    },
+    {
+      title: "Современная среда",
+      text: "Интерактивные классы, цифровые ресурсы и технологии, которые делают обучение эффективным.",
+      icon: "architecture",
+    },
+    {
+      title: "Развитие личности",
+      text: "Проектная работа, творчество, спорт и лидерские программы для всестороннего развития.",
+      icon: "extension",
+    },
+    {
+      title: "Безопасность и забота",
+      text: "Безопасная среда, внимательное отношение и поддержка каждого ребенка.",
+      icon: "verified_user",
+    },
+  ]
+}) {
   return (
-    <Box
-      as="section"
-      id="features"
-      py={10}
-      px={{ base: 6, md: 12 }}
-      maxW="7xl"
-      mx="auto"
-    >
-      <Box textAlign="center" mb={16}>
-        <Text
-          as="span"
-          display="block"
-          color="#ffb800"
-          fontWeight="bold"
-          letterSpacing="wider"
-          textTransform="uppercase"
-          fontSize="sm"
-          mb={2}
+    <Box as="section" id="features" py={{ base: 14, md: 20 }} px={{ base: 4, sm: 6, md: 12 }} maxW="7xl" mx="auto" position="relative">
+      <Box id="about" position="absolute" top="-100px" />
+      
+      {/* Section Header */}
+      <Box textAlign={{ base: "left", md: "center" }} mb={{ base: 10, md: 16 }} maxW="3xl" mx="auto">
+        <Flex 
+          display="inline-flex" 
+          align="center" 
+          gap={2} 
+          px={4} 
+          py={1.5} 
+          rounded="full" 
+          bg="rgba(255, 184, 0, 0.12)" 
+          border="1px solid rgba(255, 184, 0, 0.25)"
+          mb={4}
         >
-          Почему мы
-        </Text>
-        <Heading
-          as="h2"
-          fontFamily="heading"
-          fontSize={{ base: "4xl", md: "5xl" }}
-          fontWeight="bold"
-          color="#002045"
+          <Box as="span" className="material-symbols-outlined" color="#D4AF37" fontSize="sm">
+            star
+          </Box>
+          <Text 
+            as="span" 
+            color="#002045" 
+            fontWeight="bold" 
+            fontSize="xs" 
+            letterSpacing="wider" 
+            textTransform="uppercase"
+          >
+            {subtitle || "Почему New Generation"}
+          </Text>
+        </Flex>
+
+        <Heading 
+          as="h2" 
+          fontSize={{ base: "2xl", sm: "3xl", md: "4xl", lg: "5xl" }} 
+          fontWeight="800" 
+          color="#002045" 
+          lineHeight="1.15"
+          letterSpacing="tight"
+          mb={4}
         >
-          Добро пожаловать в New Generation
+          {title || "Школа, где образование работает на будущее"}
         </Heading>
-        <Text color="#64748B" mt={4} maxW="2xl" mx="auto" fontSize="lg">
-          Школа, где обучение встречается с инновациями и комфортом
+
+        <Text 
+          color="#64748B" 
+          fontSize={{ base: "sm", sm: "md", md: "lg" }} 
+          lineHeight="relaxed"
+          maxW="2xl"
+          mx="auto"
+        >
+          {description || "Мы помогаем ученикам развивать академические знания, критическое мышление, творчество и самостоятельность в безопасной и вдохновляющей среде."}
         </Text>
       </Box>
 
+      {/* Features Grid */}
       <Grid
         templateColumns={{
           base: "1fr",
-          md: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
+          sm: "repeat(2, 1fr)",
+          lg: "repeat(4, 1fr)",
         }}
-        gap={6}
-        sx={{ gridAutoRows: "280px" }}
+        gap={{ base: 5, md: 6 }}
       >
-        {/* Block 1 */}
-        <GridItem
-          colSpan={{ base: 1, lg: 2 }}
-          className="apple-card bento-card"
-          p={10}
-          position="relative"
-          overflow="hidden"
-          role="group"
-        >
-          <Box
-            position="absolute"
-            right={0}
-            bottom={0}
-            w={64}
-            h={64}
-            bg="blue.50"
-            rounded="full"
-            filter="blur(64px)"
-            transition="colors 0.2s"
-            _groupHover={{ bg: "blue.100" }}
-            opacity={0.6}
-          />
-          <Flex
-            position="relative"
-            zIndex={10}
-            h="full"
-            direction="column"
-            justify="space-between"
-          >
-            <Flex
-              w={14}
-              h={14}
-              rounded="2xl"
-              bg="#002045"
-              align="center"
-              justify="center"
-            >
-              <Box
-                as="span"
-                className="material-symbols-outlined"
-                color="#ffb800"
-                fontSize="4xl"
-              >
-                workspace_premium
-              </Box>
-            </Flex>
-            <Box>
-              <Heading
-                as="h3"
-                fontFamily="heading"
-                fontSize="3xl"
-                fontWeight="bold"
-                color="primaryNavy"
-                mb={3}
-              >
-                Высокие результаты
-              </Heading>
-              <Text color="#64748B" fontSize="lg" maxW="md">
-                Наши ученики достигают больших результатов благодаря
-                современному подходу к образованию и индивидуальному вниманию.
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
-
-        {/* Block 2 */}
-        <GridItem
-          className="apple-card bento-card"
-          p={10}
-          position="relative"
-          overflow="hidden"
-          role="group"
-        >
-          <Box position="absolute" inset={0} className="bg-pattern" />
-          <Flex
-            position="relative"
-            zIndex={10}
-            h="full"
-            direction="column"
-            justify="space-between"
-          >
-            <Flex
-              w={14}
-              h={14}
-              rounded="2xl"
-              bg="blue.50"
-              align="center"
-              justify="center"
-            >
-              <Box
-                as="span"
-                className="material-symbols-outlined"
-                color="blue.500"
-                fontSize="3xl"
-              >
-                menu_book
-              </Box>
-            </Flex>
-            <Box>
-              <Heading
-                as="h3"
-                fontFamily="heading"
-                fontSize="2xl"
-                fontWeight="bold"
-                color="primaryNavy"
-                mb={2}
-              >
-                Обучение
-              </Heading>
-              <Text color="#64748B">
-                Современная методика, адаптированная под потребности.
-              </Text>
-            </Box>
-          </Flex>
-        </GridItem>
-
-        {/* Block 3 */}
-        <GridItem
-          className="apple-card bento-card"
-          p={10}
-          h="full"
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-        >
-          <Flex
-            w={14}
-            h={14}
-            rounded="2xl"
-            bg="#FFFbeb"
-            align="center"
-            justify="center"
-          >
+        {items.map((item, idx) => (
+          <GridItem key={idx}>
             <Box
-              as="span"
-              className="material-symbols-outlined"
-              color="#ffb800"
-              fontSize="3xl"
-            >
-              architecture
-            </Box>
-          </Flex>
-          <Box>
-            <Heading
-              as="h3"
-              fontFamily="heading"
-              fontSize="2xl"
-              fontWeight="bold"
-              color="primaryNavy"
-              mb={2}
-            >
-              Среда
-            </Heading>
-            <Text color="#64748B">
-              Светлые классы и безопасное пространство для развития.
-            </Text>
-          </Box>
-        </GridItem>
-
-        {/* Block 4 */}
-        <GridItem
-          colSpan={{ base: 1, lg: 2 }}
-          className="bento-card"
-          bg="#002045"
-          color="white"
-          rounded="2rem"
-          p={10}
-          position="relative"
-          overflow="hidden"
-          display="flex"
-          alignItems="center"
-          boxShadow="premium"
-        >
-          <Box position="relative" zIndex={10} flex={1}>
-            <Flex
-              w={14}
-              h={14}
-              rounded="2xl"
-              bg="rgba(255,255,255,0.1)"
-              align="center"
-              justify="center"
-              mb={6}
-              backdropFilter="blur(8px)"
-            >
-              <Box
-                as="span"
-                className="material-symbols-outlined"
-                color="white"
-                fontSize="3xl"
-              >
-                extension
-              </Box>
-            </Flex>
-            <Heading
-              as="h3"
-              fontFamily="heading"
-              fontSize="3xl"
-              fontWeight="bold"
-              mb={3}
-            >
-              Всестороннее развитие
-            </Heading>
-            <Text color="rgba(219,234,254,0.8)" fontSize="lg" maxW="sm">
-              Широкий выбор дополнительных программ для раскрытия полного
-              потенциала вашего ребенка.
-            </Text>
-          </Box>
-          {/* Decorative shapes */}
-          <Box
-            display={{ base: "none", sm: "block" }}
-            position="absolute"
-            right={10}
-            top="50%"
-            transform="translateY(-50%)"
-            w={48}
-            h={48}
-          >
-            <Box
-              position="absolute"
-              inset={0}
-              bg="rgba(59,130,246,0.2)"
-              rounded="full"
-              filter="blur(24px)"
-            />
-            <Box
-              className="spin-slow"
-              position="relative"
-              w="full"
+              bg="rgba(255, 255, 255, 0.85)"
+              backdropFilter="blur(20px)"
+              p={{ base: 6, md: 8 }}
+              rounded="3xl"
+              boxShadow="0 4px 20px -2px rgba(0, 32, 69, 0.05)"
+              border="1px solid rgba(0, 32, 69, 0.08)"
               h="full"
-              border="4px dashed"
-              borderColor="rgba(255,255,255,0.2)"
-              rounded="full"
-            />
-          </Box>
-        </GridItem>
+              display="flex"
+              flexDirection="column"
+              justifyContent="space-between"
+              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+              position="relative"
+              role="group"
+              _hover={{ 
+                boxShadow: "0 20px 35px -10px rgba(0, 32, 69, 0.12)", 
+                transform: "translateY(-6px)",
+                borderColor: "rgba(255, 184, 0, 0.4)",
+                bg: "white"
+              }}
+            >
+              <VStack align="flex-start" spacing={5} w="full">
+                {/* Header Row in Card */}
+                <Flex justify="space-between" align="center" w="full">
+                  <Flex
+                    w={14}
+                    h={14}
+                    rounded="2xl"
+                    bg="#002045"
+                    align="center"
+                    justify="center"
+                    boxShadow="0 8px 16px -4px rgba(0, 32, 69, 0.25)"
+                    transition="transform 0.3s"
+                    _groupHover={{ transform: "scale(1.05)" }}
+                  >
+                    <Box as="span" className="material-symbols-outlined" color="#FFB800" fontSize="2xl">
+                      {item.icon}
+                    </Box>
+                  </Flex>
+                  <Text 
+                    fontSize="sm" 
+                    fontWeight="800" 
+                    color="#D4AF37" 
+                    letterSpacing="wider"
+                    opacity={0.8}
+                  >
+                    0{idx + 1}
+                  </Text>
+                </Flex>
+
+                <Box>
+                  <Heading 
+                    as="h3" 
+                    fontSize={{ base: "lg", md: "xl" }} 
+                    fontWeight="bold" 
+                    color="#002045" 
+                    mb={2.5}
+                    lineHeight="1.3"
+                  >
+                    {item.title}
+                  </Heading>
+                  <Text color="#64748B" fontSize="sm" lineHeight="relaxed">
+                    {item.text}
+                  </Text>
+                </Box>
+              </VStack>
+
+              {/* Bottom Subtle Accent Bar */}
+              <Box 
+                mt={6} 
+                h="2px" 
+                w="24px" 
+                bg="#002045" 
+                opacity={0.15} 
+                rounded="full"
+                transition="all 0.3s"
+                _groupHover={{ w: "48px", bg: "#FFB800", opacity: 1 }}
+              />
+            </Box>
+          </GridItem>
+        ))}
       </Grid>
     </Box>
   );

@@ -11,13 +11,15 @@ import {
   Link as ChakraLink,
   IconButton,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 const navItems = [
   { href: "/", label: "Главная" },
   { href: "/#about", label: "О нас" },
-  { href: "/#values", label: "Ценности" },
+  { href: "/#programs", label: "Программы" },
   { href: "/#testimonials", label: "Отзывы" },
-  { href: "/#news", label: "Новости" },
+  { href: "/news", label: "Новости" },
+  { href: "/apply", label: "Подать заявку" },
 ];
 
 export default function Footer() {
@@ -165,10 +167,11 @@ export default function Footer() {
             <VStack align="start" gap={4}>
               {navItems.map((item) => (
                 <ChakraLink
+                  as={Link}
                   key={item.href}
                   href={item.href}
                   color="rgba(219,234,254,0.8)"
-                  _hover={{ color: "#fdbb31", textDecoration: "none" }}
+                  _hover={{ color: "#FFB800", textDecoration: "none" }}
                 >
                   {item.label}
                 </ChakraLink>

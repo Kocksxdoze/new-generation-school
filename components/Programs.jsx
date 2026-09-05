@@ -3,54 +3,110 @@
 import {
   Box,
   Grid,
+  GridItem,
   Heading,
   Text,
   Flex,
-  Link as ChakraLink,
+  VStack,
 } from "@chakra-ui/react";
-import { programs } from "../data/programs";
+import Link from "next/link";
 
-export default function Programs() {
+export default function Programs({
+  subtitle = "НАШИ ПРОГРАММЫ",
+  title = "Образование на каждом этапе развития",
+  description = "Мы сопровождаем ученика на протяжении всего школьного пути — от первых шагов в обучении до поступления в университет.",
+  items = [
+    {
+      title: "Pre-school",
+      age: "5-6 лет",
+      text: "Играя познаем мир, развиваем речь, мышление и социальные навыки.",
+      imageUrl: "/uploads/1_w91El1j.jpg",
+      tag: "01",
+      link: "#",
+    },
+    {
+      title: "Начальная школа",
+      age: "1-4 классы",
+      text: "Формируем прочную базу знаний и любовь к обучению.",
+      imageUrl: "/uploads/1_9DRnJR0.jpg",
+      tag: "02",
+      link: "#",
+    },
+    {
+      title: "Средняя школа",
+      age: "5-9 классы",
+      text: "Углубляем знания, развиваем критическое мышление и самостоятельность.",
+      imageUrl: "/uploads/3_leXEOVP.jpg",
+      tag: "03",
+      link: "#",
+    },
+    {
+      title: "Старшая школа",
+      age: "10-11 классы",
+      text: "Подготовка к поступлению в лучшие университеты мира и взрослой жизни.",
+      imageUrl: "/uploads/1_8CletkE.jpg",
+      tag: "04",
+      link: "#",
+    },
+  ],
+}) {
   return (
     <Box
       as="section"
       id="programs"
-      py={24}
+      py={16}
       px={{ base: 6, md: 12 }}
       maxW="7xl"
       mx="auto"
     >
-      <Box textAlign="center" mb={16}>
-        <Text
-          as="span"
-          display="block"
-          color="#ffb800"
-          fontWeight="bold"
-          letterSpacing="wider"
-          textTransform="uppercase"
-          fontSize="sm"
-          mb={2}
-        >
-          НАЙДИТЕ ПРОГРАММУ ДЛЯ ВАШЕГО РЕБЕНКА
-        </Text>
-        <Heading
-          as="h2"
-          fontFamily="heading"
-          fontSize={{ base: "4xl", md: "5xl" }}
-          fontWeight="bold"
-          color="#002045"
-          maxW="3xl"
-          mx="auto"
-          lineHeight="1.1"
-        >
-          Каждый возраст, продуман до мелочей
-        </Heading>
-        <Text color="#64748B" mt={4} maxW="2xl" mx="auto" fontSize="lg">
-          Четыре этапа от первых шагов до готовности к университету — выберите
-          возрастную группу вашего ребенка, чтобы изучить учебную программу,
-          распорядок дня и систему поддержки.
-        </Text>
-      </Box>
+      <Flex
+        justify="space-between"
+        align="flex-end"
+        mb={12}
+        flexWrap="wrap"
+        gap={4}
+      >
+        <Box maxW="2xl">
+          <Text
+            as="span"
+            display="block"
+            color="#ffb800"
+            fontWeight="bold"
+            textTransform="uppercase"
+            fontSize="sm"
+            letterSpacing="wider"
+            mb={2}
+          >
+            {subtitle}
+          </Text>
+          <Heading
+            as="h2"
+            fontSize={{ base: "3xl", md: "4xl" }}
+            fontWeight="bold"
+            color="#002045"
+          >
+            {title}
+          </Heading>
+        </Box>
+        <Link href="/programs">
+          <Flex
+            align="center"
+            color="#002045"
+            fontWeight="medium"
+            _hover={{ color: "blue.600" }}
+          >
+            Все программы
+            <Box
+              as="span"
+              className="material-symbols-outlined"
+              ml={1}
+              fontSize="sm"
+            >
+              arrow_forward
+            </Box>
+          </Flex>
+        </Link>
+      </Flex>
 
       <Grid
         templateColumns={{
@@ -60,93 +116,105 @@ export default function Programs() {
         }}
         gap={6}
       >
-        {programs.map((p) => (
-          <Flex
-            key={p.title}
-            rounded="3xl"
-            p={8}
-            direction="column"
-            h="full"
-            bg={p.bg}
-            color="white"
-            transition="transform 0.3s"
-            boxShadow="premium"
-            _hover={{ transform: "translateY(-8px)" }}
-          >
-            <Flex
-              w={12}
-              h={12}
-              rounded="full"
-              bg="rgba(255,255,255,0.2)"
-              align="center"
-              justify="center"
-              mb={6}
-              backdropFilter="blur(4px)"
-            >
+        {items.map((item, idx) => {
+          // Resolve image URL (prepend API URL if it's a relative path from backend)
+          const finalImageUrl = item.imageUrl
+            ? item.imageUrl.startsWith("/")
+              ? (process.env.NEXT_PUBLIC_API_URL
+                  ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
+                  : "http://localhost:4000") + item.imageUrl
+              : item.imageUrl
+            : "/bg.png";
+
+          return (
+            <GridItem key={idx}>
               <Box
-                as="span"
-                className="material-symbols-outlined"
-                color="white"
+                bg="white"
+                rounded="2xl"
+                overflow="hidden"
+                boxShadow="sm"
+                border="1px solid"
+                borderColor="gray.100"
+                h="full"
+                transition="all 0.3s"
+                _hover={{ boxShadow: "md", transform: "translateY(-4px)" }}
+                display="flex"
+                flexDirection="column"
               >
-                {p.icon}
+                <Box position="relative" h="200px" w="full">
+                  <Box
+                    as="img"
+                    src={finalImageUrl}
+                    alt={item.title}
+                    w="full"
+                    h="full"
+                    objectFit="cover"
+                  />
+                  <Box
+                    position="absolute"
+                    top={0}
+                    left={4}
+                    bg={
+                      idx === 0
+                        ? "orange.400"
+                        : idx === 1
+                          ? "red.400"
+                          : idx === 2
+                            ? "purple.400"
+                            : "blue.600"
+                    }
+                    color="white"
+                    px={3}
+                    py={1}
+                    borderBottomRadius="md"
+                    fontWeight="bold"
+                    fontSize="sm"
+                  >
+                    {item.tag || `0${idx + 1}`}
+                  </Box>
+                </Box>
+                <VStack align="flex-start" p={6} spacing={4} flex={1}>
+                  <Flex justify="space-between" w="full" align="center">
+                    <Heading
+                      as="h3"
+                      fontSize="xl"
+                      fontWeight="bold"
+                      color="#002045"
+                    >
+                      {item.title}
+                    </Heading>
+                    <Text fontSize="sm" color="gray.400" fontWeight="medium">
+                      {item.age}
+                    </Text>
+                  </Flex>
+                  <Text color="#64748B" fontSize="sm" flex={1}>
+                    {item.text}
+                  </Text>
+                  <Link href={item.link || "#"}>
+                    <Flex
+                      align="center"
+                      color="#002045"
+                      fontWeight="bold"
+                      fontSize="sm"
+                      mt={2}
+                      _hover={{ color: "blue.600" }}
+                    >
+                      Подробнее
+                      <Box
+                        as="span"
+                        className="material-symbols-outlined"
+                        ml={1}
+                        fontSize="sm"
+                      >
+                        arrow_forward
+                      </Box>
+                    </Flex>
+                  </Link>
+                </VStack>
               </Box>
-            </Flex>
-            <Text
-              display="inline-block"
-              px={3}
-              py={1}
-              bg="rgba(255,255,255,0.2)"
-              rounded="full"
-              fontSize="sm"
-              fontWeight="medium"
-              mb={4}
-              w="fit-content"
-            >
-              {p.age}
-            </Text>
-            <Heading
-              as="h3"
-              fontFamily="heading"
-              fontSize="2xl"
-              fontWeight="bold"
-              mb={4}
-            >
-              {p.title}
-            </Heading>
-            <Text
-              color="rgba(255,255,255,0.8)"
-              flexGrow={1}
-              mb={8}
-              fontSize="sm"
-              lineHeight="relaxed"
-            >
-              {p.text}
-            </Text>
-            <ChakraLink
-              href="#"
-              display="inline-flex"
-              alignItems="center"
-              fontWeight="bold"
-              fontSize="sm"
-              role="group"
-              color={"white"}
-              _hover={{ color: "accentGold", textDecoration: "none" }}
-            >
-              Изучить программу
-              <Box
-                as="span"
-                className="material-symbols-outlined"
-                ml={2}
-                color={"white"}
-                fontSize="sm"
-                transition="transform 0.2s"
-                _groupHover={{ transform: "translateX(4px)" }}
-              >
-                arrow_forward
-              </Box>
-            </ChakraLink>
-          </Flex>
-        ))}
+            </GridItem>
+          );
+        })}
       </Grid>
     </Box>
   );
