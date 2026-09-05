@@ -1,0 +1,16 @@
+﻿services:
+  - type: web
+    name: ngs-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npx prisma generate
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:./dev.db
+      - key: JWT_SECRET
+        generateValue: true
+      - key: UPLOAD_DIR
+        value: uploads

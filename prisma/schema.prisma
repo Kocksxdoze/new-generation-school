@@ -1,0 +1,132 @@
+// Prisma schema — single source of truth for the database structure.
+// Run `npm run prisma:migrate` after changing this file.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Auth
+// ---------------------------------------------------------------------------
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String // bcrypt hash, never the plain value
+  role      Role     @default(EDITOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ---------------------------------------------------------------------------
+// News
+// ---------------------------------------------------------------------------
+
+model News {
+  id          Int      @id @default(autoincrement())
+  title       String
+  slug        String   @unique
+  excerpt     String? // short teaser shown in cards/lists
+  body        String // full article text
+  category    String // "Новость" | "Мероприятие" | "Поездка" | ...
+  date        DateTime // editorial date shown on the site
+  externalUrl String? // optional outbound link (e.g. Instagram post)
+  coverImage  String? // relative /uploads path
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([published, date])
+  @@map("news")
+}
+
+// ---------------------------------------------------------------------------
+// Media library — every uploaded image/SVG goes through here so it can be
+// reused across news posts and page sections instead of being re-uploaded.
+// ---------------------------------------------------------------------------
+
+model Media {
+  id        Int      @id @default(autoincrement())
+  filename  String // stored file name on disk, inside /uploads
+  url       String // public path, e.g. /uploads/2026/03/abc123.webp
+  mimeType  String
+  size      Int // bytes
+  width     Int?
+  height    Int?
+  alt       String? // accessibility / SEO text, editable by admin
+  createdAt DateTime @default(now())
+
+  @@map("media")
+}
+
+// ---------------------------------------------------------------------------
+// Dynamic page content
+//
+// A Page is one route of the public site ("home", "about", ...).
+// A Page is made of an ordered list of Sections. Each Section has a `type`
+// (which React component on the frontend should render it, e.g. "hero",
+// "values", "testimonials") and a free-form JSON `data` payload holding the
+// actual text/image/icon content for that block. This lets the admin panel
+// add, remove, reorder and edit sections without backend code changes.
+// ---------------------------------------------------------------------------
+
+model Page {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique // "home", "about", "admissions", ...
+  title     String // internal label shown in the admin panel
+  sections  Section[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("pages")
+}
+
+model Section {
+  id        Int      @id @default(autoincrement())
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId    Int
+  type      String // "hero" | "about" | "values" | "programs" | "testimonials" | "universities" | "features" | "news" | "custom" ...
+  order     Int      @default(0) // position within the page, admin can drag to reorder
+  visible   Boolean  @default(true)
+  data      String // JSON-encoded content specific to `type`
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([pageId, order])
+  @@map("sections")
+}
+
+// ---------------------------------------------------------------------------
+// Applications / Leads
+// ---------------------------------------------------------------------------
+
+model Application {
+  id          Int      @id @default(autoincrement())
+  fullName    String
+  phone       String
+  email       String?
+  childGrade  String?   // e.g. "1 класс", "Дошкольное (Pre-school)", "9 класс"
+  type        String   @default("admission") // "admission" | "consultation" | "tour" | "question"
+  message     String?
+  status      String   @default("NEW") // "NEW" | "CONTACTED" | "RESOLVED" | "ARCHIVED"
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status, createdAt])
+  @@map("applications")
+}
+
