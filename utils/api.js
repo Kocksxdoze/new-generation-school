@@ -7,14 +7,21 @@ const api = axios.create({
   withCredentials: true, // Включаем передачу куки (для авторизации)
 });
 
+// Прикрепляем Bearer токен из localStorage, если он есть (гарантия авторизации при кросс-доменных запросах)
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('ngs_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
+});
+
 // Интерцептор для обработки ошибок
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Можно добавить логику для глобальной обработки 401 Unauthorized
-    // Например, если статус 401, то делать редирект на /admin/login
-    // Это будет работать только на клиенте, так как window/router здесь недоступны напрямую,
-    // но можно выкинуть ошибку, которую поймают компоненты.
     return Promise.reject(error);
   }
 );
@@ -23,9 +30,15 @@ api.interceptors.response.use(
 export const authService = {
   login: async (username, password) => {
     const { data } = await api.post('/auth/login', { login: username, password });
+    if (data?.data?.token && typeof window !== 'undefined') {
+      localStorage.setItem('ngs_token', data.data.token);
+    }
     return data;
   },
   logout: async () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('ngs_token');
+    }
     const { data } = await api.post('/auth/logout');
     return data;
   },

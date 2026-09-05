@@ -27,7 +27,7 @@ export default function LoginPage() {
       await authService.login(username, password);
       router.push("/admin");
     } catch (error) {
-      alert(error.response?.data?.error || "Неверные учетные данные");
+      alert(error.response?.data?.message || error.response?.data?.error || "Неверные учетные данные");
     } finally {
       setIsLoading(false);
     }
