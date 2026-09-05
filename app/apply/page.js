@@ -59,7 +59,7 @@ export default function ApplyPage() {
   };
 
   return (
-    <Box minH="100vh" bg="#FDFBF7" display="flex" flexDirection="column">
+    <Box minH="100vh" bg="#EEF2F6" display="flex" flexDirection="column">
       <Navbar />
 
       {/* Hero Header */}

@@ -153,9 +153,9 @@ export default function Hero({
                 >
                   Поступить в школу →
                 </ChakraLink>
-                <ChakraLink
-                  as={Link}
-                  href={videoUrl}
+                <Box
+                  as="button"
+                  type="button"
                   px={10}
                   py={5}
                   bg="rgba(255, 255, 255, 0.1)"
@@ -168,7 +168,6 @@ export default function Hero({
                   transition="all 0.3s"
                   _hover={{
                     bg: "rgba(255, 255, 255, 0.2)",
-                    textDecoration: "none",
                   }}
                   w={{ base: "full", sm: "auto" }}
                   textAlign="center"
@@ -176,12 +175,13 @@ export default function Hero({
                   alignItems="center"
                   justifyContent="center"
                   fontSize="lg"
+                  cursor="pointer"
                 >
                   <Box as="span" className="material-symbols-outlined" mr={2}>
                     play_circle
                   </Box>
                   Смотреть видео
-                </ChakraLink>
+                </Box>
               </HStack>
             </VStack>
           </GridItem>

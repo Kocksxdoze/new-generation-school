@@ -64,7 +64,7 @@ export default function SingleNewsPage() {
     : "/bg.png";
 
   return (
-    <Box minH="100vh" bg="#FDFBF7" display="flex" flexDirection="column">
+    <Box minH="100vh" bg="#EEF2F6" display="flex" flexDirection="column">
       <Navbar />
 
       <Box pt={{ base: 28, md: 36 }} pb={20} px={{ base: 4, sm: 6, md: 12 }} flex={1}>

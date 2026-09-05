@@ -66,9 +66,16 @@ export default function Teachers({
         gap={6}
       >
         {items.map((item, idx) => {
-          const finalImageUrl = item.imageUrl 
+          const fallbackPhotos = [
+            "/images/teachers/teacher_math.jpg",
+            "/images/teachers/teacher_english.jpg",
+            "/images/teachers/teacher_physics.jpg",
+            "/images/teachers/teacher_biology.jpg",
+          ];
+          const hasCustomPhoto = item.imageUrl && !item.imageUrl.includes("bg.png");
+          const finalImageUrl = hasCustomPhoto 
             ? (item.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + item.imageUrl : item.imageUrl)
-            : "/bg.png";
+            : fallbackPhotos[idx % fallbackPhotos.length];
 
           return (
             <GridItem key={idx}>
