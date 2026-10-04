@@ -18,15 +18,26 @@ securityRouter.post("/track", (req, res) => {
   const ip = rawIp.toString().split(",")[0].trim();
 
   const userAgent = req.headers["user-agent"] || "";
-  const { path: pagePath = "/", referrer = "", screen = "", lang = "" } = req.body || {};
+  const { path: pagePath = "/", referrer = "", screen = "", lang = "", details: customDetails = "" } = req.body || {};
 
   let action = "VISIT_HOME";
-  if (pagePath === "/apply") action = "VISIT_APPLY_PAGE";
-  else if (pagePath.startsWith("/news")) action = "VISIT_NEWS_PAGE";
-  else if (pagePath.startsWith("/admin")) action = "VISIT_ADMIN_PORTAL";
+  if (pagePath === "/admin/login") action = "ADMIN_LOGIN_PAGE_VIEW";
+  else if (pagePath.startsWith("/admin/applications")) action = "ADMIN_VIEW_LEADS";
+  else if (pagePath.startsWith("/admin/news")) action = "ADMIN_MANAGE_NEWS";
+  else if (pagePath.startsWith("/admin/media")) action = "ADMIN_MANAGE_MEDIA";
+  else if (pagePath.startsWith("/admin")) action = "ADMIN_PORTAL_VIEW";
+  else if (pagePath === "/apply") action = "VISIT_APPLY_PAGE";
+  else if (pagePath.startsWith("/news/")) action = "VISIT_NEWS_ARTICLE";
+  else if (pagePath === "/news") action = "VISIT_NEWS_LIST";
   else if (pagePath !== "/") action = `VISIT: ${pagePath}`;
 
-  const threatDetails = screen ? `Экран: ${screen}, Язык: ${lang}` : "";
+  const metaParts = [];
+  if (screen) metaParts.push(`Экран: ${screen}`);
+  if (lang) metaParts.push(`Язык: ${lang}`);
+  if (referrer) metaParts.push(`Источник: ${referrer}`);
+  if (customDetails) metaParts.push(customDetails);
+
+  const threatDetails = metaParts.join(" | ");
 
   const event = recordSecurityEvent({
     timestamp: new Date().toISOString(),

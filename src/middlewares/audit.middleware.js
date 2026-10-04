@@ -60,38 +60,51 @@ function detectThreat(url, userAgent, statusCode) {
   return { level: "NORMAL", details: "" };
 }
 
-function resolveAction(url, method, statusCode) {
+function resolveAction(url, method, statusCode, req) {
   if (statusCode === 429) return "RATE_LIMIT_BLOCKED";
 
   const pathPart = url.split("?")[0].toLowerCase();
   const m = method.toUpperCase();
+  const adminTag = req.user?.username ? ` [👤 ${req.user.username}]` : "";
 
   if (pathPart.includes("/auth/login")) {
-    return statusCode === 200 ? "LOGIN_SUCCESS" : "LOGIN_FAILED";
+    const userAttempt = req.body?.login || req.body?.username || "не указан";
+    return statusCode === 200 
+      ? `ADMIN_LOGIN_SUCCESS: ${userAttempt}` 
+      : `ADMIN_LOGIN_FAILED: '${userAttempt}'`;
   }
-  if (pathPart.includes("/auth/logout")) return "LOGOUT";
-  if (pathPart.includes("/auth/me")) return "AUTH_CHECK";
+  if (pathPart.includes("/auth/logout")) return `ADMIN_LOGOUT${adminTag}`;
+  if (pathPart.includes("/auth/me")) return `ADMIN_AUTH_CHECK${adminTag}`;
+  if (pathPart.includes("/auth/change-password")) return `ADMIN_CHANGE_PASSWORD${adminTag}`;
 
   if (pathPart.includes("/applications")) {
-    return m === "POST" ? "SUBMIT_APPLICATION" : "ADMIN_VIEW_LEADS";
+    if (m === "POST") {
+      const p = req.body?.parentName || req.body?.name || "Родитель";
+      const ph = req.body?.phone || req.body?.phoneNumber || "";
+      return `SUBMIT_APPLICATION (${p}, ${ph})`;
+    }
+    return `ADMIN_VIEW_LEADS${adminTag}`;
   }
 
   if (pathPart.includes("/site/home") || pathPart === "/" || pathPart === "/api") {
     return "VIEW_HOMEPAGE";
   }
 
+  if (pathPart.includes("/admin/pages")) return `ADMIN_EDIT_PAGES (${m})${adminTag}`;
+  if (pathPart.includes("/admin/news")) return `ADMIN_MANAGE_NEWS (${m})${adminTag}`;
+  if (pathPart.includes("/admin/media")) return `ADMIN_MANAGE_MEDIA (${m})${adminTag}`;
+  if (pathPart.includes("/admin/applications")) return `ADMIN_VIEW_LEADS${adminTag}`;
+
   if (pathPart.includes("/news")) {
     if (m === "GET") return "VIEW_NEWS";
-    if (m === "POST") return "ADMIN_CREATE_NEWS";
-    if (m === "PUT" || m === "PATCH") return "ADMIN_UPDATE_NEWS";
-    if (m === "DELETE") return "ADMIN_DELETE_NEWS";
+    if (m === "POST") return `ADMIN_CREATE_NEWS${adminTag}`;
+    if (m === "PUT" || m === "PATCH") return `ADMIN_UPDATE_NEWS${adminTag}`;
+    if (m === "DELETE") return `ADMIN_DELETE_NEWS${adminTag}`;
   }
 
   if (pathPart.includes("/media")) {
-    return m === "POST" ? "ADMIN_UPLOAD_MEDIA" : "ADMIN_VIEW_MEDIA";
+    return m === "POST" ? `ADMIN_UPLOAD_MEDIA${adminTag}` : `ADMIN_VIEW_MEDIA${adminTag}`;
   }
-
-  if (pathPart.includes("/admin/pages")) return "ADMIN_EDIT_PAGES";
 
   return `${m} ${pathPart}`;
 }
@@ -120,7 +133,7 @@ export function auditMiddleware(req, res, next) {
     const responseTimeMs = Date.now() - startTime;
     const statusCode = res.statusCode;
     const userAgent = req.headers["user-agent"] || "";
-    const action = resolveAction(req.originalUrl || req.url, req.method, statusCode);
+    const action = resolveAction(req.originalUrl || req.url, req.method, statusCode, req);
     const threat = detectThreat(req.originalUrl || req.url, userAgent, statusCode);
 
     // Throttle repeated 429 log spamming to prevent DoS against log storage
@@ -139,6 +152,30 @@ export function auditMiddleware(req, res, next) {
       floodLogThrottler.set(ip, rec);
     }
 
+    // Capture extra rich metadata
+    const referrer = req.headers["referer"] || req.headers["referrer"] || "";
+    const country = req.headers["cf-ipcountry"] || req.headers["x-country"] || "";
+    
+    let details = threat.details;
+    if (action.startsWith("ADMIN_LOGIN_SUCCESS")) {
+      details = `Успешный вход в панель управления. IP: ${ip}`;
+    } else if (action.startsWith("ADMIN_LOGIN_FAILED")) {
+      threat.level = "WARNING";
+      details = `Ошибка входа: неверный логин или пароль ('${req.body?.login || req.body?.username}')`;
+    } else if (action.startsWith("SUBMIT_APPLICATION")) {
+      const p = req.body?.parentName || req.body?.name || "";
+      const ph = req.body?.phone || req.body?.phoneNumber || "";
+      const gr = req.body?.grade || req.body?.classNumber || "";
+      details = `Подана заявка: ${p}, тел: ${ph}, класс: ${gr}`;
+    }
+
+    if (referrer && !details.includes("Реферер")) {
+      details += details ? ` | Источник: ${referrer}` : `Источник: ${referrer}`;
+    }
+    if (country && !details.includes("Страна")) {
+      details += details ? ` | Страна: ${country}` : `Страна: ${country}`;
+    }
+
     const logEntry = {
       timestamp: new Date().toISOString(),
       ip,
@@ -149,7 +186,7 @@ export function auditMiddleware(req, res, next) {
       responseTimeMs,
       userAgent,
       threatLevel: threat.level,
-      threatDetails: threat.details
+      threatDetails: details.trim()
     };
 
     // 1. Record to internal memory store & audit log for Python sync
