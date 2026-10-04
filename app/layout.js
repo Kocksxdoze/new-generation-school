@@ -1,5 +1,6 @@
 import { Inter, Manrope } from "next/font/google";
 import ThemeProvider from "@/components/ThemeProvider";
+import VisitTracker from "@/components/VisitTracker";
 import "./globals.css";
 
 const inter = Inter({
@@ -129,7 +130,10 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#EEF2F6]">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <VisitTracker />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
