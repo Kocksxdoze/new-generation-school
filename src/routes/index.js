@@ -4,6 +4,7 @@ import { newsRouter, newsAdminRouter } from "../modules/news/news.routes.js";
 import { mediaRouter } from "../modules/media/media.routes.js";
 import { siteRouter, pagesAdminRouter } from "../modules/pages/pages.routes.js";
 import { applicationsRouter, applicationsAdminRouter } from "../modules/applications/applications.routes.js";
+import { securityRouter } from "../modules/security/security.routes.js";
 
 export const apiRouter = Router();
 
@@ -11,6 +12,7 @@ export const apiRouter = Router();
 apiRouter.use("/news", newsRouter);
 apiRouter.use("/site", siteRouter);
 apiRouter.use("/applications", applicationsRouter);
+apiRouter.use("/security", securityRouter);
 
 // --- Auth (login is public, the rest requires a session) ---
 apiRouter.use("/auth", authRouter);

@@ -5,6 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { recordSecurityEvent } from "../modules/security/security.store.js";
 
 const LOGS_DIR = path.join(process.cwd(), "logs");
 const AUDIT_FILE = path.join(LOGS_DIR, "security_audit.jsonl");
@@ -87,6 +88,12 @@ function resolveAction(url, method, statusCode) {
 }
 
 export function auditMiddleware(req, res, next) {
+  const url = req.originalUrl || req.url || "";
+  // Do not double-audit security tracker & sync endpoints
+  if (url.includes("/api/security")) {
+    return next();
+  }
+
   const startTime = Date.now();
 
   // Extract client IP
@@ -118,24 +125,17 @@ export function auditMiddleware(req, res, next) {
       threatDetails: threat.details
     };
 
-    // 1. Write to local fallback file asynchronously
-    try {
-      fs.appendFile(AUDIT_FILE, JSON.stringify(logEntry) + "\n", () => {});
-    } catch (e) {
-      // Ignore file write errors
-    }
+    // 1. Record to internal memory store & audit log for Python sync
+    recordSecurityEvent(logEntry);
 
-    // 2. Asynchronously forward to Python Security Monitor (port 8080)
-    // Non-blocking fire-and-forget
+    // 2. Direct forward to Python Security Monitor (if running locally)
     const pythonEndpoint = "http://127.0.0.1:8080/api/log";
     fetch(pythonEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(logEntry),
-      signal: AbortSignal.timeout(1500) // 1.5s timeout so it never hangs
-    }).catch(() => {
-      // Python monitor might be currently offline, ignore safely
-    });
+      signal: AbortSignal.timeout(1500)
+    }).catch(() => {});
   });
 
   next();
