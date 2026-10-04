@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireAuth, requireRole } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validate.middleware.js";
+import { authRateLimiter } from "../../middlewares/rateLimit.middleware.js";
 import {
   loginSchema,
   createUserSchema,
@@ -16,7 +17,7 @@ import {
 
 export const authRouter = Router();
 
-authRouter.post("/login", validate({ body: loginSchema }), loginController);
+authRouter.post("/login", authRateLimiter, validate({ body: loginSchema }), loginController);
 authRouter.post("/logout", logoutController);
 authRouter.get("/me", requireAuth, meController);
 authRouter.post(

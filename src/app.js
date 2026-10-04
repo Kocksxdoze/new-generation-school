@@ -8,6 +8,8 @@ import path from "node:path";
 import { env } from "./config/env.js";
 import { apiRouter } from "./routes/index.js";
 import { notFoundHandler, errorHandler } from "./middlewares/error.middleware.js";
+import { auditMiddleware } from "./middlewares/audit.middleware.js";
+import { generalApiLimiter } from "./middlewares/rateLimit.middleware.js";
 
 export const app = express();
 
@@ -49,6 +51,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan(env.isProduction ? "combined" : "dev"));
 
+// Security Audit & Request Tracking
+app.use(auditMiddleware);
+
 // Uploaded images/SVGs are served as static files, e.g. GET /uploads/2026/03/xyz.webp
 app.use("/uploads", express.static(path.join(process.cwd(), env.uploads.dir)));
 
@@ -56,7 +61,8 @@ app.get("/", (req, res) => {
   res.json({ name: "New Generation School API", status: "online", time: new Date() });
 });
 
-app.use("/api", apiRouter);
+// Protected API routes with flood rate limiting
+app.use("/api", generalApiLimiter, apiRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

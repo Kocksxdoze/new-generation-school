@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireAuth, requireRole } from "../../middlewares/auth.middleware.js";
 import { validate } from "../../middlewares/validate.middleware.js";
+import { applicationRateLimiter } from "../../middlewares/rateLimit.middleware.js";
 import {
   createApplicationSchema,
   updateApplicationStatusSchema,
@@ -18,6 +19,7 @@ import {
 export const applicationsRouter = Router();
 applicationsRouter.post(
   "/",
+  applicationRateLimiter,
   validate({ body: createApplicationSchema }),
   createApplicationController
 );
