@@ -9,32 +9,32 @@ export default function Teachers({
   teamLink = "#",
   items = [
     {
-      name: "Даврон Абдуллаев",
+      name: "Диляфруз Ганиевна",
       subject: "Математика",
-      exp: "12 лет опыта",
-      desc: "Тренер олимпиадных команд",
-      imageUrl: "/uploads/bg.png"
+      exp: "Учитель математики",
+      desc: "Ведущий преподаватель математики, подготовка к олимпиадам и экзаменам",
+      imageUrl: "/images/teachers/dilafruz.jpg"
     },
     {
-      name: "Мария Иванова",
+      name: "Нигора Усмановна",
       subject: "Английский язык",
-      exp: "IELTS 8.5",
-      desc: "Международный сертификат CELTA, DELTA",
-      imageUrl: "/uploads/bg.png"
+      exp: "Зав. кафедры английского языка",
+      desc: "Учитель и зав. кафедры английского языка, международные стандарты",
+      imageUrl: "/images/teachers/nigora.jpg"
     },
     {
-      name: "Отабек Каримов",
-      subject: "Физика",
-      exp: "15 лет опыта",
-      desc: "Подготовка к международным олимпиадам",
-      imageUrl: "/uploads/bg.png"
+      name: "Альбина Николаевна",
+      subject: "Начальные классы",
+      exp: "Классный руководитель младшей школы",
+      desc: "Сильный преподаватель начального образования, индивидуальный подход",
+      imageUrl: "/images/teachers/albina.jpg"
     },
     {
-      name: "Нигина Арслонова",
-      subject: "Биология",
-      exp: "10 лет опыта",
-      desc: "Проектная и исследовательская деятельность",
-      imageUrl: "/uploads/bg.png"
+      name: "Аида Абдурахмановна",
+      subject: "Начальные классы",
+      exp: "Классный руководитель младшей школы",
+      desc: "Сильный преподаватель начального образования, всестороннее развитие",
+      imageUrl: "/images/teachers/aida.jpg"
     }
   ]
 }) {
@@ -67,10 +67,10 @@ export default function Teachers({
       >
         {items.map((item, idx) => {
           const fallbackPhotos = [
-            "/images/teachers/teacher_math.jpg",
-            "/images/teachers/teacher_english.jpg",
-            "/images/teachers/teacher_physics.jpg",
-            "/images/teachers/teacher_biology.jpg",
+            "/images/teachers/dilafruz.jpg",
+            "/images/teachers/nigora.jpg",
+            "/images/teachers/albina.jpg",
+            "/images/teachers/aida.jpg",
           ];
           const hasCustomPhoto = item.imageUrl && !item.imageUrl.includes("bg.png");
           const finalImageUrl = hasCustomPhoto 
@@ -80,22 +80,23 @@ export default function Teachers({
           return (
             <GridItem key={idx}>
               <Box 
-                bg="rgba(255,255,255,0.85)" 
-                backdropFilter="blur(16px)"
+                bg="white" 
                 border="1px solid rgba(0, 32, 69, 0.08)" 
-                rounded="3xl" 
+                borderRadius="0" 
                 overflow="hidden" 
                 boxShadow="0 4px 20px -2px rgba(0, 32, 69, 0.04)"
                 display="flex"
+                flexDirection="column"
+                h="full"
                 transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
                 _hover={{
                   transform: "translateY(-4px)",
                   boxShadow: "0 20px 35px -10px rgba(0, 32, 69, 0.1)",
-                  borderColor: "rgba(255, 184, 0, 0.3)",
+                  borderColor: "rgba(255, 184, 0, 0.35)",
                 }}
               >
-                {/* Photo Left */}
-                <Box w="40%" minW="100px" bg="gray.100">
+                {/* Photo Top (Zero border-radius) */}
+                <Box w="full" h={{ base: "320px", sm: "340px", md: "380px" }} bg="gray.100" overflow="hidden" borderRadius="0">
                   <Box
                     as="img"
                     src={finalImageUrl}
@@ -103,16 +104,26 @@ export default function Teachers({
                     w="full"
                     h="full"
                     objectFit="cover"
+                    objectPosition="top center"
+                    borderRadius="0"
+                    transition="transform 0.4s ease"
+                    _hover={{ transform: "scale(1.03)" }}
                   />
                 </Box>
-                {/* Info Right */}
-                <Box w="60%" p={4} display="flex" flexDirection="column" justifyContent="center">
-                  <Heading as="h4" fontSize="sm" fontWeight="bold" color="#002045" mb={1}>
-                    {item.name}
-                  </Heading>
-                  <Text fontSize="xs" color="gray.500" mb={1}>{item.subject}</Text>
-                  <Text fontSize="xs" color="gray.500" mb={2}>{item.exp}</Text>
-                  <Text fontSize="xs" color="gray.400" lineHeight="1.4">
+                {/* Info Bottom (Zero border-radius) */}
+                <Box p={5} display="flex" flexDirection="column" justifyContent="space-between" flex={1} borderRadius="0" bg="white">
+                  <Box mb={2}>
+                    <Text fontSize="xs" fontWeight="bold" color="#FFB800" textTransform="uppercase" letterSpacing="wider" mb={1}>
+                      {item.subject}
+                    </Text>
+                    <Heading as="h4" fontSize={{ base: "md", md: "lg" }} fontWeight="bold" color="#002045" mb={1} lineHeight="1.3">
+                      {item.name}
+                    </Heading>
+                    <Text fontSize="xs" fontWeight="semibold" color="#64748B" mb={2}>
+                      {item.exp}
+                    </Text>
+                  </Box>
+                  <Text fontSize="xs" color="#94A3B8" lineHeight="1.5">
                     {item.desc}
                   </Text>
                 </Box>
