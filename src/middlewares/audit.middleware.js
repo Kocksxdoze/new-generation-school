@@ -42,6 +42,13 @@ function detectThreat(url, userAgent, statusCode) {
     };
   }
 
+  if (statusCode === 429) {
+    return {
+      level: "CRITICAL",
+      details: "Обнаружена DoS / флуд-атака: превышен допустимый лимит запросов (Rate Limit 429)"
+    };
+  }
+
   if (statusCode === 401 && urlLower.includes("login")) {
     return { level: "WARNING", details: "Неуспешная попытка авторизации" };
   }
@@ -54,6 +61,8 @@ function detectThreat(url, userAgent, statusCode) {
 }
 
 function resolveAction(url, method, statusCode) {
+  if (statusCode === 429) return "RATE_LIMIT_BLOCKED";
+
   const pathPart = url.split("?")[0].toLowerCase();
   const m = method.toUpperCase();
 
@@ -87,6 +96,8 @@ function resolveAction(url, method, statusCode) {
   return `${m} ${pathPart}`;
 }
 
+const floodLogThrottler = new Map(); // ip -> { count, lastLogged }
+
 export function auditMiddleware(req, res, next) {
   const url = req.originalUrl || req.url || "";
   // Do not double-audit security tracker & sync endpoints
@@ -111,6 +122,22 @@ export function auditMiddleware(req, res, next) {
     const userAgent = req.headers["user-agent"] || "";
     const action = resolveAction(req.originalUrl || req.url, req.method, statusCode);
     const threat = detectThreat(req.originalUrl || req.url, userAgent, statusCode);
+
+    // Throttle repeated 429 log spamming to prevent DoS against log storage
+    if (statusCode === 429) {
+      const rec = floodLogThrottler.get(ip) || { count: 0, lastLogged: 0 };
+      rec.count += 1;
+      const now = Date.now();
+      if (rec.count > 1 && now - rec.lastLogged < 4000) {
+        floodLogThrottler.set(ip, rec);
+        return;
+      }
+      if (rec.count > 1) {
+        threat.details += ` (заблокировано уже ${rec.count} попыток подряд)`;
+      }
+      rec.lastLogged = now;
+      floodLogThrottler.set(ip, rec);
+    }
 
     const logEntry = {
       timestamp: new Date().toISOString(),

@@ -9,6 +9,8 @@ class MemoryRateLimiter {
     this.maxRequests = maxRequests;
     this.message = message || "Слишком много запросов с вашего IP-адреса. Пожалуйста, повторите попытку позже.";
     this.hits = new Map(); // ip -> [timestamps]
+    this.bans = new Map(); // ip -> unbanTimestamp (Auto-jail for persistent loops)
+    this.violationCounts = new Map(); // ip -> count of 429 hits
 
     // Periodic cleanup of stale entries every 2 minutes
     const timer = setInterval(() => this.cleanup(), 2 * 60 * 1000);
@@ -25,6 +27,12 @@ class MemoryRateLimiter {
         this.hits.set(ip, active);
       }
     }
+    for (const [ip, unbanTime] of this.bans.entries()) {
+      if (now > unbanTime) {
+        this.bans.delete(ip);
+        this.violationCounts.delete(ip);
+      }
+    }
   }
 
   middleware() {
@@ -38,6 +46,19 @@ class MemoryRateLimiter {
       ).toString().split(",")[0].trim();
 
       const now = Date.now();
+
+      // 1. Check if IP is in temporary jail (Auto-Ban for continuous loop hammering)
+      const bannedUntil = this.bans.get(ip);
+      if (bannedUntil && now < bannedUntil) {
+        const remainingSeconds = Math.ceil((bannedUntil - now) / 1000);
+        res.setHeader("Retry-After", remainingSeconds);
+        return res.status(429).json({
+          success: false,
+          error: "IP_BANNED_FLOOD_PROTECTION",
+          message: `IP-адрес временно заблокирован за продолжающуюся флуд-атаку. Разблокировка через ${remainingSeconds} сек.`,
+        });
+      }
+
       const timestamps = this.hits.get(ip) || [];
       const windowStart = now - this.windowMs;
 
@@ -45,6 +66,21 @@ class MemoryRateLimiter {
       const recent = timestamps.filter(t => t > windowStart);
 
       if (recent.length >= this.maxRequests) {
+        const violations = (this.violationCounts.get(ip) || 0) + 1;
+        this.violationCounts.set(ip, violations);
+
+        // If client ignores 429 and keeps spamming in a while loop (> 25 attempts), put into 10-minute jail!
+        if (violations > 25) {
+          const banDuration = 10 * 60 * 1000; // 10 minutes
+          this.bans.set(ip, now + banDuration);
+          res.setHeader("Retry-After", 600);
+          return res.status(429).json({
+            success: false,
+            error: "IP_BANNED_FLOOD_PROTECTION",
+            message: "Обнаружена циклическая DoS/флуд атака. Доступ временно заблокирован на 10 минут.",
+          });
+        }
+
         res.setHeader("Retry-After", Math.ceil(this.windowMs / 1000));
         return res.status(429).json({
           success: false,
