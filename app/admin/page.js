@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, SimpleGrid, Heading, Text, VStack, HStack, Button, Spinner, Badge } from '@chakra-ui/react';
+import { Box, Flex, SimpleGrid, Heading, Text, VStack, HStack, Button, Spinner, Badge } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { newsService, pagesService, mediaService, applicationsService, teachersService } from '@/utils/api';

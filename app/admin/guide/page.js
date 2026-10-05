@@ -337,31 +337,6 @@ export default function AdminGuidePage() {
           ))}
         </SimpleGrid>
       </Box>
-
-      {/* Quick Contacts & Support Box */}
-      <Box bg="#F8FAFC" p={6} rounded="2xl" border="1px dashed" borderColor="gray.300">
-        <Flex justify="space-between" align="center" flexWrap="wrap" gap={4}>
-          <Box>
-            <Heading size="xs" color="#002045" mb={1}>
-              Техническая поддержка и системное администрирование
-            </Heading>
-            <Text fontSize="xs" color="gray.500">
-              По вопросам расширения прав доступа, сброса паролей и системных обновлений обращайтесь к разработчику сайта.
-            </Text>
-          </Box>
-          <HStack spacing={4}>
-            <Text fontSize="xs" color="#002045" fontWeight="bold">
-              📞 +998 (91) 325-95-65
-            </Text>
-            <Text fontSize="xs" color="gray.500">
-              |
-            </Text>
-            <Text fontSize="xs" color="#002045" fontWeight="bold">
-              ✉️ new_generation_school@mail.ru
-            </Text>
-          </HStack>
-        </Flex>
-      </Box>
     </Box>
   );
 }
