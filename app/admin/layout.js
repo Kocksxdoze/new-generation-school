@@ -62,10 +62,12 @@ export default function AdminLayout({ children }) {
     { name: 'Дашборд', path: '/admin', icon: 'dashboard' },
     { name: 'Заявки', path: '/admin/applications', icon: 'description' },
     { name: 'Преподаватели', path: '/admin/teachers', icon: 'school' },
+    { name: 'Университеты', path: '/admin/universities', icon: 'account_balance' },
     { name: 'Новости', path: '/admin/news', icon: 'newspaper' },
     { name: 'Галерея кампуса', path: '/admin/gallery', icon: 'photo_library' },
     { name: 'Медиатека', path: '/admin/media', icon: 'perm_media' },
     { name: 'Страницы и блоки', path: '/admin/pages', icon: 'view_quilt' },
+    { name: 'Инструкция для админов', path: '/admin/guide', icon: 'menu_book' },
   ];
 
   return (

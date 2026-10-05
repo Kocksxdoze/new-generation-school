@@ -129,13 +129,24 @@ export default function TeachersPage() {
 
   useEffect(() => {
     async function loadTeachers() {
+      if (typeof window !== "undefined") {
+        try {
+          const stored = localStorage.getItem("ngs_custom_teachers");
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setTeachers(parsed);
+            }
+          }
+        } catch (e) {}
+      }
       try {
         const res = await teachersService.getTeachers();
         if (res?.data && res.data.length > 0) {
           setTeachers(res.data);
         }
       } catch (err) {
-        console.warn("Using fallback teachers", err);
+        console.warn("Using fallback/local teachers", err);
       } finally {
         setIsLoading(false);
       }

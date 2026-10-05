@@ -193,26 +193,6 @@ export default function Programs({
                   <Text color="#64748B" fontSize="sm" flex={1}>
                     {item.text}
                   </Text>
-                  <Link href={item.link || "#"}>
-                    <Flex
-                      align="center"
-                      color="#002045"
-                      fontWeight="bold"
-                      fontSize="sm"
-                      mt={2}
-                      _hover={{ color: "blue.600" }}
-                    >
-                      Подробнее
-                      <Box
-                        as="span"
-                        className="material-symbols-outlined"
-                        ml={1}
-                        fontSize="sm"
-                      >
-                        arrow_forward
-                      </Box>
-                    </Flex>
-                  </Link>
                 </VStack>
               </Box>
             </GridItem>

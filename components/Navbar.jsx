@@ -154,15 +154,32 @@ export default function Navbar() {
               >
                 call
               </Box>
-              <Text
-                fontWeight="semibold"
-                fontSize="sm"
-                color="#002045"
-                userSelect="all"
-                whiteSpace="nowrap"
-              >
-                +998 (90) 230-29-63
-              </Text>
+              <Box>
+                <Text
+                  as="a"
+                  href="tel:+998913259565"
+                  fontWeight="bold"
+                  fontSize="xs"
+                  color="#002045"
+                  display="block"
+                  lineHeight="1.2"
+                  _hover={{ color: "blue.600" }}
+                >
+                  +998 (91) 325-95-65
+                </Text>
+                <Text
+                  as="a"
+                  href="tel:+998930417140"
+                  fontSize="11px"
+                  fontWeight="medium"
+                  color="#64748B"
+                  display="block"
+                  lineHeight="1.2"
+                  _hover={{ color: "blue.600" }}
+                >
+                  +998 (93) 041-71-40
+                </Text>
+              </Box>
             </HStack>
             <ChakraLink
               as={Link}
@@ -263,23 +280,44 @@ export default function Navbar() {
               })}
 
               <Box pt={4} mt={2} borderTop="1px solid" borderColor="gray.100">
-                <Flex
-                  alignItems="center"
-                  gap={3}
-                  color="#002045"
-                  fontWeight="bold"
-                  mb={4}
-                  px={4}
-                  py={2}
-                  bg="gray.50"
-                  rounded="xl"
-                  userSelect="all"
-                >
-                  <Box as="span" className="material-symbols-outlined" fontSize="20px" color="#FFB800">
-                    call
-                  </Box>
-                  <Text fontSize="sm">+998 (90) 230-29-63</Text>
-                </Flex>
+                <Box mb={4} px={4} py={3} bg="gray.50" rounded="xl">
+                  <Flex alignItems="center" gap={3} mb={2}>
+                    <Box as="span" className="material-symbols-outlined" fontSize="18px" color="#FFB800">
+                      call
+                    </Box>
+                    <Box>
+                      <Text fontSize="11px" color="gray.500" fontWeight="medium">Основной номер:</Text>
+                      <Text
+                        as="a"
+                        href="tel:+998913259565"
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="#002045"
+                        display="block"
+                      >
+                        +998 (91) 325-95-65
+                      </Text>
+                    </Box>
+                  </Flex>
+                  <Flex alignItems="center" gap={3}>
+                    <Box as="span" className="material-symbols-outlined" fontSize="18px" color="blue.500">
+                      phone_forwarded
+                    </Box>
+                    <Box>
+                      <Text fontSize="11px" color="gray.500" fontWeight="medium">Запасной номер:</Text>
+                      <Text
+                        as="a"
+                        href="tel:+998930417140"
+                        fontSize="sm"
+                        fontWeight="bold"
+                        color="#002045"
+                        display="block"
+                      >
+                        +998 (93) 041-71-40
+                      </Text>
+                    </Box>
+                  </Flex>
+                </Box>
 
                 <ChakraLink
                   as={Link}

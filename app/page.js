@@ -24,6 +24,8 @@ const ComponentMap = {
   location: LocationMap,
 };
 
+export const dynamic = "force-dynamic";
+
 async function getHomePageData() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://new-generation-school.onrender.com/api';
   try {

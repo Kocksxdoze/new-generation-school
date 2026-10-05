@@ -8,7 +8,6 @@ import {
   VStack,
   Flex,
   Text,
-  Select,
   HStack,
   Spinner,
 } from "@chakra-ui/react";
@@ -223,7 +222,18 @@ export default function NewsForm({ initialData = null }) {
             <Text as="label" display="block" fontSize="sm" fontWeight="semibold" color="#002045" mb={1.5}>
               Категория <span style={{ color: "#E53E3E" }}>*</span>
             </Text>
-            <Select
+            <select
+              style={{
+                width: "100%",
+                height: "40px",
+                padding: "0 12px",
+                borderRadius: "8px",
+                border: "1px solid #CBD5E1",
+                background: "#fff",
+                fontSize: "14px",
+                color: "#1E293B",
+                outline: "none",
+              }}
               value={formData.category}
               onChange={(e) => {
                 setFormData({ ...formData, category: e.target.value });
@@ -236,7 +246,7 @@ export default function NewsForm({ initialData = null }) {
                 </option>
               ))}
               <option value="Другое">Другое (ввести вручную)</option>
-            </Select>
+            </select>
           </Box>
 
           {formData.category === "Другое" && (

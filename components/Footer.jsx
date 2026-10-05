@@ -249,13 +249,27 @@ export default function Footer() {
                 </Flex>
                 <Box>
                   <Text
+                    as="a"
+                    href="tel:+998913259565"
                     display="block"
                     color="rgba(219,234,254,0.9)"
                     fontSize="sm"
-                    fontWeight="medium"
-                    userSelect="all"
+                    fontWeight="bold"
+                    _hover={{ color: "white" }}
                   >
-                    +998 (90) 230-29-63
+                    +998 (91) 325-95-65
+                  </Text>
+                  <Text
+                    as="a"
+                    href="tel:+998930417140"
+                    display="block"
+                    color="rgba(219,234,254,0.75)"
+                    fontSize="xs"
+                    fontWeight="medium"
+                    _hover={{ color: "white" }}
+                    mt={0.5}
+                  >
+                    +998 (93) 041-71-40 (запасной)
                   </Text>
                   <Text fontSize="xs" color="rgba(191,219,254,0.5)" mt={1}>
                     Пн-Пт: 08:00-17:00, Сб: 08:00-14:00

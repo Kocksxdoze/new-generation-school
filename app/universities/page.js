@@ -15,7 +15,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -175,15 +175,30 @@ const REGIONS = [
 ];
 
 export default function UniversitiesPage() {
+  const [unis, setUnis] = useState(UNIVERSITIES_DATA);
   const [selectedRegion, setSelectedRegion] = useState("all");
   const [search, setSearch] = useState("");
 
-  const filteredUnis = UNIVERSITIES_DATA.filter((uni) => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("ngs_custom_universities");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setUnis(parsed);
+          }
+        }
+      } catch (e) {}
+    }
+  }, []);
+
+  const filteredUnis = unis.filter((uni) => {
     const matchesRegion = selectedRegion === "all" || uni.region === selectedRegion;
     const matchesSearch =
       uni.name.toLowerCase().includes(search.toLowerCase()) ||
       uni.country.toLowerCase().includes(search.toLowerCase()) ||
-      uni.majors.some((m) => m.toLowerCase().includes(search.toLowerCase()));
+      (Array.isArray(uni.majors) && uni.majors.some((m) => m.toLowerCase().includes(search.toLowerCase())));
     return matchesRegion && matchesSearch;
   });
 

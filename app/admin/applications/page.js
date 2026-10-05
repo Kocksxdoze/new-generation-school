@@ -10,7 +10,6 @@ import {
   HStack,
   VStack,
   Grid,
-  Select,
   Input,
   Spinner,
 } from "@chakra-ui/react";
@@ -19,6 +18,7 @@ import { applicationsService } from "@/utils/api";
 
 export default function AdminApplicationsPage() {
   const [notice, setNotice] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -28,15 +28,24 @@ export default function AdminApplicationsPage() {
 
   const loadApplications = useCallback(async () => {
     setLoading(true);
+    setErrorMessage("");
     try {
       const params = {};
       if (statusFilter !== "all") params.status = statusFilter;
       if (search.trim()) params.search = search.trim();
       const res = await applicationsService.getAllApplications(params);
-      setApplications(res.data || []);
-      setMeta(res.meta || { page: 1, total: 0, newCount: 0 });
+      const list = res.data || [];
+      setApplications(list);
+      setMeta(res.meta || { page: 1, total: list.length, newCount: list.filter(a => a.status === 'NEW').length });
     } catch (err) {
       console.error("Failed to load applications", err);
+      // Fallback empty list without crashing page
+      setApplications([]);
+      setErrorMessage(
+        err?.response?.status === 401
+          ? "Сессия истекла. Пожалуйста, выполните повторный вход в админ-панель."
+          : "Не удалось подключиться к серверу заявок. Проверьте соединение."
+      );
     } finally {
       setLoading(false);
     }
@@ -57,6 +66,8 @@ export default function AdminApplicationsPage() {
       loadApplications();
     } catch (err) {
       console.error("Failed to update status", err);
+      setNotice("Ошибка обновления статуса");
+      setTimeout(() => setNotice(""), 3000);
     }
   };
 
@@ -69,19 +80,21 @@ export default function AdminApplicationsPage() {
       loadApplications();
     } catch (err) {
       console.error("Failed to delete application", err);
+      setNotice("Ошибка удаления заявки");
+      setTimeout(() => setNotice(""), 3000);
     }
   };
 
   const getStatusBadge = (status) => {
     switch (status) {
       case "NEW":
-        return <Badge colorScheme="red" px={2.5} py={1} rounded="full">Новая</Badge>;
+        return <Badge bg="red.100" color="red.800" px={2.5} py={1} rounded="full" fontWeight="bold">Новая</Badge>;
       case "CONTACTED":
-        return <Badge colorScheme="yellow" px={2.5} py={1} rounded="full">В обработке</Badge>;
+        return <Badge bg="yellow.100" color="yellow.800" px={2.5} py={1} rounded="full" fontWeight="bold">В обработке</Badge>;
       case "RESOLVED":
-        return <Badge colorScheme="green" px={2.5} py={1} rounded="full">Завершена</Badge>;
+        return <Badge bg="green.100" color="green.800" px={2.5} py={1} rounded="full" fontWeight="bold">Завершена</Badge>;
       case "ARCHIVED":
-        return <Badge colorScheme="gray" px={2.5} py={1} rounded="full">В архиве</Badge>;
+        return <Badge bg="gray.100" color="gray.800" px={2.5} py={1} rounded="full" fontWeight="bold">В архиве</Badge>;
       default:
         return <Badge px={2.5} py={1} rounded="full">{status}</Badge>;
     }
@@ -98,7 +111,7 @@ export default function AdminApplicationsPage() {
       case "question":
         return "Вопрос";
       default:
-        return type;
+        return type || "Заявка";
     }
   };
 
@@ -124,29 +137,38 @@ export default function AdminApplicationsPage() {
               Заявки и обращения
             </Heading>
             {meta.newCount > 0 && (
-              <Badge colorScheme="red" fontSize="sm" px={3} py={1} rounded="full">
+              <Badge bg="red.500" color="white" fontSize="xs" px={3} py={1} rounded="full">
                 +{meta.newCount} новых
               </Badge>
             )}
           </HStack>
           <Text color="gray.500" mt={1}>
-            Все заявки от родителей, поступившие с сайта
+            Все обращения родителей и кандидатов, поступившие с сайта
           </Text>
         </Box>
 
         <Button
           onClick={loadApplications}
-          leftIcon={<Box as="span" className="material-symbols-outlined" fontSize="sm">refresh</Box>}
           variant="outline"
           size="sm"
+          borderColor="gray.300"
         >
-          Обновить
+          <HStack spacing={1}>
+            <Box as="span" className="material-symbols-outlined" fontSize="sm">refresh</Box>
+            <Text>Обновить</Text>
+          </HStack>
         </Button>
       </Flex>
 
       {notice && (
         <Box mb={6} p={3} rounded="xl" bg="green.50" border="1px solid" borderColor="green.200" color="green.800" fontWeight="medium">
           ✓ {notice}
+        </Box>
+      )}
+
+      {errorMessage && (
+        <Box mb={6} p={3} rounded="xl" bg="red.50" border="1px solid" borderColor="red.200" color="red.800" fontWeight="medium">
+          ⚠️ {errorMessage}
         </Box>
       )}
 
@@ -174,7 +196,9 @@ export default function AdminApplicationsPage() {
               size="sm"
               rounded="lg"
               variant={statusFilter === tab.id ? "solid" : "ghost"}
-              colorScheme={statusFilter === tab.id ? "blue" : "gray"}
+              bg={statusFilter === tab.id ? "#002045" : "transparent"}
+              color={statusFilter === tab.id ? "white" : "gray.600"}
+              _hover={{ bg: statusFilter === tab.id ? "#001835" : "gray.100" }}
               onClick={() => setStatusFilter(tab.id)}
             >
               {tab.label}
@@ -219,7 +243,7 @@ export default function AdminApplicationsPage() {
             <Box as="span" className="material-symbols-outlined" fontSize="4xl" color="gray.300" mb={2} display="block">
               inbox
             </Box>
-            <Text color="gray.500">Заявок не найдено</Text>
+            <Text color="gray.500">Заявок пока нет или они не загружены</Text>
           </Box>
         ) : (
           <Box overflowX="auto">
@@ -262,7 +286,7 @@ export default function AdminApplicationsPage() {
                     </td>
 
                     <td style={{ padding: "12px" }}>
-                      <Badge variant="subtle" colorScheme="purple">
+                      <Badge bg="purple.100" color="purple.800" px={2} py={0.5} rounded="md" fontSize="xs">
                         {getTypeLabel(app.type)}
                       </Badge>
                     </td>
@@ -285,10 +309,17 @@ export default function AdminApplicationsPage() {
                     </td>
 
                     <td style={{ padding: "12px" }}>
-                      <Select
-                        size="xs"
-                        rounded="md"
-                        w="130px"
+                      <select
+                        style={{
+                          fontSize: "12px",
+                          padding: "4px 8px",
+                          borderRadius: "6px",
+                          border: "1px solid #CBD5E1",
+                          background: "#fff",
+                          color: "#1E293B",
+                          cursor: "pointer",
+                          outline: "none",
+                        }}
                         value={app.status}
                         onChange={(e) => handleStatusChange(app.id, e.target.value)}
                       >
@@ -296,7 +327,7 @@ export default function AdminApplicationsPage() {
                         <option value="CONTACTED">В обработке</option>
                         <option value="RESOLVED">Завершена</option>
                         <option value="ARCHIVED">В архиве</option>
-                      </Select>
+                      </select>
                     </td>
 
                     <td style={{ padding: "12px", textAlign: "right" }}>
@@ -312,6 +343,8 @@ export default function AdminApplicationsPage() {
                           size="xs"
                           colorScheme="red"
                           variant="ghost"
+                          color="red.500"
+                          _hover={{ bg: "red.50" }}
                           onClick={() => handleDelete(app.id)}
                         >
                           Удалить
@@ -366,63 +399,74 @@ export default function AdminApplicationsPage() {
                 {getStatusBadge(selectedApp.status)}
               </Flex>
 
-                <Box p={4} bg="gray.50" rounded="xl">
-                  <Text fontSize="xs" color="gray.400">Родитель</Text>
-                  <Heading size="sm" color="#002045" mb={1}>{selectedApp.fullName}</Heading>
-                  <Text color="#002045" fontWeight="bold" userSelect="all">
-                    📞 {selectedApp.phone}
-                  </Text>
-                  {selectedApp.email && (
-                    <Text fontSize="sm" color="gray.600" userSelect="all">✉️ {selectedApp.email}</Text>
-                  )}
+              <Box p={4} bg="gray.50" rounded="xl">
+                <Text fontSize="xs" color="gray.400">Родитель</Text>
+                <Heading size="sm" color="#002045" mb={1}>{selectedApp.fullName}</Heading>
+                <Text color="#002045" fontWeight="bold" userSelect="all">
+                  📞 {selectedApp.phone}
+                </Text>
+                {selectedApp.email && (
+                  <Text fontSize="sm" color="gray.600" userSelect="all">✉️ {selectedApp.email}</Text>
+                )}
+              </Box>
+
+              <Grid templateColumns="repeat(2, 1fr)" gap={4}>
+                <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
+                  <Text fontSize="xs" color="gray.400">Цель обращения</Text>
+                  <Text fontWeight="bold" fontSize="sm">{getTypeLabel(selectedApp.type)}</Text>
                 </Box>
-
-                <Grid templateColumns="repeat(2, 1fr)" gap={4}>
-                  <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
-                    <Text fontSize="xs" color="gray.400">Цель обращения</Text>
-                    <Text fontWeight="bold" fontSize="sm">{getTypeLabel(selectedApp.type)}</Text>
-                  </Box>
-                  <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
-                    <Text fontSize="xs" color="gray.400">Класс ребенка</Text>
-                    <Text fontWeight="bold" fontSize="sm">{selectedApp.childGrade || "Не указан"}</Text>
-                  </Box>
-                </Grid>
-
-                <Box>
-                  <Text fontSize="xs" color="gray.400" mb={1}>Сообщение / Комментарий</Text>
-                  <Box p={4} bg="gray.50" rounded="xl" fontSize="sm" color="gray.700" whiteSpace="pre-wrap">
-                    {selectedApp.message || "Клиент не оставил дополнительного комментария."}
-                  </Box>
+                <Box p={3} border="1px solid" borderColor="gray.100" rounded="lg">
+                  <Text fontSize="xs" color="gray.400">Класс ребенка</Text>
+                  <Text fontWeight="bold" fontSize="sm">{selectedApp.childGrade || "Не указан"}</Text>
                 </Box>
+              </Grid>
 
-                <Flex justify="space-between" align="center" pt={4} borderTop="1px solid" borderColor="gray.100">
-                  <Select
-                    size="sm"
-                    w="160px"
-                    value={selectedApp.status}
-                    onChange={(e) => {
-                      handleStatusChange(selectedApp.id, e.target.value);
-                      setSelectedApp({ ...selectedApp, status: e.target.value });
-                    }}
-                  >
-                    <option value="NEW">Новая</option>
-                    <option value="CONTACTED">В обработке</option>
-                    <option value="RESOLVED">Завершена</option>
-                    <option value="ARCHIVED">В архиве</option>
-                  </Select>
+              <Box>
+                <Text fontSize="xs" color="gray.400" mb={1}>Сообщение / Комментарий</Text>
+                <Box p={4} bg="gray.50" rounded="xl" fontSize="sm" color="gray.700" whiteSpace="pre-wrap">
+                  {selectedApp.message || "Клиент не оставил дополнительного комментария."}
+                </Box>
+              </Box>
 
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => {
-                      navigator.clipboard?.writeText(selectedApp.phone);
-                      setNotice(`Номер ${selectedApp.phone} скопирован в буфер обмена`);
-                      setTimeout(() => setNotice(""), 3000);
-                    }}
-                  >
-                    Скопировать номер
-                  </Button>
-                </Flex>
+              <Flex justify="space-between" align="center" pt={4} borderTop="1px solid" borderColor="gray.100">
+                <select
+                  style={{
+                    fontSize: "13px",
+                    padding: "6px 10px",
+                    borderRadius: "8px",
+                    border: "1px solid #CBD5E1",
+                    background: "#fff",
+                    color: "#1E293B",
+                    cursor: "pointer",
+                    outline: "none",
+                    width: "160px",
+                  }}
+                  value={selectedApp.status}
+                  onChange={(e) => {
+                    handleStatusChange(selectedApp.id, e.target.value);
+                    setSelectedApp({ ...selectedApp, status: e.target.value });
+                  }}
+                >
+                  <option value="NEW">Новая</option>
+                  <option value="CONTACTED">В обработке</option>
+                  <option value="RESOLVED">Завершена</option>
+                  <option value="ARCHIVED">В архиве</option>
+                </select>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    if (typeof navigator !== "undefined" && navigator.clipboard) {
+                      navigator.clipboard.writeText(selectedApp.phone);
+                    }
+                    setNotice(`Номер ${selectedApp.phone} скопирован в буфер обмена`);
+                    setTimeout(() => setNotice(""), 3000);
+                  }}
+                >
+                  Скопировать номер
+                </Button>
+              </Flex>
             </VStack>
           </Box>
         </Box>

@@ -139,6 +139,22 @@ export default function GalleryPage() {
 
   useEffect(() => {
     async function loadGallery() {
+      if (typeof window !== "undefined") {
+        try {
+          const stored = localStorage.getItem("ngs_custom_gallery");
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const enriched = parsed.map((item, idx) => ({
+                ...item,
+                colSpan: item.featured ? 2 : (idx % 5 === 0 ? 2 : 1),
+                rowSpan: item.featured && idx % 3 === 0 ? 2 : 1,
+              }));
+              setItems(enriched);
+            }
+          }
+        } catch (e) {}
+      }
       try {
         const res = await galleryService.getGallery();
         if (res?.data && res.data.length > 0) {
@@ -151,7 +167,7 @@ export default function GalleryPage() {
           setItems(enriched);
         }
       } catch (err) {
-        console.warn("Using fallback gallery", err);
+        console.warn("Using fallback/local gallery", err);
       } finally {
         setIsLoading(false);
       }
