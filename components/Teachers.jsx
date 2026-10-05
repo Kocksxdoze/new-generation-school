@@ -9,6 +9,13 @@ export default function Teachers({
   teamLink = "#",
   items = [
     {
+      name: "Галина Алексеевна",
+      subject: "Руководство школы",
+      exp: "Учредитель и директор школы",
+      desc: "Учредитель и директор школы НОУ «Новое Поколение», лидер развития образования",
+      imageUrl: "/images/teachers/galina.jpg"
+    },
+    {
       name: "Диляфруз Ганиевна",
       subject: "Математика",
       exp: "Учитель математики",
@@ -28,13 +35,6 @@ export default function Teachers({
       exp: "Классный руководитель младшей школы",
       desc: "Сильный преподаватель начального образования, индивидуальный подход",
       imageUrl: "/images/teachers/albina.jpg"
-    },
-    {
-      name: "Аида Абдурахмановна",
-      subject: "Начальные классы",
-      exp: "Классный руководитель младшей школы",
-      desc: "Сильный преподаватель начального образования, всестороннее развитие",
-      imageUrl: "/images/teachers/aida.jpg"
     }
   ]
 }) {
@@ -67,14 +67,16 @@ export default function Teachers({
       >
         {items.map((item, idx) => {
           const fallbackPhotos = [
+            "/images/teachers/galina.jpg",
             "/images/teachers/dilafruz.jpg",
             "/images/teachers/nigora.jpg",
             "/images/teachers/albina.jpg",
-            "/images/teachers/aida.jpg",
           ];
           const hasCustomPhoto = item.imageUrl && !item.imageUrl.includes("bg.png");
           const finalImageUrl = hasCustomPhoto 
-            ? (item.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + item.imageUrl : item.imageUrl)
+            ? (item.imageUrl.startsWith("/images/") 
+                ? item.imageUrl 
+                : (item.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + item.imageUrl : item.imageUrl))
             : fallbackPhotos[idx % fallbackPhotos.length];
 
           return (
