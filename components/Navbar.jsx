@@ -62,6 +62,7 @@ export default function Navbar() {
             display="flex"
             alignItems="center"
             gap={3}
+            flexShrink={0}
             role="group"
             _hover={{ textDecoration: "none" }}
           >
@@ -86,6 +87,7 @@ export default function Navbar() {
                 color="#002045"
                 lineHeight="tight"
                 letterSpacing="tight"
+                whiteSpace="nowrap"
               >
                 New Generation
               </Text>
@@ -95,6 +97,7 @@ export default function Navbar() {
                 letterSpacing="widest"
                 color="#64748B"
                 fontWeight="medium"
+                whiteSpace="nowrap"
               >
                 School
               </Text>
@@ -103,12 +106,13 @@ export default function Navbar() {
 
           {/* Nav Links (Desktop) */}
           <HStack
-            display={{ base: "none", md: "flex" }}
+            display={{ base: "none", xl: "flex" }}
             gap={1}
-            bg="rgba(255,255,255,0.5)"
+            bg="rgba(255,255,255,0.6)"
             rounded="full"
             p={1}
-            border="1px solid rgba(255,255,255,0.6)"
+            border="1px solid rgba(255,255,255,0.7)"
+            flexShrink={0}
           >
             {navLinks.map((link) => {
               const isActive = link.href === pathname || (link.href.startsWith("/#") && pathname === "/" && false);
@@ -117,10 +121,11 @@ export default function Navbar() {
                   as={Link}
                   key={link.href}
                   href={link.href}
+                  whiteSpace="nowrap"
                   fontWeight="medium"
-                  fontSize="sm"
-                  px={5}
-                  py={2}
+                  fontSize={{ xl: "xs", "2xl": "sm" }}
+                  px={{ xl: 3, "2xl": 4 }}
+                  py={1.5}
                   rounded="full"
                   color="#002045"
                   bg={isActive ? "white" : "transparent"}
@@ -139,8 +144,8 @@ export default function Navbar() {
           </HStack>
 
           {/* Trailing Action */}
-          <HStack gap={4}>
-            <HStack display={{ base: "none", lg: "flex" }} gap={2} mr={2}>
+          <HStack gap={3} flexShrink={0}>
+            <HStack display={{ base: "none", "2xl": "flex" }} gap={2} mr={2} flexShrink={0}>
               <Box
                 as="span"
                 className="material-symbols-outlined"
@@ -154,6 +159,7 @@ export default function Navbar() {
                 fontSize="sm"
                 color="#002045"
                 userSelect="all"
+                whiteSpace="nowrap"
               >
                 +998 (90) 230-29-63
               </Text>
@@ -161,10 +167,12 @@ export default function Navbar() {
             <ChakraLink
               as={Link}
               href="/apply"
-              display={{ base: "none", md: "inline-flex" }}
+              display={{ base: "none", sm: "inline-flex" }}
               alignItems="center"
               justifyContent="center"
-              px={6}
+              whiteSpace="nowrap"
+              flexShrink={0}
+              px={{ base: 4, xl: 6 }}
               py={2.5}
               bg="#FFB800"
               color="#002045"
@@ -182,9 +190,10 @@ export default function Navbar() {
               type="button"
               onClick={onToggle}
               aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
-              display={{ base: "flex", md: "none" }}
+              display={{ base: "flex", xl: "none" }}
               align="center"
               justify="center"
+              flexShrink={0}
               w={10}
               h={10}
               color="#002045"
