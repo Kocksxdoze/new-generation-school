@@ -143,7 +143,10 @@ export default function TeachersPage() {
     loadTeachers();
   }, []);
 
-  const resolveImage = (url) => {
+  const resolveImage = (url, name) => {
+    if (name?.includes("Галина") || url?.includes("galina") || url?.includes("Galina")) {
+      return "/images/teachers/galina.jpg";
+    }
     if (!url) return "/images/teachers/galina.jpg";
     if (url.startsWith("/images/")) return url;
     if (url.startsWith("/")) {

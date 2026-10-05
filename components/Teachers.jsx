@@ -72,12 +72,23 @@ export default function Teachers({
             "/images/teachers/nigora.jpg",
             "/images/teachers/albina.jpg",
           ];
-          const hasCustomPhoto = item.imageUrl && !item.imageUrl.includes("bg.png");
-          const finalImageUrl = hasCustomPhoto 
-            ? (item.imageUrl.startsWith("/images/") 
-                ? item.imageUrl 
-                : (item.imageUrl.startsWith("/") ? (process.env.NEXT_PUBLIC_API_URL ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") : "https://new-generation-school.onrender.com") + item.imageUrl : item.imageUrl))
-            : fallbackPhotos[idx % fallbackPhotos.length];
+
+          let finalImageUrl = fallbackPhotos[idx % fallbackPhotos.length];
+          // Always use clean local cropped portrait for Galina Alekseevna
+          if (item?.name?.includes("Галина") || item?.imageUrl?.includes("galina") || item?.imageUrl?.includes("Galina") || idx === 0) {
+            finalImageUrl = "/images/teachers/galina.jpg";
+          } else if (item?.imageUrl && !item.imageUrl.includes("bg.png")) {
+            if (item.imageUrl.startsWith("/images/")) {
+              finalImageUrl = item.imageUrl;
+            } else if (item.imageUrl.startsWith("/")) {
+              const apiBase = process.env.NEXT_PUBLIC_API_URL 
+                ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") 
+                : "https://new-generation-school.onrender.com";
+              finalImageUrl = apiBase + item.imageUrl;
+            } else {
+              finalImageUrl = item.imageUrl;
+            }
+          }
 
           return (
             <GridItem key={idx}>

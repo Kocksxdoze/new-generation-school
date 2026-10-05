@@ -117,14 +117,17 @@ export default function Programs({
         gap={6}
       >
         {items.map((item, idx) => {
-          // Resolve image URL (prepend API URL if it's a relative path from backend)
-          const finalImageUrl = item.imageUrl
-            ? item.imageUrl.startsWith("/")
-              ? (process.env.NEXT_PUBLIC_API_URL
-                  ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
-                  : "https://new-generation-school.onrender.com") + item.imageUrl
-              : item.imageUrl
-            : "/bg.png";
+          const title = (item?.title || "").toLowerCase();
+          let finalImageUrl = "/images/programs/preschool.jpg";
+          if (title.includes("дошкол") || idx === 0) {
+            finalImageUrl = "/images/programs/preschool.jpg";
+          } else if (title.includes("начальн") || idx === 1) {
+            finalImageUrl = "/images/programs/primary.jpg";
+          } else if (title.includes("средн") || idx === 2) {
+            finalImageUrl = "/images/programs/middle.jpg";
+          } else if (title.includes("старш") || idx === 3) {
+            finalImageUrl = "/images/programs/high.jpg";
+          }
 
           return (
             <GridItem key={idx}>
