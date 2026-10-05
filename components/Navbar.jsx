@@ -6,12 +6,11 @@ import {
   HStack,
   Text,
   Link as ChakraLink,
-  IconButton,
-  useDisclosure,
   VStack,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const navLinks = [
   { href: "/#about", label: "О нас" },
@@ -24,8 +23,15 @@ const navLinks = [
 ];
 
 export default function Navbar() {
-  const { isOpen, onToggle, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
+  const onToggle = () => setIsOpen((prev) => !prev);
+  const onClose = () => setIsOpen(false);
 
   return (
     <>
@@ -173,25 +179,28 @@ export default function Navbar() {
             </ChakraLink>
             <Flex
               as="button"
+              type="button"
               onClick={onToggle}
-              aria-label="Открыть меню"
+              aria-label={isOpen ? "Закрыть меню" : "Открыть меню"}
               display={{ base: "flex", md: "none" }}
               align="center"
               justify="center"
               w={10}
               h={10}
               color="#002045"
-              bg="rgba(255,255,255,0.8)"
+              bg="rgba(255,255,255,0.85)"
               rounded="full"
-              border="1px solid rgba(255,255,255,0.5)"
+              border="1px solid rgba(255,255,255,0.6)"
               cursor="pointer"
               transition="all 0.2s"
+              _active={{ transform: "scale(0.94)" }}
               _hover={{ bg: "white" }}
             >
               <Box
                 as="span"
                 className="material-symbols-outlined"
-                fontSize="md"
+                fontSize="24px"
+                lineHeight="1"
               >
                 {isOpen ? "close" : "menu"}
               </Box>
@@ -199,49 +208,70 @@ export default function Navbar() {
           </HStack>
         </Flex>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Dropdown */}
         {isOpen && (
           <Box
             display={{ base: "block", md: "none" }}
-            bg="rgba(255, 255, 255, 0.95)"
-            backdropFilter="blur(10px)"
+            bg="rgba(255, 255, 255, 0.98)"
+            backdropFilter="blur(16px)"
             mt={2}
-            rounded="2xl"
-            p={4}
-            boxShadow="lg"
+            rounded="3xl"
+            p={5}
+            boxShadow="0 20px 40px -15px rgba(0, 32, 69, 0.25)"
             border="1px solid"
-            borderColor="white"
+            borderColor="rgba(255, 255, 255, 0.8)"
+            maxH="calc(100vh - 100px)"
+            overflowY="auto"
           >
-            <VStack spacing={4} align="stretch">
-              {navLinks.map((link) => (
-                <ChakraLink
-                  key={link.href}
-                  href={link.href}
-                  onClick={onClose}
-                  color="#002045"
-                  fontWeight="medium"
-                  fontSize="md"
-                  p={2}
-                  rounded="md"
-                  _hover={{ bg: "gray.50" }}
-                >
-                  {link.label}
-                </ChakraLink>
-              ))}
-              <Box pt={4} borderTop="1px solid" borderColor="gray.100">
+            <VStack spacing={2} align="stretch">
+              {navLinks.map((link) => {
+                const isActive = link.href === pathname;
+                return (
+                  <ChakraLink
+                    as={Link}
+                    key={link.href}
+                    href={link.href}
+                    onClick={onClose}
+                    color={isActive ? "#002045" : "#1E293B"}
+                    bg={isActive ? "rgba(0, 32, 69, 0.06)" : "transparent"}
+                    fontWeight={isActive ? "bold" : "medium"}
+                    fontSize="md"
+                    px={4}
+                    py={3}
+                    rounded="xl"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="space-between"
+                    transition="all 0.15s ease"
+                    _hover={{ bg: "rgba(0, 32, 69, 0.05)", textDecoration: "none" }}
+                  >
+                    <Text>{link.label}</Text>
+                    {isActive && (
+                      <Box w={2} h={2} rounded="full" bg="#FFB800" />
+                    )}
+                  </ChakraLink>
+                );
+              })}
+
+              <Box pt={4} mt={2} borderTop="1px solid" borderColor="gray.100">
                 <Flex
                   alignItems="center"
-                  gap={2}
+                  gap={3}
                   color="#002045"
                   fontWeight="bold"
                   mb={4}
+                  px={4}
+                  py={2}
+                  bg="gray.50"
+                  rounded="xl"
                   userSelect="all"
                 >
-                  <Box as="span" className="material-symbols-outlined" fontSize="sm">
+                  <Box as="span" className="material-symbols-outlined" fontSize="20px" color="#FFB800">
                     call
                   </Box>
-                  <Text>+998 (90) 230-29-63</Text>
+                  <Text fontSize="sm">+998 (90) 230-29-63</Text>
                 </Flex>
+
                 <ChakraLink
                   as={Link}
                   href="/apply"
@@ -249,12 +279,16 @@ export default function Navbar() {
                   display="block"
                   textAlign="center"
                   px={6}
-                  py={3}
+                  py={3.5}
                   bg="#FFB800"
                   color="#002045"
                   fontWeight="bold"
+                  fontSize="md"
                   rounded="full"
-                  _hover={{ textDecoration: "none", bg: "#e6a600" }}
+                  boxShadow="0 4px 14px rgba(255, 184, 0, 0.4)"
+                  transition="all 0.2s"
+                  _hover={{ textDecoration: "none", bg: "#e6a600", transform: "translateY(-1px)" }}
+                  _active={{ transform: "scale(0.98)" }}
                 >
                   Подать заявку
                 </ChakraLink>
