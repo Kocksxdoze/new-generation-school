@@ -15,9 +15,10 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { href: "/#about", label: "О нас" },
-  { href: "/#features", label: "Почему мы" },
-  { href: "/#programs", label: "Программы" },
-  { href: "/#testimonials", label: "Отзывы" },
+  { href: "/programs", label: "Программы" },
+  { href: "/teachers", label: "Преподаватели" },
+  { href: "/universities", label: "Университеты" },
+  { href: "/gallery", label: "Кампус" },
   { href: "/news", label: "Новости" },
   { href: "/#location", label: "Контакты" },
 ];

@@ -59,11 +59,13 @@ export default function AdminLayout({ children }) {
   };
 
   const navItems = [
-    { name: 'Дашборд', path: '/admin' },
-    { name: 'Заявки', path: '/admin/applications' },
-    { name: 'Новости', path: '/admin/news' },
-    { name: 'Медиа', path: '/admin/media' },
-    { name: 'Страницы', path: '/admin/pages' },
+    { name: 'Дашборд', path: '/admin', icon: 'dashboard' },
+    { name: 'Заявки', path: '/admin/applications', icon: 'description' },
+    { name: 'Преподаватели', path: '/admin/teachers', icon: 'school' },
+    { name: 'Новости', path: '/admin/news', icon: 'newspaper' },
+    { name: 'Галерея кампуса', path: '/admin/gallery', icon: 'photo_library' },
+    { name: 'Медиатека', path: '/admin/media', icon: 'perm_media' },
+    { name: 'Страницы и блоки', path: '/admin/pages', icon: 'view_quilt' },
   ];
 
   return (
@@ -83,13 +85,23 @@ export default function AdminLayout({ children }) {
                   as={Link}
                   key={item.path}
                   href={item.path}
-                  p={3}
-                  borderRadius="md"
+                  px={3}
+                  py={2.5}
+                  borderRadius="lg"
                   bg={isActive ? 'blue.50' : 'transparent'}
-                  color={isActive ? 'blue.600' : 'gray.600'}
-                  fontWeight={isActive ? 'bold' : 'normal'}
+                  color={isActive ? 'blue.600' : 'gray.700'}
+                  fontWeight={isActive ? 'bold' : 'medium'}
+                  display="flex"
+                  alignItems="center"
+                  gap={3}
+                  transition="all 0.2s"
                   _hover={{ bg: 'blue.50', color: 'blue.600', textDecoration: 'none' }}
                 >
+                  {item.icon && (
+                    <Box as="span" className="material-symbols-outlined" fontSize="20px">
+                      {item.icon}
+                    </Box>
+                  )}
                   {item.name}
                 </ChakraLink>
               );

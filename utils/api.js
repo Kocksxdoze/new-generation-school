@@ -167,4 +167,60 @@ export const applicationsService = {
   },
 };
 
+// --- Teachers ---
+export const teachersService = {
+  // Public
+  getTeachers: async (department = null) => {
+    const params = department && department !== 'all' ? { department } : {};
+    const { data } = await api.get('/teachers', { params });
+    return data;
+  },
+  // Admin
+  getAllAdmin: async () => {
+    const { data } = await api.get('/admin/teachers');
+    return data;
+  },
+  createTeacher: async (teacherData) => {
+    const { data } = await api.post('/admin/teachers', teacherData);
+    return data;
+  },
+  updateTeacher: async (id, teacherData) => {
+    const { data } = await api.put(`/admin/teachers/${id}`, teacherData);
+    return data;
+  },
+  deleteTeacher: async (id) => {
+    const { data } = await api.delete(`/admin/teachers/${id}`);
+    return data;
+  },
+};
+
+// --- Campus Media Gallery ---
+export const galleryService = {
+  // Public
+  getGallery: async (category = null, featured = null) => {
+    const params = {};
+    if (category && category !== 'all') params.category = category;
+    if (featured !== null && featured !== undefined) params.featured = featured;
+    const { data } = await api.get('/gallery', { params });
+    return data;
+  },
+  // Admin
+  getAllAdmin: async () => {
+    const { data } = await api.get('/admin/gallery');
+    return data;
+  },
+  createItem: async (itemData) => {
+    const { data } = await api.post('/admin/gallery', itemData);
+    return data;
+  },
+  updateItem: async (id, itemData) => {
+    const { data } = await api.put(`/admin/gallery/${id}`, itemData);
+    return data;
+  },
+  deleteItem: async (id) => {
+    const { data } = await api.delete(`/admin/gallery/${id}`);
+    return data;
+  },
+};
+
 export default api;

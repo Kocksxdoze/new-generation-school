@@ -82,7 +82,7 @@ export default function Alumni({
   subtitle = "НАШИ ВЫПУСКНИКИ",
   title = "Поступают в ведущие университеты мира",
   description = "2022-2026 - 146 выпускников",
-  allLink = "#",
+  allLink = "/universities",
   logos = [
     { name: "WIUT", city: "Ташкент", bg: "blue.500", type: "text", label: "W", iconColor: "white" },
     { name: "MDIS", city: "Сингапур / Ташкент", bg: "red.500", type: "text", label: "M", iconColor: "white" },

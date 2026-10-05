@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function Teachers({
   subtitle = "НАША СИЛА — НАШИ ПРЕПОДАВАТЕЛИ",
   title = "Опытные наставники, вдохновляющие на успех",
-  teamLink = "#",
+  teamLink = "/teachers",
   items = [
     {
       name: "Галина Алексеевна",
