@@ -58,8 +58,24 @@ pagesAdminRouter.patch(
   validate({ params: sectionIdParamSchema, body: updateSectionSchema }),
   updateSectionController,
 );
+pagesAdminRouter.put(
+  "/sections/:id",
+  validate({ params: sectionIdParamSchema, body: updateSectionSchema }),
+  updateSectionController,
+);
+pagesAdminRouter.put(
+  "/:slug/sections/:id",
+  validate({ params: sectionIdParamSchema, body: updateSectionSchema }),
+  updateSectionController,
+);
 pagesAdminRouter.delete(
   "/sections/:id",
   validate({ params: sectionIdParamSchema }),
   deleteSectionController,
 );
+pagesAdminRouter.delete(
+  "/:slug/sections/:id",
+  validate({ params: sectionIdParamSchema }),
+  deleteSectionController,
+);
+

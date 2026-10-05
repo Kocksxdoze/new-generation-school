@@ -5,12 +5,16 @@ import { mediaRouter } from "../modules/media/media.routes.js";
 import { siteRouter, pagesAdminRouter } from "../modules/pages/pages.routes.js";
 import { applicationsRouter, applicationsAdminRouter } from "../modules/applications/applications.routes.js";
 import { securityRouter } from "../modules/security/security.routes.js";
+import { teachersRouter, teachersAdminRouter } from "../modules/teachers/teachers.routes.js";
+import { galleryRouter, galleryAdminRouter } from "../modules/gallery/gallery.routes.js";
 
 export const apiRouter = Router();
 
 // --- Public: consumed by the Next.js frontend ---
 apiRouter.use("/news", newsRouter);
 apiRouter.use("/site", siteRouter);
+apiRouter.use("/teachers", teachersRouter);
+apiRouter.use("/gallery", galleryRouter);
 apiRouter.use("/applications", applicationsRouter);
 apiRouter.use("/security", securityRouter);
 
@@ -21,6 +25,8 @@ apiRouter.use("/auth", authRouter);
 apiRouter.use("/admin/news", newsAdminRouter);
 apiRouter.use("/admin/media", mediaRouter);
 apiRouter.use("/admin/pages", pagesAdminRouter);
+apiRouter.use("/admin/teachers", teachersAdminRouter);
+apiRouter.use("/admin/gallery", galleryAdminRouter);
 apiRouter.use("/admin/applications", applicationsAdminRouter);
 
 apiRouter.get("/health", (req, res) => res.json({ success: true, data: "ok" }));

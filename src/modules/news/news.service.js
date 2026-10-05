@@ -66,8 +66,12 @@ export async function getNewsBySlug(slug) {
 }
 
 export async function createNews(data) {
-  const slug = await generateUniqueSlug(data.title);
-  return prisma.news.create({ data: { ...data, slug } });
+  const { slug: providedSlug, ...rest } = data;
+  let slug = providedSlug && providedSlug.trim() ? slugify(providedSlug.trim()) : await generateUniqueSlug(data.title);
+  if (await prisma.news.findUnique({ where: { slug } })) {
+    slug = await generateUniqueSlug(data.title);
+  }
+  return prisma.news.create({ data: { ...rest, slug } });
 }
 
 export async function updateNews(id, data) {

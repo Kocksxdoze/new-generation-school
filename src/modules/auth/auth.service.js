@@ -33,6 +33,10 @@ export async function login({ login, password }) {
     throw ApiError.unauthorized("Неверный логин или пароль");
   }
 
+  if (user.isLocked) {
+    throw ApiError.forbidden("Доступ к данному аккаунту заблокирован администратором безопасности");
+  }
+
   const token = signToken(user);
   return { token, user: toPublicUser(user) };
 }

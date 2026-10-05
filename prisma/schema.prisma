@@ -25,6 +25,7 @@ model User {
   email     String   @unique
   password  String // bcrypt hash, never the plain value
   role      Role     @default(EDITOR)
+  isLocked  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -128,5 +129,72 @@ model Application {
 
   @@index([status, createdAt])
   @@map("applications")
+}
+
+// ---------------------------------------------------------------------------
+// Teachers & Faculty
+// ---------------------------------------------------------------------------
+
+model Teacher {
+  id          Int      @id @default(autoincrement())
+  name        String
+  subject     String
+  role        String?  // e.g. "Учредитель и директор", "Зав. кафедры", "Учитель высшей категории"
+  desc        String?  // short bio / achievements
+  department  String   @default("all") // "leadership" | "exact" | "humanities" | "languages" | "primary" | "sports"
+  imageUrl    String?  // relative /uploads or /images path
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([department, order])
+  @@map("teachers")
+}
+
+// ---------------------------------------------------------------------------
+// Campus Media Gallery
+// ---------------------------------------------------------------------------
+
+model GalleryItem {
+  id          Int      @id @default(autoincrement())
+  title       String?
+  caption     String?
+  type        String   @default("image") // "image" | "video"
+  url         String   // path to photo or mp4/webm video
+  thumbnailUrl String?
+  category    String   @default("campus") // "campus" | "labs" | "classrooms" | "sports" | "events"
+  featured    Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category, order])
+  @@map("gallery_items")
+}
+
+// ---------------------------------------------------------------------------
+// Persistent Security & Access Audit Log
+// ---------------------------------------------------------------------------
+
+model AuditLog {
+  id             Int      @id @default(autoincrement())
+  timestamp      DateTime @default(now())
+  ip             String
+  method         String
+  endpoint       String
+  action         String
+  statusCode     Int
+  responseTimeMs Float    @default(0)
+  userAgent      String?
+  threatLevel    String   @default("NORMAL") // "NORMAL" | "WARNING" | "CRITICAL"
+  threatDetails  String?
+  adminUser      String?  // admin username if authenticated request
+  createdAt      DateTime @default(now())
+
+  @@index([timestamp])
+  @@index([ip])
+  @@index([action])
+  @@index([threatLevel])
+  @@map("audit_logs")
 }
 

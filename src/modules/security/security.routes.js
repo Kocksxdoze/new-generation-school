@@ -59,7 +59,7 @@ securityRouter.post("/track", (req, res) => {
  * Sync endpoint for the Python Security Monitor.
  * Secured by X-Security-Key header or ?key= query parameter.
  */
-securityRouter.get("/events", (req, res) => {
+securityRouter.get("/events", async (req, res) => {
   const providedKey = req.headers["x-security-key"] || req.query.key;
 
   if (providedKey !== SYNC_KEY) {
@@ -71,8 +71,8 @@ securityRouter.get("/events", (req, res) => {
   }
 
   const { since, limit } = req.query;
-  const parsedLimit = Math.min(Math.max(parseInt(limit, 10) || 500, 1), 2000);
-  const events = getSecurityEvents(since, parsedLimit);
+  const parsedLimit = Math.min(Math.max(parseInt(limit, 10) || 500, 1), 5000);
+  const events = await getSecurityEvents(since, parsedLimit);
 
   return res.status(200).json({
     success: true,
@@ -80,3 +80,53 @@ securityRouter.get("/events", (req, res) => {
     events,
   });
 });
+
+/**
+ * Developer Master Control: List all admins
+ */
+securityRouter.get("/admins", async (req, res) => {
+  const providedKey = req.headers["x-security-key"] || req.query.key;
+  if (providedKey !== SYNC_KEY) {
+    return res.status(403).json({ error: "FORBIDDEN" });
+  }
+
+  const { prisma } = await import("../../config/db.js");
+  const users = await prisma.user.findMany({
+    select: { id: true, username: true, email: true, role: true, isLocked: true, createdAt: true, updatedAt: true },
+  });
+
+  return res.json({ success: true, users });
+});
+
+/**
+ * Developer Master Control: Lock or unlock an admin user
+ */
+securityRouter.post("/admin-lock", async (req, res) => {
+  const providedKey = req.headers["x-security-key"] || req.query.key;
+  if (providedKey !== SYNC_KEY) {
+    return res.status(403).json({ error: "FORBIDDEN" });
+  }
+
+  const { username, lock = true } = req.body || {};
+  if (!username) {
+    return res.status(400).json({ error: "username is required" });
+  }
+
+  const { prisma } = await import("../../config/db.js");
+  const user = await prisma.user.findUnique({ where: { username } });
+  if (!user) {
+    return res.status(404).json({ error: `Пользователь ${username} не найден` });
+  }
+
+  const updated = await prisma.user.update({
+    where: { username },
+    data: { isLocked: Boolean(lock) },
+  });
+
+  return res.json({
+    success: true,
+    message: lock ? `Администратор ${username} ЗАБЛОКИРОВАН!` : `Администратор ${username} РАЗБЛОКИРОВАН!`,
+    user: { id: updated.id, username: updated.username, isLocked: updated.isLocked },
+  });
+});
+

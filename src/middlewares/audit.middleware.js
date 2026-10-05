@@ -92,8 +92,17 @@ function resolveAction(url, method, statusCode, req) {
 
   if (pathPart.includes("/admin/pages")) return `ADMIN_EDIT_PAGES (${m})${adminTag}`;
   if (pathPart.includes("/admin/news")) return `ADMIN_MANAGE_NEWS (${m})${adminTag}`;
+  if (pathPart.includes("/admin/teachers")) return `ADMIN_MANAGE_TEACHERS (${m})${adminTag}`;
+  if (pathPart.includes("/admin/gallery")) return `ADMIN_MANAGE_GALLERY (${m})${adminTag}`;
   if (pathPart.includes("/admin/media")) return `ADMIN_MANAGE_MEDIA (${m})${adminTag}`;
   if (pathPart.includes("/admin/applications")) return `ADMIN_VIEW_LEADS${adminTag}`;
+
+  if (pathPart.includes("/teachers")) {
+    return m === "GET" ? "VIEW_TEACHERS" : `ADMIN_MANAGE_TEACHERS${adminTag}`;
+  }
+  if (pathPart.includes("/gallery")) {
+    return m === "GET" ? "VIEW_GALLERY" : `ADMIN_MANAGE_GALLERY${adminTag}`;
+  }
 
   if (pathPart.includes("/news")) {
     if (m === "GET") return "VIEW_NEWS";
@@ -186,7 +195,8 @@ export function auditMiddleware(req, res, next) {
       responseTimeMs,
       userAgent,
       threatLevel: threat.level,
-      threatDetails: details.trim()
+      threatDetails: details.trim(),
+      adminUser: req.user?.username || null
     };
 
     // 1. Record to internal memory store & audit log for Python sync

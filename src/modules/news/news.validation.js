@@ -20,14 +20,16 @@ export const newsSlugParamSchema = z.object({
 });
 
 export const createNewsSchema = z.object({
-  title: z.string().trim().min(3).max(200),
-  excerpt: z.string().trim().max(300).optional(),
-  body: z.string().trim().min(1),
-  category: z.string().trim().min(1),
-  date: z.coerce.date(),
-  externalUrl: z.string().url().optional().or(z.literal("")),
-  coverImage: z.string().optional(),
+  title: z.string().trim().min(1, "Заголовок обязателен").max(300),
+  slug: z.string().trim().optional(),
+  excerpt: z.string().trim().max(1000).optional().nullable(),
+  body: z.string().trim().min(1, "Текст новости обязателен"),
+  category: z.string().trim().min(1).default("Новость"),
+  date: z.coerce.date().default(() => new Date()),
+  externalUrl: z.string().optional().nullable().or(z.literal("")),
+  coverImage: z.string().optional().nullable(),
   published: z.boolean().default(true),
 });
 
 export const updateNewsSchema = createNewsSchema.partial();
+
