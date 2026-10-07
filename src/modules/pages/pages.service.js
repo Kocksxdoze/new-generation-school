@@ -81,9 +81,16 @@ export async function deleteSection(id) {
 
 // Applies a full new ordering in one transaction so the page never sits in
 // a half-reordered state if something goes wrong midway.
-export async function reorderSections(pageSlug, order) {
-  const page = await prisma.page.findUnique({ where: { slug: pageSlug } });
-  if (!page) throw ApiError.notFound(`Страница "${pageSlug}" не найдена`);
+export async function reorderSections(pageSlugOrId, order) {
+  let page = null;
+  const numId = Number(pageSlugOrId);
+  if (!isNaN(numId)) {
+    page = await prisma.page.findUnique({ where: { id: numId } });
+  }
+  if (!page) {
+    page = await prisma.page.findUnique({ where: { slug: String(pageSlugOrId) } });
+  }
+  if (!page) throw ApiError.notFound(`Страница "${pageSlugOrId}" не найдена`);
 
   await prisma.$transaction(
     order.map(({ id, order: newOrder }) =>
@@ -91,5 +98,5 @@ export async function reorderSections(pageSlug, order) {
     ),
   );
 
-  return getPageBySlug(pageSlug);
+  return getPageBySlug(page.slug);
 }

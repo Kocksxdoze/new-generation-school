@@ -53,6 +53,11 @@ pagesAdminRouter.post(
   validate({ params: pageSlugParamSchema, body: reorderSectionsSchema }),
   reorderSectionsController,
 );
+pagesAdminRouter.put(
+  "/:slug/sections/reorder",
+  validate({ params: pageSlugParamSchema, body: reorderSectionsSchema }),
+  reorderSectionsController,
+);
 pagesAdminRouter.patch(
   "/sections/:id",
   validate({ params: sectionIdParamSchema, body: updateSectionSchema }),
@@ -60,6 +65,11 @@ pagesAdminRouter.patch(
 );
 pagesAdminRouter.put(
   "/sections/:id",
+  validate({ params: sectionIdParamSchema, body: updateSectionSchema }),
+  updateSectionController,
+);
+pagesAdminRouter.patch(
+  "/:slug/sections/:id",
   validate({ params: sectionIdParamSchema, body: updateSectionSchema }),
   updateSectionController,
 );

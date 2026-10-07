@@ -25,7 +25,18 @@ export const createNewsSchema = z.object({
   excerpt: z.string().trim().max(1000).optional().nullable(),
   body: z.string().trim().min(1, "Текст новости обязателен"),
   category: z.string().trim().min(1).default("Новость"),
-  date: z.coerce.date().default(() => new Date()),
+  date: z.preprocess((val) => {
+    if (!val) return new Date();
+    if (typeof val === "string") {
+      const trimmed = val.trim();
+      if (/^\d{2}\.\d{2}\.\d{4}$/.test(trimmed)) {
+        const [d, m, y] = trimmed.split(".");
+        return new Date(`${y}-${m}-${d}T12:00:00Z`);
+      }
+    }
+    const parsed = new Date(val);
+    return isNaN(parsed.getTime()) ? new Date() : parsed;
+  }, z.date()).default(() => new Date()),
   externalUrl: z.string().optional().nullable().or(z.literal("")),
   coverImage: z.string().optional().nullable(),
   published: z.boolean().default(true),
