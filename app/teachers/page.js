@@ -154,12 +154,9 @@ export default function TeachersPage() {
     loadTeachers();
   }, []);
 
-  const resolveImage = (url, name) => {
-    if (name?.includes("Галина") || url?.includes("galina") || url?.includes("Galina")) {
-      return "/images/teachers/galina.jpg";
-    }
+  const resolveImage = (url) => {
     if (!url) return "/images/teachers/galina.jpg";
-    if (url.startsWith("/images/")) return url;
+    if (url.startsWith("/images/") || url.startsWith("data:") || url.startsWith("http")) return url;
     if (url.startsWith("/")) {
       const base = process.env.NEXT_PUBLIC_API_URL
         ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")

@@ -120,13 +120,29 @@ export default function NewsForm({ initialData = null }) {
     setIsLoading(true);
     try {
       const activeCategory = customCategory.trim() || formData.category;
+      
+      let parsedDate = new Date();
+      if (formData.date) {
+        const rawDate = String(formData.date).trim();
+        if (/^\d{2}\.\d{2}\.\d{4}$/.test(rawDate)) {
+          const [d, m, y] = rawDate.split('.');
+          parsedDate = new Date(`${y}-${m}-${d}T12:00:00Z`);
+        } else {
+          const d = new Date(rawDate);
+          if (!isNaN(d.getTime())) {
+            parsedDate = d;
+          }
+        }
+      }
+      const finalIsoDate = !isNaN(parsedDate.getTime()) ? parsedDate.toISOString() : new Date().toISOString();
+
       const payload = {
         title: formData.title.trim(),
         slug: formData.slug.trim() || transliterate(formData.title),
         excerpt: formData.excerpt.trim() || formData.body.slice(0, 180),
         body: formData.body.trim(),
         category: activeCategory,
-        date: new Date(formData.date).toISOString(),
+        date: finalIsoDate,
         externalUrl: formData.externalUrl.trim() || null,
         coverImage: formData.coverImage.trim() || null,
         published: Boolean(formData.published),
@@ -142,11 +158,22 @@ export default function NewsForm({ initialData = null }) {
       router.push("/admin/news");
       router.refresh();
     } catch (error) {
+      let desc = error.response?.data?.message || "Проверьте введенные данные";
+      if (error.response?.data?.details) {
+        const details = error.response.data.details;
+        const errStrings = Object.entries(details).map(([field, errList]) => {
+          const msg = Array.isArray(errList) ? errList.join(", ") : String(errList);
+          return `${field}: ${msg}`;
+        });
+        if (errStrings.length > 0) {
+          desc = `${desc} (${errStrings.join("; ")})`;
+        }
+      }
       toast({
         title: "Ошибка сохранения",
-        description: error.response?.data?.message || error.response?.data?.error || "Проверьте введенные данные",
+        description: desc,
         status: "error",
-        duration: 4000,
+        duration: 5000,
       });
     } finally {
       setIsLoading(false);

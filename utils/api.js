@@ -109,17 +109,40 @@ export const pagesService = {
     return data;
   },
   updateSection: async (pageId, sectionId, sectionData) => {
-    const { data } = await api.put(`/admin/pages/${pageId}/sections/${sectionId}`, sectionData);
-    return data;
+    try {
+      const { data } = await api.put(`/admin/pages/${pageId}/sections/${sectionId}`, sectionData);
+      return data;
+    } catch (err) {
+      if (err.response?.status === 404) {
+        const { data } = await api.patch(`/admin/pages/sections/${sectionId}`, sectionData);
+        return data;
+      }
+      throw err;
+    }
   },
   deleteSection: async (pageId, sectionId) => {
-    const { data } = await api.delete(`/admin/pages/${pageId}/sections/${sectionId}`);
-    return data;
+    try {
+      const { data } = await api.delete(`/admin/pages/${pageId}/sections/${sectionId}`);
+      return data;
+    } catch (err) {
+      if (err.response?.status === 404) {
+        const { data } = await api.delete(`/admin/pages/sections/${sectionId}`);
+        return data;
+      }
+      throw err;
+    }
   },
   reorderSections: async (pageId, sectionIds) => {
-    // sectionIds: [1, 3, 2] array of IDs in new order
-    const { data } = await api.put(`/admin/pages/${pageId}/sections/reorder`, { order: sectionIds });
-    return data;
+    try {
+      const { data } = await api.put(`/admin/pages/${pageId}/sections/reorder`, { order: sectionIds });
+      return data;
+    } catch (err) {
+      if (err.response?.status === 404) {
+        const { data } = await api.post(`/admin/pages/${pageId}/sections/reorder`, { order: sectionIds });
+        return data;
+      }
+      throw err;
+    }
   }
 };
 

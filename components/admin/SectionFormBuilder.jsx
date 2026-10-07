@@ -4,10 +4,14 @@ import { Box, Button, Flex, Input, Textarea, Text, VStack, IconButton, HStack } 
 
 export default function SectionFormBuilder({ type, dataStr, onChange }) {
   let parsedData = {};
-  try {
-    parsedData = JSON.parse(dataStr || '{}');
-  } catch (e) {
-    parsedData = {};
+  if (typeof dataStr === 'object' && dataStr !== null) {
+    parsedData = dataStr;
+  } else {
+    try {
+      parsedData = JSON.parse(dataStr || '{}');
+    } catch (e) {
+      parsedData = {};
+    }
   }
 
   const updateField = (field, value) => {

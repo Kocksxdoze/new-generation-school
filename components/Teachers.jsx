@@ -2,42 +2,98 @@
 
 import { Box, Grid, GridItem, Heading, Text, Flex, VStack } from "@chakra-ui/react";
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { teachersService } from "@/utils/api";
+
+const DEFAULT_TEACHERS = [
+  {
+    name: "Галина Алексеевна",
+    subject: "Руководство школы",
+    exp: "Учредитель и директор школы",
+    desc: "Учредитель и директор школы НОУ «Новое Поколение», лидер развития образования",
+    imageUrl: "/images/teachers/galina.jpg"
+  },
+  {
+    name: "Диляфруз Ганиевна",
+    subject: "Математика",
+    exp: "Учитель математики",
+    desc: "Ведущий преподаватель математики, подготовка к олимпиадам и экзаменам",
+    imageUrl: "/images/teachers/dilafruz.jpg"
+  },
+  {
+    name: "Нигора Усмановна",
+    subject: "Английский язык",
+    exp: "Зав. кафедры английского языка",
+    desc: "Учитель и зав. кафедры английского языка, международные стандарты",
+    imageUrl: "/images/teachers/nigora.jpg"
+  },
+  {
+    name: "Альбина Николаевна",
+    subject: "Начальные классы",
+    exp: "Классный руководитель младшей школы",
+    desc: "Сильный преподаватель начального образования, индивидуальный подход",
+    imageUrl: "/images/teachers/albina.jpg"
+  }
+];
 
 export default function Teachers({
   subtitle = "НАША СИЛА — НАШИ ПРЕПОДАВАТЕЛИ",
   title = "Опытные наставники, вдохновляющие на успех",
   teamLink = "/teachers",
-  items = [
-    {
-      name: "Галина Алексеевна",
-      subject: "Руководство школы",
-      exp: "Учредитель и директор школы",
-      desc: "Учредитель и директор школы НОУ «Новое Поколение», лидер развития образования",
-      imageUrl: "/images/teachers/galina.jpg"
-    },
-    {
-      name: "Диляфруз Ганиевна",
-      subject: "Математика",
-      exp: "Учитель математики",
-      desc: "Ведущий преподаватель математики, подготовка к олимпиадам и экзаменам",
-      imageUrl: "/images/teachers/dilafruz.jpg"
-    },
-    {
-      name: "Нигора Усмановна",
-      subject: "Английский язык",
-      exp: "Зав. кафедры английского языка",
-      desc: "Учитель и зав. кафедры английского языка, международные стандарты",
-      imageUrl: "/images/teachers/nigora.jpg"
-    },
-    {
-      name: "Альбина Николаевна",
-      subject: "Начальные классы",
-      exp: "Классный руководитель младшей школы",
-      desc: "Сильный преподаватель начального образования, индивидуальный подход",
-      imageUrl: "/images/teachers/albina.jpg"
-    }
-  ]
+  items = DEFAULT_TEACHERS
 }) {
+  const [teachersList, setTeachersList] = useState(items);
+
+  useEffect(() => {
+    async function loadDynamicTeachers() {
+      // 1. Check local cache first for instant reactivity
+      if (typeof window !== "undefined") {
+        try {
+          const stored = localStorage.getItem("ngs_custom_teachers");
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setTeachersList(parsed.slice(0, 4));
+            }
+          }
+        } catch (e) {}
+      }
+
+      // 2. Query remote API
+      try {
+        const res = await teachersService.getTeachers();
+        if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+          setTeachersList(res.data.slice(0, 4));
+        }
+      } catch (err) {
+        // Fallback to provided props or local list
+      }
+    }
+
+    loadDynamicTeachers();
+  }, []);
+
+  const resolveImageUrl = (url, idx) => {
+    const fallbackPhotos = [
+      "/images/teachers/galina.jpg",
+      "/images/teachers/dilafruz.jpg",
+      "/images/teachers/nigora.jpg",
+      "/images/teachers/albina.jpg",
+    ];
+
+    if (!url) return fallbackPhotos[idx % fallbackPhotos.length];
+    if (url.startsWith("/images/") || url.startsWith("data:") || url.startsWith("http")) {
+      return url;
+    }
+    if (url.startsWith("/")) {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL 
+        ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") 
+        : "https://new-generation-school.onrender.com";
+      return apiBase + url;
+    }
+    return url;
+  };
+
   return (
     <Box as="section" id="teachers" py={16} px={{ base: 4, sm: 6, md: 12 }} maxW="7xl" mx="auto">
       <Flex justify="space-between" align="flex-end" mb={12} flexWrap="wrap" gap={4}>
@@ -65,33 +121,11 @@ export default function Teachers({
         }}
         gap={6}
       >
-        {items.map((item, idx) => {
-          const fallbackPhotos = [
-            "/images/teachers/galina.jpg",
-            "/images/teachers/dilafruz.jpg",
-            "/images/teachers/nigora.jpg",
-            "/images/teachers/albina.jpg",
-          ];
-
-          let finalImageUrl = fallbackPhotos[idx % fallbackPhotos.length];
-          // Always use clean local cropped portrait for Galina Alekseevna
-          if (item?.name?.includes("Галина") || item?.imageUrl?.includes("galina") || item?.imageUrl?.includes("Galina") || idx === 0) {
-            finalImageUrl = "/images/teachers/galina.jpg";
-          } else if (item?.imageUrl && !item.imageUrl.includes("bg.png")) {
-            if (item.imageUrl.startsWith("/images/")) {
-              finalImageUrl = item.imageUrl;
-            } else if (item.imageUrl.startsWith("/")) {
-              const apiBase = process.env.NEXT_PUBLIC_API_URL 
-                ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "") 
-                : "https://new-generation-school.onrender.com";
-              finalImageUrl = apiBase + item.imageUrl;
-            } else {
-              finalImageUrl = item.imageUrl;
-            }
-          }
+        {teachersList.map((item, idx) => {
+          const finalImageUrl = resolveImageUrl(item.imageUrl, idx);
 
           return (
-            <GridItem key={idx}>
+            <GridItem key={item.id || idx}>
               <Box 
                 bg="white" 
                 border="1px solid rgba(0, 32, 69, 0.08)" 
@@ -108,38 +142,98 @@ export default function Teachers({
                   borderColor: "rgba(255, 184, 0, 0.35)",
                 }}
               >
-                {/* Photo Top (Zero border-radius) */}
-                <Box w="full" h={{ base: "320px", sm: "340px", md: "380px" }} bg="gray.100" overflow="hidden" borderRadius="0">
-                  <Box
-                    as="img"
+                {/* Photo container */}
+                <Box
+                  position="relative"
+                  w="full"
+                  h="380px"
+                  bg="gray.100"
+                  overflow="hidden"
+                  sx={{
+                    "&::after": {
+                      content: '""',
+                      position: "absolute",
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: "35%",
+                      background: "linear-gradient(to top, rgba(0, 32, 69, 0.5) 0%, transparent 100%)",
+                      pointerEvents: "none",
+                    }
+                  }}
+                >
+                  <img
                     src={finalImageUrl}
                     alt={item.name}
-                    w="full"
-                    h="full"
-                    objectFit="cover"
-                    objectPosition="top center"
-                    borderRadius="0"
-                    transition="transform 0.4s ease"
-                    _hover={{ transform: "scale(1.03)" }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      objectPosition: "top center",
+                      display: "block",
+                      transition: "transform 0.5s ease",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.src = "/images/teachers/galina.jpg";
+                    }}
                   />
+                  <Box
+                    position="absolute"
+                    top={4}
+                    left={4}
+                    bg="rgba(0, 32, 69, 0.85)"
+                    backdropFilter="blur(4px)"
+                    color="#FFB800"
+                    px={3}
+                    py={1}
+                    fontSize="xs"
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    letterSpacing="wider"
+                    zIndex={2}
+                  >
+                    {item.subject}
+                  </Box>
                 </Box>
-                {/* Info Bottom (Zero border-radius) */}
-                <Box p={5} display="flex" flexDirection="column" justifyContent="space-between" flex={1} borderRadius="0" bg="white">
-                  <Box mb={2}>
-                    <Text fontSize="xs" fontWeight="bold" color="#FFB800" textTransform="uppercase" letterSpacing="wider" mb={1}>
-                      {item.subject}
-                    </Text>
-                    <Heading as="h4" fontSize={{ base: "md", md: "lg" }} fontWeight="bold" color="#002045" mb={1} lineHeight="1.3">
+
+                {/* Content info */}
+                <VStack
+                  align="flex-start"
+                  p={6}
+                  spacing={3}
+                  flex={1}
+                  bg="white"
+                  justify="space-between"
+                >
+                  <Box w="full">
+                    <Heading
+                      as="h3"
+                      fontSize="xl"
+                      fontWeight="bold"
+                      color="#002045"
+                      mb={1}
+                    >
                       {item.name}
                     </Heading>
-                    <Text fontSize="xs" fontWeight="semibold" color="#64748B" mb={2}>
-                      {item.exp}
+                    <Text
+                      fontSize="xs"
+                      color="#64748B"
+                      fontWeight="semibold"
+                      mb={3}
+                      letterSpacing="wide"
+                    >
+                      {item.role || item.exp || "Преподаватель"}
+                    </Text>
+                    <Text
+                      color="#475569"
+                      fontSize="sm"
+                      lineHeight="tall"
+                      noOfLines={3}
+                    >
+                      {item.desc}
                     </Text>
                   </Box>
-                  <Text fontSize="xs" color="#94A3B8" lineHeight="1.5">
-                    {item.desc}
-                  </Text>
-                </Box>
+                </VStack>
               </Box>
             </GridItem>
           );

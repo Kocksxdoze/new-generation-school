@@ -44,18 +44,32 @@ export default function EditPageSections({ params }) {
 
   const handleSaveSection = async () => {
     try {
+      let parsedData = formData.data;
+      if (typeof parsedData === 'string') {
+        try {
+          parsedData = JSON.parse(parsedData);
+        } catch (e) {
+          parsedData = {};
+        }
+      }
+      const payload = {
+        type: formData.type,
+        visible: Boolean(formData.visible),
+        data: parsedData,
+      };
+
       if (editingSection) {
-        await pagesService.updateSection(id, editingSection.id, formData);
+        await pagesService.updateSection(id, editingSection.id, payload);
         alert('Секция обновлена');
       } else {
-        await pagesService.createSection(id, formData);
+        await pagesService.createSection(id, payload);
         alert('Секция добавлена');
       }
       setEditingSection(null);
       setFormData({ type: 'hero', data: '{}', visible: true });
       fetchPage();
     } catch (error) {
-      alert(error.response?.data?.error || 'Ошибка сохранения');
+      alert(error.response?.data?.message || error.response?.data?.error || 'Ошибка сохранения');
     }
   };
 
