@@ -70,56 +70,129 @@ export default function AdminLayout({ children }) {
     { name: 'Инструкция для админов', path: '/admin/guide', icon: 'menu_book' },
   ];
 
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
   return (
-    <Flex h="100vh" overflow="hidden" bg="gray.100">
-      {/* Sidebar */}
-      <Box w="250px" bg="white" boxShadow="md" display={{ base: 'none', md: 'block' }}>
-        <VStack align="stretch" h="full" p={4} spacing={6}>
-          <Heading size="md" color="blue.600" textAlign="center" py={4}>
+    <Flex h="100vh" overflow="hidden" bg="gray.100" direction="column">
+      {/* Mobile Top Header */}
+      <Box
+        display={{ base: "block", md: "none" }}
+        bg="white"
+        boxShadow="sm"
+        borderBottom="1px solid"
+        borderColor="gray.200"
+        zIndex={100}
+      >
+        <Flex px={4} py={3} justify="space-between" align="center">
+          <Heading size="sm" color="blue.600">
             NGS Admin
           </Heading>
-          
-          <VStack align="stretch" spacing={2} flex={1}>
-            {navItems.map((item) => {
-              const isActive = pathname === item.path || (item.path !== '/admin' && pathname.startsWith(item.path));
-              return (
-                <ChakraLink
-                  as={Link}
-                  key={item.path}
-                  href={item.path}
-                  px={3}
-                  py={2.5}
-                  borderRadius="lg"
-                  bg={isActive ? 'blue.50' : 'transparent'}
-                  color={isActive ? 'blue.600' : 'gray.700'}
-                  fontWeight={isActive ? 'bold' : 'medium'}
-                  display="flex"
-                  alignItems="center"
-                  gap={3}
-                  transition="all 0.2s"
-                  _hover={{ bg: 'blue.50', color: 'blue.600', textDecoration: 'none' }}
-                >
-                  {item.icon && (
-                    <Box as="span" className="material-symbols-outlined" fontSize="20px">
-                      {item.icon}
-                    </Box>
-                  )}
-                  {item.name}
-                </ChakraLink>
-              );
-            })}
-          </VStack>
-
-          <Button colorScheme="red" variant="ghost" onClick={handleLogout} w="full">
-            Выйти
+          <Button
+            size="sm"
+            variant="outline"
+            colorScheme="blue"
+            onClick={() => setMobileNavOpen((prev) => !prev)}
+          >
+            {mobileNavOpen ? "Закрыть ✕" : "Меню ☰"}
           </Button>
-        </VStack>
+        </Flex>
+
+        {mobileNavOpen && (
+          <Box p={4} bg="gray.50" borderTop="1px solid" borderColor="gray.200" maxH="75vh" overflowY="auto">
+            <VStack align="stretch" spacing={1.5}>
+              {navItems.map((item) => {
+                const isActive = pathname === item.path || (item.path !== '/admin' && pathname.startsWith(item.path));
+                return (
+                  <ChakraLink
+                    as={Link}
+                    key={item.path}
+                    href={item.path}
+                    onClick={() => setMobileNavOpen(false)}
+                    px={3}
+                    py={2}
+                    borderRadius="md"
+                    bg={isActive ? 'blue.600' : 'white'}
+                    color={isActive ? 'white' : 'gray.800'}
+                    fontWeight={isActive ? 'bold' : 'medium'}
+                    display="flex"
+                    alignItems="center"
+                    gap={3}
+                    border="1px solid"
+                    borderColor={isActive ? "blue.600" : "gray.200"}
+                  >
+                    {item.icon && (
+                      <Box as="span" className="material-symbols-outlined" fontSize="18px">
+                        {item.icon}
+                      </Box>
+                    )}
+                    {item.name}
+                  </ChakraLink>
+                );
+              })}
+              <Button
+                mt={2}
+                colorScheme="red"
+                size="sm"
+                onClick={handleLogout}
+                w="full"
+              >
+                Выйти
+              </Button>
+            </VStack>
+          </Box>
+        )}
       </Box>
 
-      {/* Main Content */}
-      <Box flex={1} overflowY="auto" p={8}>
-        {children}
-      </Box>
+      <Flex flex={1} overflow="hidden">
+        {/* Desktop Sidebar */}
+        <Box w="250px" bg="white" boxShadow="md" display={{ base: 'none', md: 'block' }}>
+          <VStack align="stretch" h="full" p={4} spacing={6}>
+            <Heading size="md" color="blue.600" textAlign="center" py={4}>
+              NGS Admin
+            </Heading>
+            
+            <VStack align="stretch" spacing={2} flex={1}>
+              {navItems.map((item) => {
+                const isActive = pathname === item.path || (item.path !== '/admin' && pathname.startsWith(item.path));
+                return (
+                  <ChakraLink
+                    as={Link}
+                    key={item.path}
+                    href={item.path}
+                    px={3}
+                    py={2.5}
+                    borderRadius="lg"
+                    bg={isActive ? 'blue.50' : 'transparent'}
+                    color={isActive ? 'blue.600' : 'gray.700'}
+                    fontWeight={isActive ? 'bold' : 'medium'}
+                    display="flex"
+                    alignItems="center"
+                    gap={3}
+                    transition="all 0.2s"
+                    _hover={{ bg: 'blue.50', color: 'blue.600', textDecoration: 'none' }}
+                  >
+                    {item.icon && (
+                      <Box as="span" className="material-symbols-outlined" fontSize="20px">
+                        {item.icon}
+                      </Box>
+                    )}
+                    {item.name}
+                  </ChakraLink>
+                );
+              })}
+            </VStack>
+
+            <Button colorScheme="red" variant="ghost" onClick={handleLogout} w="full">
+              Выйти
+            </Button>
+          </VStack>
+        </Box>
+
+        {/* Main Content */}
+        <Box flex={1} overflowY="auto" p={{ base: 4, sm: 6, md: 8 }}>
+          {children}
+        </Box>
+      </Flex>
     </Flex>
   );
 }

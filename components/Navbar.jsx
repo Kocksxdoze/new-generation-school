@@ -237,7 +237,7 @@ export default function Navbar() {
         {/* Mobile Menu Dropdown */}
         {isOpen && (
           <Box
-            display={{ base: "block", md: "none" }}
+            display={{ base: "block", xl: "none" }}
             bg="rgba(255, 255, 255, 0.98)"
             backdropFilter="blur(16px)"
             mt={2}

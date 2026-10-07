@@ -160,9 +160,11 @@ export default function Hero({
                 >
                   Поступить в школу →
                 </ChakraLink>
-                <Box
-                  as="button"
-                  type="button"
+                <ChakraLink
+                  as={Link}
+                  href={videoUrl && videoUrl.startsWith("http") ? videoUrl : "/gallery"}
+                  target={videoUrl && videoUrl.startsWith("http") ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
                   px={10}
                   py={5}
                   bg="rgba(255, 255, 255, 0.1)"
@@ -175,6 +177,7 @@ export default function Hero({
                   transition="all 0.3s"
                   _hover={{
                     bg: "rgba(255, 255, 255, 0.2)",
+                    textDecoration: "none",
                   }}
                   w={{ base: "full", sm: "auto" }}
                   textAlign="center"
@@ -188,7 +191,7 @@ export default function Hero({
                     play_circle
                   </Box>
                   Смотреть видео
-                </Box>
+                </ChakraLink>
               </HStack>
             </VStack>
           </GridItem>

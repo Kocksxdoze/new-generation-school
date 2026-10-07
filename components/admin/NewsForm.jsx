@@ -138,7 +138,7 @@ export default function NewsForm({ initialData = null }) {
 
       const payload = {
         title: formData.title.trim(),
-        slug: formData.slug.trim() || transliterate(formData.title),
+        slug: formData.slug.trim() || transliterate(formData.title) || `news-${Date.now()}`,
         excerpt: formData.excerpt.trim() || formData.body.slice(0, 180),
         body: formData.body.trim(),
         category: activeCategory,

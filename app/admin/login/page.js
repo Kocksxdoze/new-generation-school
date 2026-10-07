@@ -16,18 +16,26 @@ import { authService } from "@/utils/api";
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
+    const cleanUser = username.trim();
+    if (!cleanUser || !password) {
+      setErrorMsg("Пожалуйста, заполните логин и пароль");
+      return;
+    }
     setIsLoading(true);
 
     try {
-      await authService.login(username, password);
+      await authService.login(cleanUser, password);
       router.push("/admin");
     } catch (error) {
-      alert(error.response?.data?.message || error.response?.data?.error || "Неверные учетные данные");
+      const msg = error.response?.data?.message || error.response?.data?.error || "Неверный логин или пароль";
+      setErrorMsg(msg);
     } finally {
       setIsLoading(false);
     }
@@ -43,6 +51,22 @@ export default function LoginPage() {
           <Text color="gray.500" textAlign="center">
             Введите логин и пароль для доступа
           </Text>
+
+          {errorMsg && (
+            <Box
+              w="full"
+              p={3}
+              bg="red.50"
+              border="1px solid"
+              borderColor="red.200"
+              borderRadius="md"
+              color="red.700"
+              fontSize="sm"
+              textAlign="center"
+            >
+              {errorMsg}
+            </Box>
+          )}
 
           <Box w="full">
             <Text as="label" display="block" mb={2} fontWeight="medium">
