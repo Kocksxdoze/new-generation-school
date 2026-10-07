@@ -3,10 +3,23 @@ import { z } from "zod";
 export const createApplicationSchema = z.object({
   fullName: z.string().trim().min(2, "Имя слишком короткое").max(100),
   phone: z.string().trim().min(7, "Укажите корректный номер телефона").max(30),
-  email: z.string().trim().email("Некорректный email").optional().or(z.literal("")),
-  childGrade: z.string().trim().max(100).optional(),
-  type: z.enum(["admission", "consultation", "tour", "question"]).default("admission"),
-  message: z.string().trim().max(1000).optional(),
+  email: z.preprocess((val) => {
+    if (!val || typeof val !== "string" || val.trim() === "") return "";
+    return val.trim();
+  }, z.string().email("Некорректный email").or(z.literal("")).optional().nullable()),
+  childGrade: z.preprocess((val) => {
+    if (val === null || val === undefined) return "";
+    return String(val).trim();
+  }, z.string().max(100).optional().nullable()),
+  type: z.preprocess((val) => {
+    if (!val || typeof val !== "string") return "admission";
+    const lower = val.trim().toLowerCase();
+    return ["admission", "consultation", "tour", "question"].includes(lower) ? lower : "admission";
+  }, z.enum(["admission", "consultation", "tour", "question"]).default("admission")),
+  message: z.preprocess((val) => {
+    if (val === null || val === undefined) return "";
+    return String(val).trim();
+  }, z.string().max(1000).optional().nullable()),
 });
 
 export const updateApplicationStatusSchema = z.object({
