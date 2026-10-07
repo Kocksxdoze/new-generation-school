@@ -34,25 +34,28 @@ export default function AdminDashboard() {
         const appsRes = results[3].status === 'fulfilled' ? results[3].value : null;
         const teachersRes = results[4].status === 'fulfilled' ? results[4].value : null;
 
-        const apps = appsRes?.data || [];
-        const newApps = apps.filter((a) => a.status === 'NEW').length;
+        const apps = Array.isArray(appsRes?.data) ? appsRes.data : [];
+        const newApps = apps.filter((a) => a && a.status === 'NEW').length;
 
         // Custom universities count from localStorage if available
         let uniCount = 12;
         if (typeof window !== 'undefined') {
           try {
             const stored = localStorage.getItem('ngs_custom_universities');
-            if (stored) uniCount = JSON.parse(stored).length;
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              if (Array.isArray(parsed)) uniCount = parsed.length;
+            }
           } catch (e) {}
         }
 
         setStats({
-          news: newsRes?.data?.length || 4,
-          pages: pagesRes?.data?.length || 1,
-          media: mediaRes?.data?.length || 0,
+          news: Array.isArray(newsRes?.data) ? newsRes.data.length : 4,
+          pages: Array.isArray(pagesRes?.data) ? pagesRes.data.length : 1,
+          media: Array.isArray(mediaRes?.data) ? mediaRes.data.length : 0,
           applications: apps.length,
           newApplications: newApps,
-          teachers: teachersRes?.data?.length || 10,
+          teachers: Array.isArray(teachersRes?.data) ? teachersRes.data.length : 10,
           universities: uniCount,
         });
       } catch (error) {

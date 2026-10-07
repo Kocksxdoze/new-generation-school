@@ -11,6 +11,7 @@ export default function AdminLayout({ children }) {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const isLoginPage = pathname === '/admin/login';
 
@@ -69,8 +70,6 @@ export default function AdminLayout({ children }) {
     { name: 'Страницы и блоки', path: '/admin/pages', icon: 'view_quilt' },
     { name: 'Инструкция для админов', path: '/admin/guide', icon: 'menu_book' },
   ];
-
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <Flex h="100vh" overflow="hidden" bg="gray.100" direction="column">
