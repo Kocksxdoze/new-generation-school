@@ -66,7 +66,7 @@ export default function Hero({
       pb={{ base: 12, md: 16 }}
     >
       {/* Background Media */}
-      <Box position="absolute" inset={0} zIndex={0} bg="gray.900">
+      <Box position="absolute" inset={0} zIndex={0} bg="#EEF2F6">
         {isVideo ? (
           <video
             src={finalImageUrl}
@@ -85,13 +85,13 @@ export default function Hero({
             bgPosition={{ base: "center", md: "center" }}
           />
         )}
-        {/* Responsive Overlay so text is readable while character and colors remain vibrant */}
+        {/* Soft light gradient overlay: provides maximum contrast for dark text while preserving the bright vibrant mascot */}
         <Box
           position="absolute"
           inset={0}
           bgGradient={{
-            base: "linear(to-b, rgba(5, 15, 35, 0.78) 0%, rgba(5, 15, 35, 0.6) 60%, rgba(5, 15, 35, 0.8) 100%)",
-            lg: "linear(to-r, rgba(5, 15, 35, 0.85) 0%, rgba(5, 15, 35, 0.65) 45%, rgba(5, 15, 35, 0.25) 80%, rgba(5, 15, 35, 0.15) 100%)",
+            base: "linear(to-b, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.88) 55%, rgba(255, 255, 255, 0.6) 80%, rgba(255, 255, 255, 0.25) 100%)",
+            lg: "linear(to-r, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.9) 35%, rgba(255, 255, 255, 0.55) 60%, rgba(255, 255, 255, 0.15) 85%, transparent 100%)",
           }}
         />
       </Box>
@@ -112,7 +112,7 @@ export default function Hero({
                 as="h1"
                 fontSize={{ base: "32px", sm: "44px", md: "5xl", lg: "68px" }}
                 fontWeight="800"
-                color="white"
+                color="#002045"
                 lineHeight="1.1"
                 letterSpacing="tight"
                 dangerouslySetInnerHTML={{ __html: titleHtml }}
@@ -124,19 +124,19 @@ export default function Hero({
                 gap={2}
                 px={4}
                 py={1.5}
-                bg="rgba(255, 255, 255, 0.12)"
+                bg="rgba(0, 32, 69, 0.07)"
                 backdropFilter="blur(10px)"
                 rounded="full"
-                border="1px solid rgba(255, 255, 255, 0.25)"
+                border="1px solid rgba(0, 32, 69, 0.14)"
                 w="fit-content"
               >
-                <Box as="span" className="material-symbols-outlined" color="#ffb800" fontSize="16px">
+                <Box as="span" className="material-symbols-outlined" color="#002045" fontSize="16px">
                   location_on
                 </Box>
                 <Text
                   fontSize={{ base: "xs", sm: "sm" }}
                   fontWeight="bold"
-                  color="#ffb800"
+                  color="#002045"
                   textTransform="uppercase"
                   letterSpacing="wider"
                 >
@@ -146,9 +146,10 @@ export default function Hero({
 
               <Text
                 fontSize={{ base: "md", sm: "lg", md: "2xl" }}
-                color="gray.200"
+                color="#334155"
                 lineHeight="1.6"
                 maxW="xl"
+                fontWeight="500"
               >
                 {description}
               </Text>
@@ -170,9 +171,11 @@ export default function Hero({
                   fontWeight="bold"
                   rounded="full"
                   transition="all 0.3s"
+                  boxShadow="0 4px 14px rgba(255, 184, 0, 0.35)"
                   _hover={{
                     bg: "#e6a600",
                     transform: "translateY(-2px)",
+                    boxShadow: "0 6px 20px rgba(255, 184, 0, 0.45)",
                     textDecoration: "none",
                   }}
                   w={{ base: "full", sm: "auto" }}
@@ -188,16 +191,20 @@ export default function Hero({
                   rel="noopener noreferrer"
                   px={10}
                   py={5}
-                  bg="rgba(255, 255, 255, 0.1)"
+                  bg="white"
                   backdropFilter="blur(10px)"
-                  color="white"
+                  color="#002045"
                   fontWeight="bold"
                   rounded="full"
                   border="1px solid"
-                  borderColor="rgba(255, 255, 255, 0.3)"
+                  borderColor="rgba(0, 32, 69, 0.15)"
+                  boxShadow="sm"
                   transition="all 0.3s"
                   _hover={{
-                    bg: "rgba(255, 255, 255, 0.2)",
+                    bg: "gray.50",
+                    transform: "translateY(-2px)",
+                    boxShadow: "md",
+                    borderColor: "rgba(0, 32, 69, 0.3)",
                     textDecoration: "none",
                   }}
                   w={{ base: "full", sm: "auto" }}
@@ -208,7 +215,7 @@ export default function Hero({
                   fontSize="lg"
                   cursor="pointer"
                 >
-                  <Box as="span" className="material-symbols-outlined" mr={2}>
+                  <Box as="span" className="material-symbols-outlined" mr={2} color="#002045">
                     play_circle
                   </Box>
                   Смотреть видео
@@ -225,7 +232,7 @@ export default function Hero({
           mt={{ base: 10, md: 16 }}
           pt={{ base: 6, md: 10 }}
           borderTop="1px solid"
-          borderColor="rgba(255, 255, 255, 0.2)"
+          borderColor="rgba(0, 32, 69, 0.12)"
         >
           {stats.map((stat, idx) => (
             <GridItem key={idx}>
@@ -234,14 +241,15 @@ export default function Hero({
                   w={12}
                   h={12}
                   rounded="full"
-                  bg="rgba(255, 255, 255, 0.1)"
+                  bg="white"
+                  boxShadow="sm"
                   backdropFilter="blur(10px)"
                   align="center"
                   justify="center"
-                  color="#ffb800"
+                  color="#002045"
                   flexShrink={0}
                   border="1px solid"
-                  borderColor="rgba(255, 255, 255, 0.2)"
+                  borderColor="rgba(0, 32, 69, 0.1)"
                 >
                   <Box as="span" className="material-symbols-outlined">
                     {stat.icon}
@@ -251,16 +259,17 @@ export default function Hero({
                   <Text
                     fontSize="2xl"
                     fontWeight="bold"
-                    color="white"
+                    color="#002045"
                     lineHeight="1.2"
                   >
                     {stat.value}
                   </Text>
                   <Text
                     fontSize="xs"
-                    color="gray.300"
+                    color="#475569"
                     textTransform="uppercase"
                     letterSpacing="wide"
+                    fontWeight="semibold"
                   >
                     {stat.label}
                   </Text>
