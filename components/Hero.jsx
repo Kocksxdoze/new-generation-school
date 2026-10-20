@@ -19,7 +19,7 @@ export default function Hero({
   description = "Современная школа полного цикла с сильным преподавательским составом, современной образовательной средой и индивидуальным подходом к развитию каждого ученика.",
   applyUrl = "#",
   videoUrl = "https://www.youtube.com/watch?v=VTZey0E9H5E",
-  imageUrl = "/uploads/back.mp4",
+  imageUrl = "/hero-panda.png",
   stats = [
     { value: "15+", label: "лет успешной работы", icon: "workspace_premium" },
     { value: "40+", label: "квалифицированных преподавателей", icon: "school" },
@@ -29,15 +29,29 @@ export default function Hero({
 }) {
   const isVideo = imageUrl?.endsWith(".mp4") || imageUrl?.endsWith(".webm");
 
-  const finalImageUrl = imageUrl
-    ? isVideo
-      ? imageUrl
-      : imageUrl.startsWith("/")
-        ? (process.env.NEXT_PUBLIC_API_URL
-            ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
-            : "https://new-generation-school.onrender.com") + imageUrl
-        : imageUrl
-    : "/bg.png";
+  let finalImageUrl = "/hero-panda.png";
+
+  if (imageUrl) {
+    if (isVideo) {
+      finalImageUrl = imageUrl;
+    } else if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+      finalImageUrl = imageUrl;
+    } else if (
+      imageUrl.startsWith("/hero-") || 
+      imageUrl.startsWith("/bg.") || 
+      imageUrl.startsWith("/images/") ||
+      imageUrl === "/uploads/hero-panda.png"
+    ) {
+      finalImageUrl = imageUrl;
+    } else if (imageUrl.startsWith("/")) {
+      const backendBase = process.env.NEXT_PUBLIC_API_URL
+        ? process.env.NEXT_PUBLIC_API_URL.replace("/api", "")
+        : "https://new-generation-school.onrender.com";
+      finalImageUrl = `${backendBase}${imageUrl}`;
+    } else {
+      finalImageUrl = imageUrl;
+    }
+  }
 
   return (
     <Box
@@ -68,11 +82,18 @@ export default function Hero({
             inset={0}
             bgImage={`url('${finalImageUrl}')`}
             bgSize="cover"
-            bgPosition="center"
+            bgPosition={{ base: "center", md: "center" }}
           />
         )}
-        {/* Dark Overlay so text is readable */}
-        <Box position="absolute" inset={0} bg="blackAlpha.600" />
+        {/* Responsive Overlay so text is readable while character and colors remain vibrant */}
+        <Box
+          position="absolute"
+          inset={0}
+          bgGradient={{
+            base: "linear(to-b, rgba(5, 15, 35, 0.78) 0%, rgba(5, 15, 35, 0.6) 60%, rgba(5, 15, 35, 0.8) 100%)",
+            lg: "linear(to-r, rgba(5, 15, 35, 0.85) 0%, rgba(5, 15, 35, 0.65) 45%, rgba(5, 15, 35, 0.25) 80%, rgba(5, 15, 35, 0.15) 100%)",
+          }}
+        />
       </Box>
 
       {/* Main Content Container */}
