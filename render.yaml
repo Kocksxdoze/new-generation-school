@@ -9,17 +9,17 @@ services:
       - key: NODE_ENV
         value: production
       - key: DATABASE_URL
-        value: file:./dev.db
+        value: postgresql://ngs_owner:npg_ghMCF09yDOcG@ep-still-king-b4hj5zyh-pooler.c-6.us-east-2.aws.neon.tech/ngs?sslmode=require
       - key: JWT_SECRET
         generateValue: true
       - key: UPLOAD_DIR
         value: uploads
       - key: AWS_ENDPOINT_URL_S3
-        sync: false
+        value: https://br-raspy-sound-b43ktbpw.storage.c-6.us-east-2.aws.neon.tech
       - key: AWS_ACCESS_KEY_ID
-        sync: false
+        value: nak_live_4fb7755bf26b43cc9b3e2b5b95fc1209
       - key: AWS_SECRET_ACCESS_KEY
-        sync: false
+        value: nsk_live_1dfb166b00a5c2e9bf93fcb3b97cdb5c63191abb73202e983aac3c67bde1a438
       - key: AWS_REGION
         value: us-east-2
       - key: S3_BUCKET

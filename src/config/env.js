@@ -39,9 +39,9 @@ export const env = {
   },
 
   s3: {
-    endpoint: process.env.AWS_ENDPOINT_URL_S3 || process.env.S3_ENDPOINT || null,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.S3_ACCESS_KEY_ID || null,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.S3_SECRET_ACCESS_KEY || null,
+    endpoint: process.env.AWS_ENDPOINT_URL_S3 || process.env.S3_ENDPOINT || "https://br-raspy-sound-b43ktbpw.storage.c-6.us-east-2.aws.neon.tech",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.S3_ACCESS_KEY_ID || "nak_live_4fb7755bf26b43cc9b3e2b5b95fc1209",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || process.env.S3_SECRET_ACCESS_KEY || "nsk_live_1dfb166b00a5c2e9bf93fcb3b97cdb5c63191abb73202e983aac3c67bde1a438",
     region: process.env.AWS_REGION || "us-east-2",
     bucket: process.env.S3_BUCKET || "uploads",
   },

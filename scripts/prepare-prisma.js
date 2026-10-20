@@ -3,8 +3,8 @@ import path from "node:path";
 import "dotenv/config";
 
 const dbUrl = process.env.DATABASE_URL || "";
-const isPostgres = dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://");
-const targetProvider = isPostgres ? "postgresql" : "sqlite";
+const isExplicitSqlite = dbUrl.startsWith("file:") || dbUrl.startsWith("sqlite:");
+const targetProvider = isExplicitSqlite ? "sqlite" : "postgresql";
 
 const schemaPath = path.resolve(process.cwd(), "prisma", "schema.prisma");
 if (fs.existsSync(schemaPath)) {
