@@ -39,17 +39,19 @@ export default function Navbar() {
         as="nav"
         position="fixed"
         top={0}
+        left={0}
+        right={0}
         w="full"
         zIndex={50}
-        py={4}
-        px={{ base: 4, md: 12 }}
+        py={{ base: 3, md: 4 }}
+        px={{ base: 4, sm: 6, md: 8, xl: 12 }}
       >
         <Flex
           className="glass-panel"
           rounded="full"
-          maxW="7xl"
+          maxW={{ base: "full", xl: "7xl", "2xl": "1440px" }}
           mx="auto"
-          px={{ base: 4, md: 6 }}
+          px={{ base: 4, md: 6, "2xl": 8 }}
           py={3}
           align="center"
           justify="space-between"
@@ -107,7 +109,7 @@ export default function Navbar() {
           {/* Nav Links (Desktop) */}
           <HStack
             display={{ base: "none", xl: "flex" }}
-            gap={1}
+            gap={{ xl: 0.5, "2xl": 1.5 }}
             bg="rgba(255,255,255,0.6)"
             rounded="full"
             p={1}
@@ -124,7 +126,7 @@ export default function Navbar() {
                   whiteSpace="nowrap"
                   fontWeight="medium"
                   fontSize={{ xl: "xs", "2xl": "sm" }}
-                  px={{ xl: 3, "2xl": 4 }}
+                  px={{ xl: 2.5, "2xl": 3.5 }}
                   py={1.5}
                   rounded="full"
                   color="#002045"
@@ -144,8 +146,8 @@ export default function Navbar() {
           </HStack>
 
           {/* Trailing Action */}
-          <HStack gap={3} flexShrink={0}>
-            <HStack display={{ base: "none", "2xl": "flex" }} gap={2} mr={2} flexShrink={0}>
+          <HStack gap={{ base: 2, md: 3, "2xl": 4 }} flexShrink={0}>
+            <HStack display={{ base: "none", "2xl": "flex" }} gap={2} mr={1} flexShrink={0}>
               <Box
                 as="span"
                 className="material-symbols-outlined"

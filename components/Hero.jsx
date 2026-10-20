@@ -62,7 +62,7 @@ export default function Hero({
       overflow="hidden"
       display="flex"
       alignItems="center"
-      pt={{ base: "120px", md: "100px" }}
+      pt={{ base: "120px", md: "130px", lg: "140px", "2xl": "150px" }}
       pb={{ base: 12, md: 16 }}
     >
       {/* Background Media */}
@@ -98,9 +98,9 @@ export default function Hero({
 
       {/* Main Content Container */}
       <Box
-        maxW="7xl"
+        maxW={{ base: "7xl", "2xl": "1440px" }}
         mx="auto"
-        px={{ base: 4, md: 8 }}
+        px={{ base: 4, md: 8, "2xl": 8 }}
         position="relative"
         zIndex={10}
         w="full"
