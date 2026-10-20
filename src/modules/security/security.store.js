@@ -56,24 +56,26 @@ export function recordSecurityEvent(event) {
     fs.appendFile(AUDIT_FILE, JSON.stringify(entry) + "\n", () => {});
   } catch (_) {}
 
-  // Asynchronously persist to persistent SQLite database (dev.db)
-  prisma.auditLog.create({
-    data: {
-      timestamp: ts,
-      ip: entry.ip,
-      method: entry.method,
-      endpoint: entry.endpoint,
-      action: entry.action,
-      statusCode: entry.statusCode,
-      responseTimeMs: entry.responseTimeMs,
-      userAgent: entry.userAgent ? entry.userAgent.substring(0, 500) : null,
-      threatLevel: entry.threatLevel,
-      threatDetails: entry.threatDetails ? entry.threatDetails.substring(0, 500) : null,
-      adminUser: entry.adminUser,
-    },
-  }).catch((err) => {
-    // Database log error shouldn't crash the request
-  });
+  // Asynchronously persist to database if auditLog model is available
+  if (prisma?.auditLog?.create) {
+    prisma.auditLog.create({
+      data: {
+        timestamp: ts,
+        ip: entry.ip,
+        method: entry.method,
+        endpoint: entry.endpoint,
+        action: entry.action,
+        statusCode: entry.statusCode,
+        responseTimeMs: entry.responseTimeMs,
+        userAgent: entry.userAgent ? entry.userAgent.substring(0, 500) : null,
+        threatLevel: entry.threatLevel,
+        threatDetails: entry.threatDetails ? entry.threatDetails.substring(0, 500) : null,
+        adminUser: entry.adminUser,
+      },
+    }).catch(() => {
+      // Database log error shouldn't crash the request
+    });
+  }
 
   return entry;
 }

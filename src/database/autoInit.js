@@ -254,21 +254,25 @@ export async function autoInitDatabase() {
     }
 
     // 4. Ensure default teachers
-    const countTeachers = await prisma.teacher.count().catch(() => 0);
-    if (countTeachers === 0) {
-      for (const t of DEFAULT_TEACHERS) {
-        await prisma.teacher.create({ data: t }).catch(() => {});
+    if (prisma?.teacher?.count) {
+      const countTeachers = await prisma.teacher.count().catch(() => 0);
+      if (countTeachers === 0) {
+        for (const t of DEFAULT_TEACHERS) {
+          await prisma.teacher.create({ data: t }).catch(() => {});
+        }
+        console.log(`[AutoInit] Seeded ${DEFAULT_TEACHERS.length} teachers.`);
       }
-      console.log(`[AutoInit] Seeded ${DEFAULT_TEACHERS.length} teachers.`);
     }
 
     // 5. Ensure default gallery
-    const countGallery = await prisma.galleryItem.count().catch(() => 0);
-    if (countGallery === 0) {
-      for (const g of DEFAULT_GALLERY) {
-        await prisma.galleryItem.create({ data: g }).catch(() => {});
+    if (prisma?.galleryItem?.count) {
+      const countGallery = await prisma.galleryItem.count().catch(() => 0);
+      if (countGallery === 0) {
+        for (const g of DEFAULT_GALLERY) {
+          await prisma.galleryItem.create({ data: g }).catch(() => {});
+        }
+        console.log(`[AutoInit] Seeded ${DEFAULT_GALLERY.length} gallery items.`);
       }
-      console.log(`[AutoInit] Seeded ${DEFAULT_GALLERY.length} gallery items.`);
     }
 
     // 6. Ensure admin accounts
