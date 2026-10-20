@@ -1,8 +1,10 @@
 import path from "node:path";
 import fs from "node:fs/promises";
 import sharp from "sharp";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "../../config/db.js";
 import { env } from "../../config/env.js";
+import { s3Client } from "../../config/s3.js";
 import { ApiError } from "../../utils/ApiError.js";
 
 // Reads image dimensions when possible (skipped for SVG, which is
@@ -21,13 +23,24 @@ export async function saveUploadedFile(file, subdir, alt) {
   const absolutePath = path.join(process.cwd(), env.uploads.dir, subdir, file.filename);
   const { width, height } = await readDimensions(absolutePath, file.mimetype);
 
-  // Store base64 data URI to survive ephemeral container wipes
+  // Store base64 data URI and upload to S3 bucket to survive ephemeral container wipes
   let base64Data = null;
   try {
     const fileBuffer = await fs.readFile(absolutePath);
     base64Data = `data:${file.mimetype};base64,${fileBuffer.toString("base64")}`;
+
+    if (s3Client) {
+      const s3Key = `${subdir}/${file.filename}`.replace(/\\/g, "/");
+      await s3Client.send(new PutObjectCommand({
+        Bucket: env.s3.bucket,
+        Key: s3Key,
+        Body: fileBuffer,
+        ContentType: file.mimetype,
+      }));
+      console.log(`[S3 Upload] Successfully pushed ${s3Key} to "${env.s3.bucket}"`);
+    }
   } catch (err) {
-    console.warn("Failed to generate persistent base64 buffer for media:", err.message);
+    console.warn("Storage persistence backup note:", err.message);
   }
 
   return prisma.media.create({

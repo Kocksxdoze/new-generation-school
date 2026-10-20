@@ -223,7 +223,7 @@ export async function autoInitDatabase() {
               pageId: home.id,
               type: s.type,
               order: s.order,
-              visible: s.visible ?? true,
+              visible: s.visible !== undefined ? Boolean(s.visible) : true,
               data: s.data,
             },
           }).catch(() => {});
@@ -246,7 +246,7 @@ export async function autoInitDatabase() {
             date: new Date(n.date),
             externalUrl: n.externalUrl,
             coverImage: n.coverImage,
-            published: n.published ?? true,
+            published: n.published !== undefined ? Boolean(n.published) : true,
           },
         }).catch(() => {});
       }

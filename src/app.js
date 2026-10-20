@@ -6,8 +6,10 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "node:path";
 import fs from "node:fs/promises";
+import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { prisma } from "./config/db.js";
 import { env } from "./config/env.js";
+import { s3Client } from "./config/s3.js";
 import { apiRouter } from "./routes/index.js";
 import { notFoundHandler, errorHandler } from "./middlewares/error.middleware.js";
 import { auditMiddleware } from "./middlewares/audit.middleware.js";
@@ -60,10 +62,38 @@ app.use(auditMiddleware);
 app.use("/uploads", express.static(path.join(process.cwd(), env.uploads.dir)));
 
 // Self-healing media restore: if file is missing from ephemeral disk after container restart,
-// reconstruct from database persistent base64 buffer, cache to disk, and serve.
+// fetch directly from Neon S3 bucket or reconstruct from database persistent base64 buffer.
 app.use("/uploads", async (req, res, next) => {
   try {
     const rawPath = req.path;
+    const s3Key = rawPath.replace(/^\//, "");
+    const diskPath = path.join(process.cwd(), env.uploads.dir, rawPath);
+
+    // 1. Try Neon S3 bucket
+    if (s3Client) {
+      try {
+        const getCmd = new GetObjectCommand({
+          Bucket: env.s3.bucket,
+          Key: s3Key,
+        });
+        const s3Res = await s3Client.send(getCmd);
+        const bytes = await s3Res.Body.transformToByteArray();
+        const buffer = Buffer.from(bytes);
+
+        // Cache to local disk for fast subsequent hits
+        fs.mkdir(path.dirname(diskPath), { recursive: true })
+          .then(() => fs.writeFile(diskPath, buffer))
+          .catch(() => {});
+
+        res.setHeader("Content-Type", s3Res.ContentType || "image/webp");
+        res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        return res.send(buffer);
+      } catch (s3Err) {
+        // Not in S3 or error, fall through to DB
+      }
+    }
+
+    // 2. Fallback: Database persistent base64 buffer
     const requestedUrl = `/uploads${rawPath}`.replace(/\\/g, "/");
     const baseName = path.basename(rawPath);
 
@@ -83,7 +113,6 @@ app.use("/uploads", async (req, res, next) => {
       const buffer = Buffer.from(base64Content, "base64");
 
       // Asynchronously restore file to disk cache
-      const diskPath = path.join(process.cwd(), env.uploads.dir, rawPath);
       fs.mkdir(path.dirname(diskPath), { recursive: true })
         .then(() => fs.writeFile(diskPath, buffer))
         .catch(() => {});
