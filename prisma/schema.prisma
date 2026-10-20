@@ -68,6 +68,7 @@ model Media {
   width     Int?
   height    Int?
   alt       String? // accessibility / SEO text, editable by admin
+  data      String? // Base64 data URI of the image (persistent fallback if file on ephemeral disk is missing)
   createdAt DateTime @default(now())
 
   @@map("media")

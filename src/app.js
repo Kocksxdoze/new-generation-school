@@ -5,6 +5,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import path from "node:path";
+import fs from "node:fs/promises";
+import { prisma } from "./config/db.js";
 import { env } from "./config/env.js";
 import { apiRouter } from "./routes/index.js";
 import { notFoundHandler, errorHandler } from "./middlewares/error.middleware.js";
@@ -56,6 +58,45 @@ app.use(auditMiddleware);
 
 // Uploaded images/SVGs are served as static files, e.g. GET /uploads/2026/03/xyz.webp
 app.use("/uploads", express.static(path.join(process.cwd(), env.uploads.dir)));
+
+// Self-healing media restore: if file is missing from ephemeral disk after container restart,
+// reconstruct from database persistent base64 buffer, cache to disk, and serve.
+app.use("/uploads", async (req, res, next) => {
+  try {
+    const rawPath = req.path;
+    const requestedUrl = `/uploads${rawPath}`.replace(/\\/g, "/");
+    const baseName = path.basename(rawPath);
+
+    const media = await prisma.media.findFirst({
+      where: {
+        OR: [
+          { url: requestedUrl },
+          { filename: baseName },
+        ],
+      },
+    });
+
+    if (media && media.data) {
+      const match = media.data.match(/^data:([^;]+);base64,(.+)$/);
+      const mimeType = match ? match[1] : (media.mimeType || "image/webp");
+      const base64Content = match ? match[2] : media.data;
+      const buffer = Buffer.from(base64Content, "base64");
+
+      // Asynchronously restore file to disk cache
+      const diskPath = path.join(process.cwd(), env.uploads.dir, rawPath);
+      fs.mkdir(path.dirname(diskPath), { recursive: true })
+        .then(() => fs.writeFile(diskPath, buffer))
+        .catch(() => {});
+
+      res.setHeader("Content-Type", mimeType);
+      res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+      return res.send(buffer);
+    }
+  } catch (err) {
+    console.error("[Media Restore Warning]", err.message);
+  }
+  next();
+});
 
 app.get("/", (req, res) => {
   res.json({ name: "New Generation School API", status: "online", time: new Date() });

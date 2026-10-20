@@ -21,6 +21,15 @@ export async function saveUploadedFile(file, subdir, alt) {
   const absolutePath = path.join(process.cwd(), env.uploads.dir, subdir, file.filename);
   const { width, height } = await readDimensions(absolutePath, file.mimetype);
 
+  // Store base64 data URI to survive ephemeral container wipes
+  let base64Data = null;
+  try {
+    const fileBuffer = await fs.readFile(absolutePath);
+    base64Data = `data:${file.mimetype};base64,${fileBuffer.toString("base64")}`;
+  } catch (err) {
+    console.warn("Failed to generate persistent base64 buffer for media:", err.message);
+  }
+
   return prisma.media.create({
     data: {
       filename: file.filename,
@@ -30,6 +39,7 @@ export async function saveUploadedFile(file, subdir, alt) {
       width,
       height,
       alt: alt ?? null,
+      data: base64Data,
     },
   });
 }

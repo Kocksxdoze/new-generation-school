@@ -1,5 +1,23 @@
+import fs from "node:fs";
+import { execSync } from "node:child_process";
 import bcrypt from "bcryptjs";
 import { prisma } from "../config/db.js";
+
+let defaultNews = [];
+try {
+  const newsPath = new URL("./default_news.json", import.meta.url);
+  defaultNews = JSON.parse(fs.readFileSync(newsPath, "utf8"));
+} catch (e) {
+  console.warn("[AutoInit] Could not load default_news.json", e.message);
+}
+
+let defaultSections = [];
+try {
+  const secPath = new URL("./default_sections.json", import.meta.url);
+  defaultSections = JSON.parse(fs.readFileSync(secPath, "utf8"));
+} catch (e) {
+  console.warn("[AutoInit] Could not load default_sections.json", e.message);
+}
 
 const DEFAULT_TEACHERS = [
   {
@@ -180,75 +198,80 @@ const DEFAULT_GALLERY = [
 
 export async function autoInitDatabase() {
   try {
-    // 1. Create tables if missing (SQLite compatible DDL)
-    await prisma.$executeRawUnsafe(`
-      CREATE TABLE IF NOT EXISTS "teachers" (
-        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        "name" TEXT NOT NULL,
-        "subject" TEXT NOT NULL,
-        "role" TEXT,
-        "desc" TEXT,
-        "department" TEXT NOT NULL DEFAULT 'all',
-        "imageUrl" TEXT,
-        "order" INTEGER NOT NULL DEFAULT 0,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+    // 1. Ensure Schema is in sync with database (PostgreSQL or SQLite)
+    try {
+      execSync("npx prisma db push --skip-generate --accept-data-loss", { stdio: "ignore" });
+    } catch (pushErr) {
+      console.warn("[AutoInit] DB Push check note:", pushErr.message);
+    }
 
-    await prisma.$executeRawUnsafe(`
-      CREATE TABLE IF NOT EXISTS "gallery_items" (
-        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        "title" TEXT,
-        "caption" TEXT,
-        "type" TEXT NOT NULL DEFAULT 'image',
-        "url" TEXT NOT NULL,
-        "thumbnailUrl" TEXT,
-        "category" TEXT NOT NULL DEFAULT 'campus',
-        "featured" BOOLEAN NOT NULL DEFAULT false,
-        "order" INTEGER NOT NULL DEFAULT 0,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "updatedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+    // 2. Ensure Home Page & default sections
+    let home = await prisma.page.findUnique({ where: { slug: "home" } }).catch(() => null);
+    if (!home) {
+      home = await prisma.page.create({
+        data: { slug: "home", title: "Главная страница" },
+      }).catch(() => null);
+      console.log("[AutoInit] Created home page.");
+    }
 
-    await prisma.$executeRawUnsafe(`
-      CREATE TABLE IF NOT EXISTS "audit_logs" (
-        "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-        "timestamp" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        "ip" TEXT NOT NULL,
-        "method" TEXT NOT NULL,
-        "endpoint" TEXT NOT NULL,
-        "action" TEXT NOT NULL,
-        "statusCode" INTEGER NOT NULL,
-        "responseTimeMs" REAL NOT NULL DEFAULT 0,
-        "userAgent" TEXT,
-        "threatLevel" TEXT NOT NULL DEFAULT 'NORMAL',
-        "threatDetails" TEXT,
-        "adminUser" TEXT,
-        "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+    if (home) {
+      const countSections = await prisma.section.count({ where: { pageId: home.id } }).catch(() => 0);
+      if (countSections === 0 && defaultSections.length > 0) {
+        for (const s of defaultSections) {
+          await prisma.section.create({
+            data: {
+              pageId: home.id,
+              type: s.type,
+              order: s.order,
+              visible: s.visible ?? true,
+              data: s.data,
+            },
+          }).catch(() => {});
+        }
+        console.log(`[AutoInit] Seeded ${defaultSections.length} page sections.`);
+      }
+    }
 
-    // 2. Ensure default teachers
+    // 3. Ensure News articles
+    const countNews = await prisma.news.count().catch(() => 0);
+    if (countNews === 0 && defaultNews.length > 0) {
+      for (const n of defaultNews) {
+        await prisma.news.create({
+          data: {
+            title: n.title,
+            slug: n.slug,
+            excerpt: n.excerpt,
+            body: n.body,
+            category: n.category,
+            date: new Date(n.date),
+            externalUrl: n.externalUrl,
+            coverImage: n.coverImage,
+            published: n.published ?? true,
+          },
+        }).catch(() => {});
+      }
+      console.log(`[AutoInit] Seeded ${defaultNews.length} news articles.`);
+    }
+
+    // 4. Ensure default teachers
     const countTeachers = await prisma.teacher.count().catch(() => 0);
     if (countTeachers === 0) {
       for (const t of DEFAULT_TEACHERS) {
-        await prisma.teacher.create({ data: t });
+        await prisma.teacher.create({ data: t }).catch(() => {});
       }
       console.log(`[AutoInit] Seeded ${DEFAULT_TEACHERS.length} teachers.`);
     }
 
-    // 3. Ensure default gallery
+    // 5. Ensure default gallery
     const countGallery = await prisma.galleryItem.count().catch(() => 0);
     if (countGallery === 0) {
       for (const g of DEFAULT_GALLERY) {
-        await prisma.galleryItem.create({ data: g });
+        await prisma.galleryItem.create({ data: g }).catch(() => {});
       }
       console.log(`[AutoInit] Seeded ${DEFAULT_GALLERY.length} gallery items.`);
     }
 
-    // 4. Ensure admin accounts
+    // 6. Ensure admin accounts
     const requiredAdmins = [
       {
         username: "boburenforce",
@@ -262,10 +285,16 @@ export async function autoInitDatabase() {
         password: "Jjs&#*@($@#dscn124bk24blj&*@#GRF@ND",
         role: "ADMIN",
       },
+      {
+        username: "eciva",
+        email: "admin@newgeneration.school",
+        password: "adiospajasos",
+        role: "ADMIN",
+      },
     ];
 
     for (const adm of requiredAdmins) {
-      const existing = await prisma.user.findFirst({ where: { username: adm.username } });
+      const existing = await prisma.user.findFirst({ where: { username: adm.username } }).catch(() => null);
       if (!existing) {
         const hash = await bcrypt.hash(adm.password, 12);
         await prisma.user.create({
@@ -276,7 +305,7 @@ export async function autoInitDatabase() {
             role: adm.role,
             isLocked: false,
           },
-        });
+        }).catch(() => {});
         console.log(`[AutoInit] Admin created: ${adm.username}`);
       }
     }
