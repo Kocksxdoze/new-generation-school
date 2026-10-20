@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 const navLinks = [
   { href: "/#about", label: "О нас" },
   { href: "/programs", label: "Программы" },
+  { href: "/#ai", label: "EmpasisAI", isAi: true },
   { href: "/teachers", label: "Преподаватели" },
   { href: "/universities", label: "Университеты" },
   { href: "/gallery", label: "Кампус" },
@@ -124,21 +125,30 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   whiteSpace="nowrap"
-                  fontWeight="medium"
+                  fontWeight={link.isAi ? "bold" : "medium"}
                   fontSize={{ xl: "xs", "2xl": "sm" }}
-                  px={{ xl: 2.5, "2xl": 3.5 }}
+                  px={{ xl: 2, "2xl": 3 }}
                   py={1.5}
                   rounded="full"
                   color="#002045"
-                  bg={isActive ? "white" : "transparent"}
+                  bg={isActive ? "white" : link.isAi ? "rgba(255, 184, 0, 0.2)" : "transparent"}
+                  border={link.isAi ? "1px solid rgba(255, 184, 0, 0.45)" : "none"}
                   boxShadow={isActive ? "sm" : "none"}
                   transition="all 0.2s"
+                  display="inline-flex"
+                  alignItems="center"
+                  gap={1}
                   _hover={{
-                    bg: "rgba(255,255,255,0.9)",
+                    bg: link.isAi ? "rgba(255, 184, 0, 0.35)" : "rgba(255,255,255,0.9)",
                     color: "#002045",
                     textDecoration: "none",
                   }}
                 >
+                  {link.isAi && (
+                    <Box as="span" className="material-symbols-outlined" fontSize="13px" color="#D97706">
+                      auto_awesome
+                    </Box>
+                  )}
                   {link.label}
                 </ChakraLink>
               );
@@ -261,8 +271,9 @@ export default function Navbar() {
                     href={link.href}
                     onClick={onClose}
                     color={isActive ? "#002045" : "#1E293B"}
-                    bg={isActive ? "rgba(0, 32, 69, 0.06)" : "transparent"}
-                    fontWeight={isActive ? "bold" : "medium"}
+                    bg={isActive ? "rgba(0, 32, 69, 0.06)" : link.isAi ? "rgba(255, 184, 0, 0.12)" : "transparent"}
+                    border={link.isAi ? "1px solid rgba(255, 184, 0, 0.3)" : "none"}
+                    fontWeight={isActive || link.isAi ? "bold" : "medium"}
                     fontSize="md"
                     px={4}
                     py={3}
@@ -273,8 +284,20 @@ export default function Navbar() {
                     transition="all 0.15s ease"
                     _hover={{ bg: "rgba(0, 32, 69, 0.05)", textDecoration: "none" }}
                   >
-                    <Text>{link.label}</Text>
-                    {isActive && (
+                    <Flex align="center" gap={2}>
+                      {link.isAi && (
+                        <Box as="span" className="material-symbols-outlined" fontSize="18px" color="#FFB800">
+                          auto_awesome
+                        </Box>
+                      )}
+                      <Text>{link.label}</Text>
+                    </Flex>
+                    {link.isAi && (
+                      <Badge bg="#FFB800" color="#002045" fontSize="10px" px={2} py={0.5} rounded="full" fontWeight="bold">
+                        AI
+                      </Badge>
+                    )}
+                    {isActive && !link.isAi && (
                       <Box w={2} h={2} rounded="full" bg="#FFB800" />
                     )}
                   </ChakraLink>

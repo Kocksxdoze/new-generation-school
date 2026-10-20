@@ -188,6 +188,26 @@ export default function SectionFormBuilder({ type, dataStr, onChange }) {
     );
   }
 
+  // --- EmpasisAI Form ---
+  if (type === 'ai') {
+    return (
+      <VStack align="stretch" spacing={4}>
+        <Box>
+          <Text fontSize="sm" fontWeight="medium" mb={1}>Текст бейджа</Text>
+          <Input value={parsedData.badge || ''} onChange={(e) => updateField('badge', e.target.value)} placeholder="СОБСТВЕННАЯ НЕЙРОСЕТЬ ШКОЛЫ" />
+        </Box>
+        <Box>
+          <Text fontSize="sm" fontWeight="medium" mb={1}>Главный заголовок</Text>
+          <Input value={parsedData.title || ''} onChange={(e) => updateField('title', e.target.value)} placeholder="EmpasisAI — Персональный искусственный интеллект школы" />
+        </Box>
+        <Box>
+          <Text fontSize="sm" fontWeight="medium" mb={1}>Описание / подзаголовок</Text>
+          <Textarea value={parsedData.subtitle || ''} onChange={(e) => updateField('subtitle', e.target.value)} placeholder="Уникальная распределенная нейросеть..." />
+        </Box>
+      </VStack>
+    );
+  }
+
   // --- Teachers Form ---
   if (type === 'teachers') {
     const items = parsedData.items || [];

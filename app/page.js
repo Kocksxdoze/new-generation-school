@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import Programs from "@/components/Programs";
 import TechResults from "@/components/TechResults";
+import AiSection from "@/components/AiSection";
 import Teachers from "@/components/Teachers";
 import Alumni from "@/components/Alumni";
 import News from "@/components/News";
@@ -17,6 +18,7 @@ const ComponentMap = {
   features: Features,
   programs: Programs,
   tech_results: TechResults,
+  ai: AiSection,
   teachers: Teachers,
   alumni: Alumni,
   testimonials: Testimonials,
@@ -53,6 +55,7 @@ export default async function Home() {
         <AnimateInView><Features /></AnimateInView>
         <AnimateInView><Programs /></AnimateInView>
         <AnimateInView><TechResults /></AnimateInView>
+        <AnimateInView><AiSection /></AnimateInView>
         <AnimateInView><Teachers /></AnimateInView>
         <AnimateInView><Alumni /></AnimateInView>
         <AnimateInView><Testimonials /></AnimateInView>

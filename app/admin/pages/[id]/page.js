@@ -180,6 +180,7 @@ export default function EditPageSections({ params }) {
               <option value="features">Features</option>
               <option value="programs">Programs</option>
               <option value="tech_results">Tech & Results</option>
+              <option value="ai">EmpasisAI (Нейросеть)</option>
               <option value="teachers">Teachers</option>
               <option value="alumni">Alumni</option>
               <option value="testimonials">Testimonials</option>
