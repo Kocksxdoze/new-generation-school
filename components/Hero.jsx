@@ -147,27 +147,21 @@ export default function Hero({
 
               <Heading
                 as="h1"
+                className="hero-title-halo"
                 fontSize={{ base: "32px", sm: "44px", md: "5xl", lg: "64px" }}
                 fontWeight="800"
                 color="#002045"
                 lineHeight="1.1"
                 letterSpacing="tight"
-                style={{
-                  textShadow:
-                    "0 0 25px rgba(255, 255, 255, 1), 0 0 10px rgba(255, 255, 255, 0.95), 0 2px 4px rgba(255, 255, 255, 0.8)",
-                }}
                 dangerouslySetInnerHTML={{ __html: titleHtml }}
               />
 
               <Text
+                className="hero-text-halo"
                 fontSize={{ base: "md", sm: "lg", md: "xl" }}
                 color="#002045"
                 lineHeight="1.6"
                 fontWeight="600"
-                style={{
-                  textShadow:
-                    "0 0 20px rgba(255, 255, 255, 1), 0 1px 4px rgba(255, 255, 255, 0.9)",
-                }}
               >
                 {description}
               </Text>
@@ -278,10 +272,7 @@ export default function Hero({
                     fontWeight="800"
                     color="#002045"
                     lineHeight="1.2"
-                    style={{
-                      textShadow:
-                        "0 0 16px rgba(255, 255, 255, 1), 0 1px 4px rgba(255, 255, 255, 0.9)",
-                    }}
+                    className="hero-text-halo"
                   >
                     {stat.value}
                   </Text>
@@ -291,10 +282,7 @@ export default function Hero({
                     textTransform="uppercase"
                     letterSpacing="wide"
                     fontWeight="700"
-                    style={{
-                      textShadow:
-                        "0 0 12px rgba(255, 255, 255, 1), 0 1px 3px rgba(255, 255, 255, 0.9)",
-                    }}
+                    className="hero-text-halo"
                   >
                     {stat.label}
                   </Text>
