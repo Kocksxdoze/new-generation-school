@@ -85,14 +85,24 @@ export default function Hero({
             bgPosition={{ base: "center", md: "center" }}
           />
         )}
-        {/* Soft light gradient overlay: provides maximum contrast for dark text while preserving the bright vibrant mascot */}
+        {/* Soft atmospheric lighting overlay on canvas */}
         <Box
           position="absolute"
           inset={0}
           bgGradient={{
-            base: "linear(to-b, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.88) 55%, rgba(255, 255, 255, 0.6) 80%, rgba(255, 255, 255, 0.25) 100%)",
-            lg: "linear(to-r, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.9) 35%, rgba(255, 255, 255, 0.55) 60%, rgba(255, 255, 255, 0.15) 85%, transparent 100%)",
+            base: "linear(to-b, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.85) 100%)",
+            lg: "linear(to-r, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.78) 40%, rgba(255, 255, 255, 0.35) 65%, transparent 85%)",
           }}
+        />
+        {/* Soft bottom ambient fade for stats row */}
+        <Box
+          position="absolute"
+          bottom={0}
+          left={0}
+          right={0}
+          h={{ base: "260px", md: "180px" }}
+          bgGradient="linear(to-t, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.5) 60%, transparent 100%)"
+          pointerEvents="none"
         />
       </Box>
 
@@ -107,194 +117,192 @@ export default function Hero({
       >
         <Grid templateColumns={{ base: "1fr", lg: "repeat(12, 1fr)" }} gap={8}>
           <GridItem colSpan={{ base: 1, lg: 8 }}>
-            {/* White Frosted Glass Card framing the hero text */}
-            <Box
-              className="glass-panel"
-              p={{ base: 6, sm: 8, md: 9 }}
-              rounded="3xl"
-              boxShadow="0 20px 45px -10px rgba(0, 32, 69, 0.12)"
-              border="1px solid rgba(255, 255, 255, 0.95)"
-              bg="rgba(255, 255, 255, 0.85)"
-              backdropFilter="blur(24px)"
-              WebkitBackdropFilter="blur(24px)"
-              maxW="2xl"
-            >
-              <VStack align="start" spacing={5}>
-                {/* School Brand Accent Tag */}
-                <Flex
-                  align="center"
-                  gap={2}
-                  px={4}
-                  py={1.5}
-                  bg="white"
-                  boxShadow="sm"
-                  rounded="full"
-                  border="1px solid rgba(0, 32, 69, 0.12)"
-                  w="fit-content"
-                >
-                  <Box as="span" className="material-symbols-outlined" color="#002045" fontSize="16px">
-                    location_on
-                  </Box>
-                  <Text
-                    fontSize={{ base: "xs", sm: "sm" }}
-                    fontWeight="bold"
-                    color="#002045"
-                    textTransform="uppercase"
-                    letterSpacing="wider"
-                  >
-                    {badgeText}
-                  </Text>
-                </Flex>
-
-                <Heading
-                  as="h1"
-                  fontSize={{ base: "32px", sm: "44px", md: "5xl", lg: "62px" }}
-                  fontWeight="800"
-                  color="#002045"
-                  lineHeight="1.1"
-                  letterSpacing="tight"
-                  dangerouslySetInnerHTML={{ __html: titleHtml }}
-                />
-
+            <VStack align="start" spacing={5} maxW="2xl">
+              {/* School Brand Accent Tag */}
+              <Flex
+                align="center"
+                gap={2}
+                px={4}
+                py={1.5}
+                bg="rgba(255, 255, 255, 0.9)"
+                backdropFilter="blur(10px)"
+                boxShadow="sm"
+                rounded="full"
+                border="1px solid rgba(0, 32, 69, 0.15)"
+                w="fit-content"
+              >
+                <Box as="span" className="material-symbols-outlined" color="#002045" fontSize="16px">
+                  location_on
+                </Box>
                 <Text
-                  fontSize={{ base: "md", sm: "lg", md: "xl" }}
-                  color="#334155"
-                  lineHeight="1.6"
-                  fontWeight="500"
+                  fontSize={{ base: "xs", sm: "sm" }}
+                  fontWeight="bold"
+                  color="#002045"
+                  textTransform="uppercase"
+                  letterSpacing="wider"
                 >
-                  {description}
+                  {badgeText}
                 </Text>
+              </Flex>
 
-                <HStack
-                  spacing={4}
-                  pt={4}
-                  w="full"
-                  flexDir={{ base: "column", sm: "row" }}
-                  align="flex-start"
+              <Heading
+                as="h1"
+                fontSize={{ base: "32px", sm: "44px", md: "5xl", lg: "64px" }}
+                fontWeight="800"
+                color="#002045"
+                lineHeight="1.1"
+                letterSpacing="tight"
+                style={{
+                  textShadow:
+                    "0 0 25px rgba(255, 255, 255, 1), 0 0 10px rgba(255, 255, 255, 0.95), 0 2px 4px rgba(255, 255, 255, 0.8)",
+                }}
+                dangerouslySetInnerHTML={{ __html: titleHtml }}
+              />
+
+              <Text
+                fontSize={{ base: "md", sm: "lg", md: "xl" }}
+                color="#002045"
+                lineHeight="1.6"
+                fontWeight="600"
+                style={{
+                  textShadow:
+                    "0 0 20px rgba(255, 255, 255, 1), 0 1px 4px rgba(255, 255, 255, 0.9)",
+                }}
+              >
+                {description}
+              </Text>
+
+              <HStack
+                spacing={4}
+                pt={4}
+                w="full"
+                flexDir={{ base: "column", sm: "row" }}
+                align="flex-start"
+              >
+                <ChakraLink
+                  as={Link}
+                  href={applyUrl && applyUrl !== "#" ? applyUrl : "/apply"}
+                  px={10}
+                  py={5}
+                  bg="#ffb800"
+                  color="#002045"
+                  fontWeight="bold"
+                  rounded="full"
+                  transition="all 0.3s"
+                  boxShadow="0 4px 14px rgba(255, 184, 0, 0.4)"
+                  _hover={{
+                    bg: "#e6a600",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 6px 20px rgba(255, 184, 0, 0.5)",
+                    textDecoration: "none",
+                  }}
+                  w={{ base: "full", sm: "auto" }}
+                  textAlign="center"
+                  fontSize="lg"
                 >
-                  <ChakraLink
-                    as={Link}
-                    href={applyUrl && applyUrl !== "#" ? applyUrl : "/apply"}
-                    px={8}
-                    py={4}
-                    bg="#ffb800"
-                    color="#002045"
-                    fontWeight="bold"
-                    rounded="full"
-                    transition="all 0.3s"
-                    boxShadow="0 4px 14px rgba(255, 184, 0, 0.35)"
-                    _hover={{
-                      bg: "#e6a600",
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 6px 20px rgba(255, 184, 0, 0.45)",
-                      textDecoration: "none",
-                    }}
-                    w={{ base: "full", sm: "auto" }}
-                    textAlign="center"
-                    fontSize="md"
-                  >
-                    Поступить в школу →
-                  </ChakraLink>
-                  <ChakraLink
-                    as={Link}
-                    href={videoUrl && videoUrl.startsWith("http") ? videoUrl : "/gallery"}
-                    target={videoUrl && videoUrl.startsWith("http") ? "_blank" : "_self"}
-                    rel="noopener noreferrer"
-                    px={8}
-                    py={4}
-                    bg="white"
-                    color="#002045"
-                    fontWeight="bold"
-                    rounded="full"
-                    border="1px solid"
-                    borderColor="rgba(0, 32, 69, 0.15)"
-                    boxShadow="sm"
-                    transition="all 0.3s"
-                    _hover={{
-                      bg: "gray.50",
-                      transform: "translateY(-2px)",
-                      boxShadow: "md",
-                      borderColor: "rgba(0, 32, 69, 0.3)",
-                      textDecoration: "none",
-                    }}
-                    w={{ base: "full", sm: "auto" }}
-                    textAlign="center"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    fontSize="md"
-                    cursor="pointer"
-                  >
-                    <Box as="span" className="material-symbols-outlined" mr={2} color="#002045">
-                      play_circle
-                    </Box>
-                    Смотреть видео
-                  </ChakraLink>
-                </HStack>
-              </VStack>
-            </Box>
+                  Поступить в школу →
+                </ChakraLink>
+                <ChakraLink
+                  as={Link}
+                  href={videoUrl && videoUrl.startsWith("http") ? videoUrl : "/gallery"}
+                  target={videoUrl && videoUrl.startsWith("http") ? "_blank" : "_self"}
+                  rel="noopener noreferrer"
+                  px={10}
+                  py={5}
+                  bg="white"
+                  backdropFilter="blur(10px)"
+                  color="#002045"
+                  fontWeight="bold"
+                  rounded="full"
+                  border="1px solid"
+                  borderColor="rgba(0, 32, 69, 0.15)"
+                  boxShadow="sm"
+                  transition="all 0.3s"
+                  _hover={{
+                    bg: "gray.50",
+                    transform: "translateY(-2px)",
+                    boxShadow: "md",
+                    borderColor: "rgba(0, 32, 69, 0.3)",
+                    textDecoration: "none",
+                  }}
+                  w={{ base: "full", sm: "auto" }}
+                  textAlign="center"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  fontSize="lg"
+                  cursor="pointer"
+                >
+                  <Box as="span" className="material-symbols-outlined" mr={2} color="#002045">
+                    play_circle
+                  </Box>
+                  Смотреть видео
+                </ChakraLink>
+              </HStack>
+            </VStack>
           </GridItem>
         </Grid>
 
-        {/* Stats Row in Frosted Glass Capsule */}
-        <Box
-          mt={{ base: 8, md: 12 }}
-          p={{ base: 4, sm: 6 }}
-          rounded="2xl"
-          bg="rgba(255, 255, 255, 0.88)"
-          backdropFilter="blur(20px)"
-          WebkitBackdropFilter="blur(20px)"
-          border="1px solid rgba(255, 255, 255, 0.95)"
-          boxShadow="0 10px 30px -5px rgba(0, 32, 69, 0.08)"
+        {/* Stats Row - Clean floating grid without box */}
+        <Grid
+          templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }}
+          gap={{ base: 4, sm: 6, md: 8 }}
+          mt={{ base: 10, md: 16 }}
+          pt={{ base: 6, md: 10 }}
+          borderTop="1px solid"
+          borderColor="rgba(0, 32, 69, 0.15)"
         >
-          <Grid
-            templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }}
-            gap={{ base: 4, sm: 6, md: 8 }}
-          >
-            {stats.map((stat, idx) => (
-              <GridItem key={idx}>
-                <Flex align="center" gap={4}>
-                  <Flex
-                    w={12}
-                    h={12}
-                    rounded="full"
-                    bg="white"
-                    boxShadow="sm"
-                    align="center"
-                    justify="center"
-                    color="#002045"
-                    flexShrink={0}
-                    border="1px solid"
-                    borderColor="rgba(0, 32, 69, 0.1)"
-                  >
-                    <Box as="span" className="material-symbols-outlined">
-                      {stat.icon}
-                    </Box>
-                  </Flex>
-                  <Box>
-                    <Text
-                      fontSize="2xl"
-                      fontWeight="bold"
-                      color="#002045"
-                      lineHeight="1.2"
-                    >
-                      {stat.value}
-                    </Text>
-                    <Text
-                      fontSize="xs"
-                      color="#475569"
-                      textTransform="uppercase"
-                      letterSpacing="wide"
-                      fontWeight="semibold"
-                    >
-                      {stat.label}
-                    </Text>
+          {stats.map((stat, idx) => (
+            <GridItem key={idx}>
+              <Flex align="center" gap={4}>
+                <Flex
+                  w={12}
+                  h={12}
+                  rounded="full"
+                  bg="white"
+                  boxShadow="sm"
+                  align="center"
+                  justify="center"
+                  color="#002045"
+                  flexShrink={0}
+                  border="1px solid"
+                  borderColor="rgba(0, 32, 69, 0.12)"
+                >
+                  <Box as="span" className="material-symbols-outlined">
+                    {stat.icon}
                   </Box>
                 </Flex>
-              </GridItem>
-            ))}
-          </Grid>
-        </Box>
+                <Box>
+                  <Text
+                    fontSize="2xl"
+                    fontWeight="800"
+                    color="#002045"
+                    lineHeight="1.2"
+                    style={{
+                      textShadow:
+                        "0 0 16px rgba(255, 255, 255, 1), 0 1px 4px rgba(255, 255, 255, 0.9)",
+                    }}
+                  >
+                    {stat.value}
+                  </Text>
+                  <Text
+                    fontSize="xs"
+                    color="#002045"
+                    textTransform="uppercase"
+                    letterSpacing="wide"
+                    fontWeight="700"
+                    style={{
+                      textShadow:
+                        "0 0 12px rgba(255, 255, 255, 1), 0 1px 3px rgba(255, 255, 255, 0.9)",
+                    }}
+                  >
+                    {stat.label}
+                  </Text>
+                </Box>
+              </Flex>
+            </GridItem>
+          ))}
+        </Grid>
       </Box>
     </Box>
   );
