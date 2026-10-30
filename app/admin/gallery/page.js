@@ -26,98 +26,7 @@ const CATEGORIES = [
   { id: "events", label: "Жизнь школы и события" },
 ];
 
-const INITIAL_GALLERY = [
-  {
-    id: 1,
-    title: "Инновационная лаборатория робототехники и IT",
-    caption: "Рабочие места для программирования, тестирования роботов, пайки и 3D-печати.",
-    type: "image",
-    url: "/images/programs/high.jpg",
-    category: "labs",
-    featured: true,
-    order: 1,
-  },
-  {
-    id: 2,
-    title: "Видео-тур по современному кампусу NGS",
-    caption: "Атмосфера школы: просторные светлые коридоры, зоны отдыха и технологии.",
-    type: "video",
-    url: "https://assets.mixkit.co/videos/preview/mixkit-group-of-students-studying-in-a-classroom-42654-large.mp4",
-    category: "campus",
-    featured: true,
-    order: 2,
-  },
-  {
-    id: 3,
-    title: "Естественно-научная лаборатория биологии и химии",
-    caption: "Оптические микроскопы, реактивы и практические эксперименты на каждом уроке.",
-    type: "image",
-    url: "/images/programs/middle.jpg",
-    category: "labs",
-    featured: false,
-    order: 3,
-  },
-  {
-    id: 4,
-    title: "Интерактивные классы начальной школы",
-    caption: "Эргономичная мебель, смарт-экраны и комфорт для учеников 1-4 классов.",
-    type: "image",
-    url: "/images/programs/primary.jpg",
-    category: "classrooms",
-    featured: false,
-    order: 4,
-  },
-  {
-    id: 5,
-    title: "Пространство дошколят (Pre-school)",
-    caption: "Уютный класс с материалами Монтессори, играми и мягким ковровым покрытием.",
-    type: "image",
-    url: "/images/programs/preschool.jpg",
-    category: "classrooms",
-    featured: false,
-    order: 5,
-  },
-  {
-    id: 6,
-    title: "Практикум по программированию и алгоритмам",
-    caption: "Старшеклассники разрабатывают проекты с использованием Python и машинного обучения.",
-    type: "video",
-    url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-person-typing-on-a-laptop-keyboard-41386-large.mp4",
-    category: "labs",
-    featured: false,
-    order: 6,
-  },
-  {
-    id: 7,
-    title: "Главный кампус и прилегающая территория",
-    caption: "Охраняемая благоустроенная зеленая зона отдыха в экологически чистом районе.",
-    type: "image",
-    url: "/uploads/bg.png",
-    category: "campus",
-    featured: true,
-    order: 7,
-  },
-  {
-    id: 8,
-    title: "Спортивный комплекс и открытые площадки",
-    caption: "Крытый универсальный спортзал, профессиональное покрытие, футбольное поле.",
-    type: "image",
-    url: "/uploads/bg.png",
-    category: "sports",
-    featured: false,
-    order: 8,
-  },
-  {
-    id: 9,
-    title: "Школьные проекты и научные презентации",
-    caption: "Защита стартапов и докладов на школьной научной ярмарке.",
-    type: "image",
-    url: "/images/programs/middle.jpg",
-    category: "events",
-    featured: false,
-    order: 9,
-  },
-];
+const INITIAL_GALLERY = [];
 
 export default function AdminGalleryPage() {
   const [items, setItems] = useState([]);
@@ -145,7 +54,12 @@ export default function AdminGalleryPage() {
     if (typeof window !== "undefined") {
       try {
         const stored = localStorage.getItem("ngs_custom_gallery");
-        if (stored) return JSON.parse(stored);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          const hasMocks = Array.isArray(parsed) && parsed.some(it => it.url?.includes("mixkit") || it.url?.includes("/images/programs/"));
+          if (!hasMocks && Array.isArray(parsed)) return parsed;
+          localStorage.removeItem("ngs_custom_gallery");
+        }
       } catch (e) {}
     }
     return INITIAL_GALLERY;
@@ -163,7 +77,7 @@ export default function AdminGalleryPage() {
     try {
       setIsLoading(true);
       const res = await galleryService.getAllAdmin();
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         setItems(res.data);
         persistLocalGallery(res.data);
         return;

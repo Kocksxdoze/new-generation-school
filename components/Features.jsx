@@ -149,36 +149,6 @@ export default function Features({
                   <Text color="#64748B" fontSize="sm" lineHeight="relaxed">
                     {item.text}
                   </Text>
-                  {(item.title.toLowerCase().includes("сред") || idx === 1) && (
-                    <Box mt={4} pt={1}>
-                      <Box
-                        as={Link}
-                        href="/gallery"
-                        display="inline-flex"
-                        alignItems="center"
-                        fontSize="xs"
-                        fontWeight="700"
-                        color="#002045"
-                        bg="rgba(255, 184, 0, 0.15)"
-                        border="1px solid rgba(255, 184, 0, 0.45)"
-                        px={3.5}
-                        py={2}
-                        rounded="full"
-                        transition="all 0.2s"
-                        _hover={{
-                          bg: "#FFB800",
-                          color: "#002045",
-                          transform: "translateX(3px)",
-                          boxShadow: "0 4px 12px rgba(255, 184, 0, 0.3)"
-                        }}
-                      >
-                        Посмотреть нашу школу
-                        <Box as="span" className="material-symbols-outlined" ml={1.5} fontSize="15px">
-                          arrow_forward
-                        </Box>
-                      </Box>
-                    </Box>
-                  )}
                 </Box>
               </VStack>
 
@@ -197,6 +167,37 @@ export default function Features({
           </GridItem>
         ))}
       </Grid>
+
+      {/* Unified Action Button */}
+      <Flex justify="center" mt={{ base: 10, md: 14 }}>
+        <Box
+          as={Link}
+          href="/gallery"
+          display="inline-flex"
+          alignItems="center"
+          gap={2.5}
+          fontSize={{ base: "sm", md: "md" }}
+          fontWeight="700"
+          color="#002045"
+          bg="#FFB800"
+          px={{ base: 7, md: 9 }}
+          py={{ base: 3.5, md: 4 }}
+          rounded="full"
+          boxShadow="0 4px 16px rgba(255, 184, 0, 0.35)"
+          transition="all 0.25s ease"
+          _hover={{
+            bg: "#e6a600",
+            transform: "translateY(-2px)",
+            boxShadow: "0 8px 24px rgba(255, 184, 0, 0.45)",
+            textDecoration: "none",
+          }}
+        >
+          <span>Посмотреть нашу школу</span>
+          <Box as="span" className="material-symbols-outlined" fontSize="18px">
+            arrow_forward
+          </Box>
+        </Box>
+      </Flex>
     </Box>
   );
 }

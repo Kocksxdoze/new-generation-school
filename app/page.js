@@ -11,6 +11,7 @@ import Testimonials from "@/components/Testimonials";
 import LocationMap from "@/components/LocationMap";
 import Footer from "@/components/Footer";
 import AnimateInView from "@/components/AnimateInView";
+import IntroVideo from "@/components/IntroVideo";
 
 // Map section types to their respective React components
 const ComponentMap = {
@@ -50,13 +51,14 @@ export default async function Home() {
   if (!pageData || !pageData.data || !pageData.data.sections || pageData.data.sections.length === 0) {
     return (
       <>
+        <IntroVideo />
         <Navbar />
         <Hero />
         <AnimateInView><Features /></AnimateInView>
         <AnimateInView><Programs /></AnimateInView>
         <AnimateInView><TechResults /></AnimateInView>
-        <AnimateInView><AiSection /></AnimateInView>
-        <AnimateInView><Teachers /></AnimateInView>
+        {/* <AnimateInView><AiSection /></AnimateInView> -- В разработке */}
+        {/* <AnimateInView><Teachers /></AnimateInView> -- Временно скрыто */}
         <AnimateInView><Alumni /></AnimateInView>
         <AnimateInView><Testimonials /></AnimateInView>
         <AnimateInView><News /></AnimateInView>
@@ -67,11 +69,12 @@ export default async function Home() {
   }
 
   const sections = pageData.data.sections
-    .filter(s => s.visible)
+    .filter(s => s.visible && s.type !== 'ai' && s.type !== 'teachers')
     .sort((a, b) => a.order - b.order);
 
   return (
     <>
+      <IntroVideo />
       <Navbar />
       {sections.map((section, idx) => {
         const Component = ComponentMap[section.type];

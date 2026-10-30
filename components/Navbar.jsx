@@ -15,13 +15,15 @@ import { useState, useEffect } from "react";
 const navLinks = [
   { href: "/#about", label: "О нас" },
   { href: "/programs", label: "Программы" },
-  { href: "/#ai", label: "EmpasisAI", isAi: true },
-  { href: "/teachers", label: "Преподаватели" },
+  { href: "/#ai", label: "EmpasisAI", isAi: true, hidden: true }, // в разработке
+  { href: "/teachers", label: "Преподаватели", hidden: true },     // временно скрыто
   { href: "/universities", label: "Университеты" },
   { href: "/gallery", label: "Кампус" },
   { href: "/news", label: "Новости" },
   { href: "/#location", label: "Контакты" },
 ];
+
+const visibleNavLinks = navLinks.filter((link) => !link.hidden);
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -117,7 +119,7 @@ export default function Navbar() {
             border="1px solid rgba(255,255,255,0.7)"
             flexShrink={0}
           >
-            {navLinks.map((link) => {
+            {visibleNavLinks.map((link) => {
               const isActive = link.href === pathname || (link.href.startsWith("/#") && pathname === "/" && false);
               return (
                 <ChakraLink
@@ -262,7 +264,7 @@ export default function Navbar() {
             overflowY="auto"
           >
             <VStack spacing={2} align="stretch">
-              {navLinks.map((link) => {
+              {visibleNavLinks.map((link) => {
                 const isActive = link.href === pathname;
                 return (
                   <ChakraLink

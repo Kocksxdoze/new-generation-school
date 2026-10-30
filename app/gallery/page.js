@@ -29,107 +29,7 @@ const CATEGORIES = [
   { id: "events", label: "Школьные события" },
 ];
 
-const FALLBACK_ITEMS = [
-  {
-    id: 1,
-    title: "Инновационная лаборатория робототехники и IT",
-    caption: "Рабочие места для программирования, тестирования роботов, пайки и 3D-печати.",
-    type: "image",
-    url: "/images/programs/high.jpg",
-    category: "labs",
-    featured: true,
-    colSpan: 2,
-    rowSpan: 2,
-  },
-  {
-    id: 2,
-    title: "Видео-тур по современному кампусу NGS",
-    caption: "Атмосфера школы: просторные светлые коридоры, зоны отдыха и технологии.",
-    type: "video",
-    url: "https://assets.mixkit.co/videos/preview/mixkit-group-of-students-studying-in-a-classroom-42654-large.mp4",
-    category: "campus",
-    featured: true,
-    colSpan: 2,
-    rowSpan: 1,
-  },
-  {
-    id: 3,
-    title: "Естественно-научная лаборатория биологии и химии",
-    caption: "Оптические микроскопы, реактивы и практические эксперименты на каждом уроке.",
-    type: "image",
-    url: "/images/programs/middle.jpg",
-    category: "labs",
-    featured: false,
-    colSpan: 1,
-    rowSpan: 1,
-  },
-  {
-    id: 4,
-    title: "Интерактивные классы начальной школы",
-    caption: "Эргономичная мебель, смарт-экраны и комфорт для учеников 1-4 классов.",
-    type: "image",
-    url: "/images/programs/primary.jpg",
-    category: "classrooms",
-    featured: false,
-    colSpan: 1,
-    rowSpan: 1,
-  },
-  {
-    id: 5,
-    title: "Пространство дошколят (Pre-school)",
-    caption: "Уютный класс с материалами Монтессори, играми и мягким ковровым покрытием.",
-    type: "image",
-    url: "/images/programs/preschool.jpg",
-    category: "classrooms",
-    featured: false,
-    colSpan: 1,
-    rowSpan: 1,
-  },
-  {
-    id: 6,
-    title: "Практикум по программированию и алгоритмам",
-    caption: "Старшеклассники разрабатывают проекты с использованием Python и машинного обучения.",
-    type: "video",
-    url: "https://assets.mixkit.co/videos/preview/mixkit-hands-of-a-person-typing-on-a-laptop-keyboard-41386-large.mp4",
-    category: "labs",
-    featured: false,
-    colSpan: 1,
-    rowSpan: 1,
-  },
-  {
-    id: 7,
-    title: "Главный кампус и прилегающая территория",
-    caption: "Охраняемая благоустроенная зеленая зона отдыха в экологически чистом районе.",
-    type: "image",
-    url: "/uploads/bg.png",
-    category: "campus",
-    featured: true,
-    colSpan: 2,
-    rowSpan: 1,
-  },
-  {
-    id: 8,
-    title: "Спортивный комплекс и арена для соревнований",
-    caption: "Зал для баскетбола, волейбола, гимнастики и турниров.",
-    type: "image",
-    url: "/uploads/3_eoUwudV.jpg",
-    category: "sports",
-    featured: false,
-    colSpan: 1,
-    rowSpan: 1,
-  },
-  {
-    id: 9,
-    title: "Школьные проекты и научные презентации",
-    caption: "Защита стартапов и докладов на школьной научной ярмарке.",
-    type: "image",
-    url: "/uploads/photo_2025-04-25_15-39-52_2.jpg",
-    category: "events",
-    featured: false,
-    colSpan: 1,
-    rowSpan: 1,
-  },
-];
+const FALLBACK_ITEMS = [];
 
 export default function GalleryPage() {
   const [items, setItems] = useState(FALLBACK_ITEMS);
@@ -144,20 +44,23 @@ export default function GalleryPage() {
           const stored = localStorage.getItem("ngs_custom_gallery");
           if (stored) {
             const parsed = JSON.parse(stored);
-            if (Array.isArray(parsed) && parsed.length > 0) {
+            const hasMocks = Array.isArray(parsed) && parsed.some(it => it.url?.includes("mixkit") || it.url?.includes("/images/programs/"));
+            if (!hasMocks && Array.isArray(parsed) && parsed.length > 0) {
               const enriched = parsed.map((item, idx) => ({
                 ...item,
                 colSpan: item.featured ? 2 : (idx % 5 === 0 ? 2 : 1),
                 rowSpan: item.featured && idx % 3 === 0 ? 2 : 1,
               }));
               setItems(enriched);
+            } else if (hasMocks) {
+              localStorage.removeItem("ngs_custom_gallery");
             }
           }
         } catch (e) {}
       }
       try {
         const res = await galleryService.getGallery();
-        if (res?.data && res.data.length > 0) {
+        if (res?.data && Array.isArray(res.data)) {
           // enrich with bento spans
           const enriched = res.data.map((item, idx) => ({
             ...item,
@@ -241,8 +144,42 @@ export default function GalleryPage() {
 
         {isLoading ? (
           <Flex justify="center" align="center" minH="300px">
-            <Spinner size="xl" color="blue.500" />
+            <Spinner size="xl" color="#FFB800" />
           </Flex>
+        ) : filteredItems.length === 0 ? (
+          <Box
+            textAlign="center"
+            py={{ base: 16, md: 24 }}
+            px={6}
+            bg="rgba(255, 255, 255, 0.7)"
+            backdropFilter="blur(20px)"
+            rounded="3xl"
+            border="1px solid rgba(0, 32, 69, 0.08)"
+            maxW="2xl"
+            mx="auto"
+          >
+            <Flex
+              w={16}
+              h={16}
+              mx="auto"
+              mb={4}
+              rounded="2xl"
+              bg="rgba(0, 32, 69, 0.06)"
+              align="center"
+              justify="center"
+              color="#002045"
+            >
+              <Box as="span" className="material-symbols-outlined" fontSize="32px">
+                photo_library
+              </Box>
+            </Flex>
+            <Heading as="h3" fontSize={{ base: "xl", md: "2xl" }} color="#002045" mb={2} fontWeight="bold">
+              Галерея обновляется
+            </Heading>
+            <Text color="#64748B" fontSize="sm" maxW="md" mx="auto" lineHeight="relaxed">
+              Мы готовим актуальные фото- и видеоматериалы кампуса. Скоро здесь появятся новые кадры!
+            </Text>
+          </Box>
         ) : (
           /* Bento Grid Layout */
           <Grid

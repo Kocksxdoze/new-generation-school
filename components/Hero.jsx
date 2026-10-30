@@ -18,7 +18,7 @@ export default function Hero({
   titleHtml = "Образование, которое <br />открывает больше <br />возможностей",
   description = "Современная школа полного цикла с сильным преподавательским составом, современной образовательной средой и индивидуальным подходом к развитию каждого ученика.",
   applyUrl = "#",
-  videoUrl = "https://www.youtube.com/watch?v=VTZey0E9H5E",
+  videoUrl = "https://youtu.be/GVJVB3wjtHc?feature=shared",
   imageUrl = "/hero-panda.png",
   stats = [
     { value: "15+", label: "лет успешной работы", icon: "workspace_premium" },
@@ -34,11 +34,14 @@ export default function Hero({
   if (imageUrl) {
     if (isVideo) {
       finalImageUrl = imageUrl;
-    } else if (imageUrl.startsWith("http://") || imageUrl.startsWith("https://")) {
+    } else if (
+      imageUrl.startsWith("http://") ||
+      imageUrl.startsWith("https://")
+    ) {
       finalImageUrl = imageUrl;
     } else if (
-      imageUrl.startsWith("/hero-") || 
-      imageUrl.startsWith("/bg.") || 
+      imageUrl.startsWith("/hero-") ||
+      imageUrl.startsWith("/bg.") ||
       imageUrl.startsWith("/images/") ||
       imageUrl === "/uploads/hero-panda.png"
     ) {
@@ -90,8 +93,8 @@ export default function Hero({
           position="absolute"
           inset={0}
           bgGradient={{
-            base: "linear(to-b, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0.85) 100%)",
-            lg: "linear(to-r, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.78) 40%, rgba(255, 255, 255, 0.35) 65%, transparent 85%)",
+            base: "linear(to-b, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 50%, rgba(255, 255, 255, 0.9) 100%)",
+            lg: "linear(to-r, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 38%, rgba(255, 255, 255, 0.45) 60%, transparent 85%)",
           }}
         />
         {/* Soft bottom ambient fade for stats row */}
@@ -100,8 +103,8 @@ export default function Hero({
           bottom={0}
           left={0}
           right={0}
-          h={{ base: "260px", md: "180px" }}
-          bgGradient="linear(to-t, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.5) 60%, transparent 100%)"
+          h={{ base: "300px", md: "220px" }}
+          bgGradient="linear(to-t, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.8) 55%, transparent 100%)"
           pointerEvents="none"
         />
       </Box>
@@ -131,7 +134,12 @@ export default function Hero({
                 border="1px solid rgba(0, 32, 69, 0.15)"
                 w="fit-content"
               >
-                <Box as="span" className="material-symbols-outlined" color="#002045" fontSize="16px">
+                <Box
+                  as="span"
+                  className="material-symbols-outlined"
+                  color="#002045"
+                  fontSize="16px"
+                >
                   location_on
                 </Box>
                 <Text
@@ -147,7 +155,6 @@ export default function Hero({
 
               <Heading
                 as="h1"
-                className="hero-title-halo"
                 fontSize={{ base: "32px", sm: "44px", md: "5xl", lg: "64px" }}
                 fontWeight="800"
                 color="#002045"
@@ -157,7 +164,6 @@ export default function Hero({
               />
 
               <Text
-                className="hero-text-halo"
                 fontSize={{ base: "md", sm: "lg", md: "xl" }}
                 color="#002045"
                 lineHeight="1.6"
@@ -198,8 +204,14 @@ export default function Hero({
                 </ChakraLink>
                 <ChakraLink
                   as={Link}
-                  href={videoUrl && videoUrl.startsWith("http") ? videoUrl : "/gallery"}
-                  target={videoUrl && videoUrl.startsWith("http") ? "_blank" : "_self"}
+                  href={
+                    videoUrl && videoUrl.startsWith("http")
+                      ? videoUrl
+                      : "/gallery"
+                  }
+                  target={
+                    videoUrl && videoUrl.startsWith("http") ? "_blank" : "_self"
+                  }
                   rel="noopener noreferrer"
                   px={10}
                   py={5}
@@ -227,7 +239,12 @@ export default function Hero({
                   fontSize="lg"
                   cursor="pointer"
                 >
-                  <Box as="span" className="material-symbols-outlined" mr={2} color="#002045">
+                  <Box
+                    as="span"
+                    className="material-symbols-outlined"
+                    mr={2}
+                    color="#002045"
+                  >
                     play_circle
                   </Box>
                   Смотреть видео
@@ -272,7 +289,6 @@ export default function Hero({
                     fontWeight="800"
                     color="#002045"
                     lineHeight="1.2"
-                    className="hero-text-halo"
                   >
                     {stat.value}
                   </Text>
@@ -282,7 +298,6 @@ export default function Hero({
                     textTransform="uppercase"
                     letterSpacing="wide"
                     fontWeight="700"
-                    className="hero-text-halo"
                   >
                     {stat.label}
                   </Text>

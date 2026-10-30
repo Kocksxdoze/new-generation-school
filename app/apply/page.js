@@ -93,7 +93,7 @@ export default function ApplyPage() {
               letterSpacing="wider"
               textTransform="uppercase"
             >
-              Приемная кампания · New Generation
+              Приемная компания · New Generation
             </Text>
           </Flex>
 
