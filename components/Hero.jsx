@@ -56,6 +56,11 @@ export default function Hero({
     }
   }
 
+  const targetVideoUrl =
+    videoUrl && videoUrl !== "#" && videoUrl.startsWith("http")
+      ? videoUrl
+      : "https://youtu.be/GVJVB3wjtHc?feature=shared";
+
   return (
     <Box
       as="section"
@@ -203,15 +208,9 @@ export default function Hero({
                   Поступить в школу →
                 </ChakraLink>
                 <ChakraLink
-                  as={Link}
-                  href={
-                    videoUrl && videoUrl.startsWith("http")
-                      ? videoUrl
-                      : "/gallery"
-                  }
-                  target={
-                    videoUrl && videoUrl.startsWith("http") ? "_blank" : "_self"
-                  }
+                  as="a"
+                  href={targetVideoUrl}
+                  target="_blank"
                   rel="noopener noreferrer"
                   px={10}
                   py={5}

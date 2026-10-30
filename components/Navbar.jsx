@@ -18,7 +18,7 @@ const navLinks = [
   { href: "/#ai", label: "EmpasisAI", isAi: true, hidden: true }, // в разработке
   { href: "/teachers", label: "Преподаватели", hidden: true },     // временно скрыто
   { href: "/universities", label: "Университеты" },
-  { href: "/gallery", label: "Кампус" },
+  { href: "/gallery", label: "Галерея" },
   { href: "/news", label: "Новости" },
   { href: "/#location", label: "Контакты" },
 ];
@@ -77,6 +77,7 @@ export default function Navbar() {
               alt="New Generation School Logo"
               h="10"
               w="auto"
+              style={{ maxHeight: "40px", maxWidth: "160px", width: "auto", height: "40px" }}
               objectFit="contain"
               transition="transform 0.2s"
               _groupHover={{ transform: "scale(1.05)" }}

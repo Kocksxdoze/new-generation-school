@@ -110,7 +110,7 @@ export default function ApplyPage() {
           </Heading>
 
           <Text color="#64748B" fontSize={{ base: "sm", md: "lg" }} maxW="2xl" mx="auto">
-            Оставьте заявку, чтобы получить персональную консультацию, узнать условия поступления или записаться на экскурсию по кампусу.
+            Оставьте заявку, чтобы получить персональную консультацию, узнать условия поступления или записаться на экскурсию по школе.
           </Text>
         </Box>
       </Box>
@@ -467,7 +467,7 @@ export default function ApplyPage() {
                       </Box>
                     </Flex>
                     <Box>
-                      <Text fontSize="xs" color="gray.500">Адрес кампуса</Text>
+                      <Text fontSize="xs" color="gray.500">Адрес школы</Text>
                       <Text fontWeight="bold" color="#002045" fontSize="sm">
                         г. Фергана, ул. Мустакиллик, 228
                       </Text>

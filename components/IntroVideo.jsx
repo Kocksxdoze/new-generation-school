@@ -1,22 +1,38 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Box, Flex, Text, Button } from "@chakra-ui/react";
+import { Box, Flex, Button } from "@chakra-ui/react";
 
 export default function IntroVideo() {
   const [isMounted, setIsMounted] = useState(true);
   const [isFading, setIsFading] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
   const videoRef = useRef(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
+      video.muted = false;
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch((err) => {
-          console.warn("Autoplay deferred or blocked by browser policy:", err);
+          // If browser policy blocks unmuted autoplay without prior interaction,
+          // play video smoothly and unmute on first user click/touch
+          console.warn("Unmuted autoplay restricted by browser policy; unmuting on first interaction:", err);
+          video.muted = true;
+          video.play().catch(() => {});
+
+          const unmute = () => {
+            if (videoRef.current) {
+              videoRef.current.muted = false;
+            }
+            window.removeEventListener("click", unmute);
+            window.removeEventListener("touchstart", unmute);
+            window.removeEventListener("keydown", unmute);
+          };
+
+          window.addEventListener("click", unmute, { once: true });
+          window.addEventListener("touchstart", unmute, { once: true });
+          window.addEventListener("keydown", unmute, { once: true });
         });
       }
     }
@@ -27,20 +43,6 @@ export default function IntroVideo() {
     setTimeout(() => {
       setIsMounted(false);
     }, 600);
-  };
-
-  const handleTimeUpdate = () => {
-    if (videoRef.current && videoRef.current.duration) {
-      const pct = (videoRef.current.currentTime / videoRef.current.duration) * 100;
-      setProgress(pct);
-    }
-  };
-
-  const toggleSound = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
-    }
   };
 
   if (!isMounted) return null;
@@ -62,68 +64,35 @@ export default function IntroVideo() {
         ref={videoRef}
         src="/title.mp4"
         autoPlay
-        muted
         playsInline
         onEnded={handleFinish}
-        onTimeUpdate={handleTimeUpdate}
         style={{
           width: "100%",
           height: "100%",
           objectFit: "cover",
+          backgroundColor: "#000000",
         }}
       />
 
-      {/* Top Header Overlay with Logo & Skip Button */}
+      {/* Top Bar with Skip Button Only - No Logo */}
       <Flex
         position="absolute"
         top={0}
         left={0}
         right={0}
         p={{ base: 4, sm: 6, md: 8 }}
-        justify="space-between"
+        justify="flex-end"
         align="center"
-        bgGradient="linear(to-b, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)"
         zIndex={10}
+        pointerEvents="auto"
       >
-        <Flex align="center" gap={3}>
-          <Box
-            as="img"
-            src="/ЛОГО.png"
-            alt="New Generation School"
-            h={{ base: "8", sm: "10" }}
-            w="auto"
-            filter="drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
-          />
-          <Box display={{ base: "none", sm: "block" }}>
-            <Text
-              color="white"
-              fontWeight="bold"
-              fontSize={{ base: "sm", md: "md" }}
-              letterSpacing="tight"
-              lineHeight="1.2"
-            >
-              New Generation School
-            </Text>
-            <Text
-              fontSize="10px"
-              textTransform="uppercase"
-              letterSpacing="widest"
-              color="#FFB800"
-              fontWeight="bold"
-            >
-              Fergana Campus
-            </Text>
-          </Box>
-        </Flex>
-
-        {/* Skip Button */}
         <Button
           onClick={handleFinish}
           size={{ base: "sm", md: "md" }}
-          bg="rgba(255, 255, 255, 0.2)"
+          bg="rgba(0, 0, 0, 0.45)"
           backdropFilter="blur(16px)"
           color="white"
-          border="1px solid rgba(255, 255, 255, 0.35)"
+          border="1px solid rgba(255, 255, 255, 0.3)"
           rounded="full"
           px={{ base: 4, sm: 6 }}
           py={2.5}
@@ -148,69 +117,6 @@ export default function IntroVideo() {
           </Box>
         </Button>
       </Flex>
-
-      {/* Bottom Bar: Sound Toggle & Status */}
-      <Flex
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        p={{ base: 4, sm: 6, md: 8 }}
-        justify="space-between"
-        align="center"
-        bgGradient="linear(to-t, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)"
-        zIndex={10}
-      >
-        <Button
-          onClick={toggleSound}
-          size="sm"
-          variant="ghost"
-          color="white"
-          bg="rgba(0, 0, 0, 0.4)"
-          backdropFilter="blur(12px)"
-          border="1px solid rgba(255, 255, 255, 0.25)"
-          rounded="full"
-          px={4}
-          py={2}
-          fontSize="xs"
-          fontWeight="600"
-          cursor="pointer"
-          display="inline-flex"
-          alignItems="center"
-          gap={2}
-          transition="all 0.2s"
-          _hover={{
-            bg: "rgba(255, 255, 255, 0.2)",
-            borderColor: "white",
-          }}
-        >
-          <Box as="span" className="material-symbols-outlined" fontSize="18px" color="#FFB800">
-            {isMuted ? "volume_off" : "volume_up"}
-          </Box>
-          <span>{isMuted ? "Включить звук" : "Выключить звук"}</span>
-        </Button>
-
-        <Text
-          color="rgba(255, 255, 255, 0.7)"
-          fontSize={{ base: "2xs", sm: "xs" }}
-          fontWeight="500"
-          letterSpacing="wide"
-        >
-          Презентация кампуса NGS
-        </Text>
-      </Flex>
-
-      {/* Bottom Progress Bar */}
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        h="3px"
-        bg="#FFB800"
-        w={`${progress}%`}
-        transition="width 0.15s linear"
-        zIndex={20}
-      />
     </Box>
   );
 }

@@ -19,7 +19,7 @@ import AdminToast, { useAdminToast } from "@/components/admin/AdminToast";
 
 const CATEGORIES = [
   { id: "all", label: "Все категории" },
-  { id: "campus", label: "Кампус и архитектура" },
+  { id: "campus", label: "Территория и архитектура" },
   { id: "labs", label: "Лаборатории и IT" },
   { id: "classrooms", label: "Классы и аудитории" },
   { id: "sports", label: "Спорт и здоровье" },
@@ -278,7 +278,7 @@ export default function AdminGalleryPage() {
     <Box>
       <Flex justify="space-between" align="center" mb={6} flexWrap="wrap" gap={4}>
         <Box>
-          <Heading size="lg" color="#002045">Галерея кампуса и жизни школы</Heading>
+          <Heading size="lg" color="#002045">Галерея жизни и среды школы</Heading>
           <Text color="gray.600" fontSize="sm" mt={1}>
             Управление фото- и видеоматериалами современной среды школы
           </Text>
@@ -570,7 +570,7 @@ export default function AdminGalleryPage() {
                     { label: "Естественные науки", url: "/images/programs/middle.jpg", type: "image" },
                     { label: "Начальная школа", url: "/images/programs/primary.jpg", type: "image" },
                     { label: "Дошколята", url: "/images/programs/preschool.jpg", type: "image" },
-                    { label: "Видео кампус", url: "https://assets.mixkit.co/videos/preview/mixkit-group-of-students-studying-in-a-classroom-42654-large.mp4", type: "video" },
+                    { label: "Видео школы", url: "https://assets.mixkit.co/videos/preview/mixkit-group-of-students-studying-in-a-classroom-42654-large.mp4", type: "video" },
                   ].map((preset) => (
                     <Button
                       key={preset.url}
@@ -620,7 +620,7 @@ export default function AdminGalleryPage() {
                   rows={3}
                   value={formData.caption}
                   onChange={(e) => setFormData({ ...formData, caption: e.target.value })}
-                  placeholder="Краткое описание оборудования или зоны кампуса..."
+                  placeholder="Краткое описание оборудования или зоны школы..."
                 />
               </Box>
 

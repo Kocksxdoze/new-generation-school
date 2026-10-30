@@ -211,7 +211,7 @@ export default function AdminDashboard() {
             <Box w={10} h={10} rounded="xl" bg="purple.50" color="purple.600" display="flex" align="center" justify="center">
               <Box as="span" className="material-symbols-outlined" fontSize="22px">photo_library</Box>
             </Box>
-            <Heading size="sm" color="#002045">Галерея кампуса</Heading>
+            <Heading size="sm" color="#002045">Галерея школы</Heading>
           </Flex>
           <Text fontSize="xs" color="gray.600">
             Загрузка фото оборудования, классов, спортзала и автовоспроизводимых видеороликов.

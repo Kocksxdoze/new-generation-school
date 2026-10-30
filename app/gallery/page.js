@@ -22,7 +22,7 @@ import { galleryService } from "@/utils/api";
 
 const CATEGORIES = [
   { id: "all", label: "Все пространства" },
-  { id: "campus", label: "Кампус и архитектура" },
+  { id: "campus", label: "Территория и архитектура" },
   { id: "labs", label: "STEM & IT Лаборатории" },
   { id: "classrooms", label: "Классы и аудитории" },
   { id: "sports", label: "Спортивный комплекс" },
@@ -106,7 +106,7 @@ export default function GalleryPage() {
               <Text fontSize="xs" color="#94A3B8" _hover={{ color: "#FFB800" }}>Главная</Text>
             </Link>
             <Text fontSize="xs" color="#64748B">/</Text>
-            <Text fontSize="xs" color="#FFB800" fontWeight="bold">Кампус и галерея</Text>
+            <Text fontSize="xs" color="#FFB800" fontWeight="bold">Жизнь и галерея школы</Text>
           </Flex>
 
           <Heading as="h1" fontSize={{ base: "3xl", sm: "4xl", md: "5xl", lg: "6xl" }} fontWeight="900" mb={4} lineHeight="1.15">
@@ -114,7 +114,7 @@ export default function GalleryPage() {
           </Heading>
 
           <Text color="#94A3B8" fontSize={{ base: "md", md: "xl" }} maxW="3xl" lineHeight="relaxed">
-            Погрузитесь в атмосферу инновационного кампуса: умные аудитории, передовые лаборатории робототехники, спортивный комплекс и пространства для развития талантов каждого ученика.
+            Погрузитесь в атмосферу нашей школы: умные аудитории, передовые лаборатории робототехники, спортивный комплекс и пространства для развития талантов каждого ученика.
           </Text>
         </Box>
       </Box>
@@ -177,7 +177,7 @@ export default function GalleryPage() {
               Галерея обновляется
             </Heading>
             <Text color="#64748B" fontSize="sm" maxW="md" mx="auto" lineHeight="relaxed">
-              Мы готовим актуальные фото- и видеоматериалы кампуса. Скоро здесь появятся новые кадры!
+              Мы готовим актуальные фото- и видеоматериалы школы. Скоро здесь появятся новые кадры!
             </Text>
           </Box>
         ) : (
